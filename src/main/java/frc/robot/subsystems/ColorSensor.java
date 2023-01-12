@@ -15,7 +15,7 @@ public class ColorSensor extends SubsystemBase {
     public static final int DISTANCE_THRESHOLD = 0;
   }
 
-  private ColorSensorV3 colorSensor = new ColorSensorV3(Constants.PORT);
+  private final ColorSensorV3 colorSensor = new ColorSensorV3(Constants.PORT);
   
   public ColorSensor() {}
 

@@ -12,15 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
   
-  private CANSparkMax left_front_drive = new CANSparkMax(0, MotorType.kBrushless);
-  private CANSparkMax left_front_turn = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax right_front_drive = new CANSparkMax(2, MotorType.kBrushless);
-  private CANSparkMax right_front_turn = new CANSparkMax(3, MotorType.kBrushless);
-  private CANSparkMax left_rear_drive = new CANSparkMax(4, MotorType.kBrushless);
-  private CANSparkMax left_rear_turn = new CANSparkMax(5, MotorType.kBrushless);
-  private CANSparkMax right_rear_drive = new CANSparkMax(6, MotorType.kBrushless);
-  private CANSparkMax right_rear_turn = new CANSparkMax(7, MotorType.kBrushless);
-  
+  // private final SwerveModule frontLeft = new SwerveModule();
   public Swerve() {}
 
   /**
