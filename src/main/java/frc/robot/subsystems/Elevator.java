@@ -22,10 +22,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Elevator extends SubsystemBase {
   
     public enum Level{
-      GROUND,
-      MID,
-      HIGH,
-      INTAKE
+        GROUND,
+        MID,
+        HIGH,
+        INTAKE
     }
     private final CANSparkMax elevMotor;
     private final DutyCycleEncoder elevEncoder;
