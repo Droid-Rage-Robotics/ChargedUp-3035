@@ -2,28 +2,34 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
     public static class Constants {
-        public static final double DRIVE_ENCODER_ROT_2_METER = 0;
-        public static final double DRIVE_ENCODER_RPM_2_METER_PER_SEC = 0;
-        public static final double TURN_ENCODER_ROT_2_RAD = 0;
-        public static final double TURN_ENCODER_RPM_2_RAD_PER_SEC = 0;
-
-        public static final double TURN_P = 0;
-
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
         public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.75;
+        public static final double TURN_MOTOR_GEAR_RATIO = 1 / 18; // TODO: change
 
+        public static final double DRIVE_ENCODER_ROT_2_METER = DRIVE_MOTOR_GEAR_RATIO * Math.PI * WHEEL_DIAMETER_METERS;
+        public static final double DRIVE_ENCODER_RPM_2_METER_PER_SEC = DRIVE_ENCODER_ROT_2_METER / 60;
+        public static final double TURN_ENCODER_ROT_2_RAD = TURN_MOTOR_GEAR_RATIO * 2 * Math.PI;
+        public static final double TURN_ENCODER_RPM_2_RAD_PER_SEC = TURN_ENCODER_ROT_2_RAD / 60;
+
+        public static final double TURN_P = 0.5;
+
+        public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 5;
+        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI); // 2 revolutions per second
     }
 
     private final CANSparkMax driveMotor;
@@ -92,13 +98,23 @@ public class SwerveModule {
         turnEncoder.setPosition(getTurnEncoderRad());
     }
 
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(getDrivePos(), new Rotation2d(getTurningPosition()));
+    }
+
     public SwerveModuleState getState(){
         return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
     }
 
     public void setState(SwerveModuleState state) {
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
         state = SwerveModuleState.optimize(state, getState().angle);
-        // driveMotor.set(state.speedMetersPerSecond / );
+        driveMotor.set(state.speedMetersPerSecond / Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
+        turnMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        SmartDashboard.putString("Swerve[" + turnEncoder.getDeviceID() + "] state", state.toString());
     }
 
     public void stop(){

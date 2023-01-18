@@ -47,4 +47,8 @@ public class DroidRageEncoder {
     public void setPosition(double position) {
         canCoder.setPosition(position);
     }
+
+    public int getDeviceID() {
+        return canCoder.getDeviceID();
+    }
 }
