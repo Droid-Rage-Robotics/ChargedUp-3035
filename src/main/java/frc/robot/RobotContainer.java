@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
@@ -42,7 +41,7 @@ public class RobotContainer {
     
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driverController =
-        new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+        new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {

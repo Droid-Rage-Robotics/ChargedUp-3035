@@ -6,8 +6,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.DroidRageConstants;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Gamepad;
 import frc.robot.subsystems.SwerveModule;
 
 public class SwerveDrive extends CommandBase {
@@ -49,9 +49,9 @@ public class SwerveDrive extends CommandBase {
         double ySpeed = y.get();
         double turnSpeed = turn.get();
 
-        xSpeed = Math.abs(xSpeed) > Gamepad.Constants.DEADZONE ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > Gamepad.Constants.DEADZONE ? ySpeed : 0.0;
-        turnSpeed = Math.abs(turnSpeed) > Gamepad.Constants.DEADZONE ? turnSpeed : 0.0;
+        xSpeed = Math.abs(xSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? xSpeed : 0.0;
+        ySpeed = Math.abs(ySpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? ySpeed : 0.0;
+        turnSpeed = Math.abs(turnSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? turnSpeed : 0.0;
 
         xSpeed = xLimiter.calculate(xSpeed) * Constants.MAX_SPEED_METERS_PER_SECOND;
         ySpeed = yLimiter.calculate(ySpeed) * Constants.MAX_SPEED_METERS_PER_SECOND;
