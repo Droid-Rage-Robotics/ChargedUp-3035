@@ -93,10 +93,10 @@ public class RobotContainer {
       trajectoryConfig
       );
 
-    PIDController xController = new PIDController(Drive.Constants.Auto.X_KP, 0, 0);
-    PIDController yController = new PIDController(Drive.Constants.Auto.Y_KP, 0, 0);
+    PIDController xController = new PIDController(Drive.Constants.Auto.TRANSLATIONAL_KP, 0, 0);
+    PIDController yController = new PIDController(Drive.Constants.Auto.TRANSLATIONAL_KP, 0, 0);
     ProfiledPIDController thetaController = new ProfiledPIDController(
-      Drive.Constants.Auto.X_KP, 
+      Drive.Constants.Auto.THETA_KP, 
       0, 
       0, 
       Drive.Constants.Auto.THETA_CONSTRAINTS);

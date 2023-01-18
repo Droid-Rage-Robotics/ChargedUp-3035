@@ -22,8 +22,7 @@ public class Drive extends SubsystemBase {
             public static final double MAX_ACCELERATION_METERS_PER_SECOND = 2;
             public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 0;
             public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = 0;
-            public static final double X_KP = 0;
-            public static final double Y_KP = 0;
+            public static final double TRANSLATIONAL_KP = 0;
             public static final double THETA_KP = 0;
             public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
                 new TrapezoidProfile.Constraints(
@@ -140,7 +139,7 @@ public class Drive extends SubsystemBase {
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
         Constants.DRIVE_KINEMATICS, 
         new Rotation2d(0), 
-        null
+        getModulePositions()
     );
 
     public Drive() {
@@ -184,7 +183,7 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(getRotation2d(), null, pose);
+        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
     public void stop() {
