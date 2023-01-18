@@ -79,7 +79,7 @@ public class RobotContainer {
     
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
             Drive.Constants.Auto.MAX_SPEED_METERS_PER_SECOND, 
-            Drive.Constants.Auto.MAX_ACCELERATION_METERS_PER_SECOND)
+            Drive.Constants.Auto.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
                 .setKinematics(Drive.Constants.DRIVE_KINEMATICS);
     
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(

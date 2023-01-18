@@ -18,12 +18,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drive extends SubsystemBase {
     public static class Constants {
         public static class Auto {
-            public static final double MAX_SPEED_METERS_PER_SECOND = 2;
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND = 2;
-            public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 0;
-            public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = 0;
-            public static final double TRANSLATIONAL_KP = 0;
-            public static final double THETA_KP = 0;
+            public static final double MAX_SPEED_METERS_PER_SECOND = 
+                SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
+
+            public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
+                SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
+
+            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
+            public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
+            public static final double TRANSLATIONAL_KP = 1.5;
+            public static final double THETA_KP = 3;
             public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
                 new TrapezoidProfile.Constraints(
                     MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
