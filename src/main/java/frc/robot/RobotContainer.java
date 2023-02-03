@@ -5,11 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Vision;
 
 import java.util.List;
 
@@ -37,8 +35,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-  private final Vision vision = new Vision();
-  private final Drive drive = new Drive();
+  // private final Vision vision = new Vision();
+  private final SwerveDrive drive = new SwerveDrive();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -79,9 +77,9 @@ public class RobotContainer {
     // return Autos.exampleAuto(exampleSubsystem);
 
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-      Drive.Constants.Auto.MAX_SPEED_METERS_PER_SECOND, 
-      Drive.Constants.Auto.MAX_ACCELERATION_METERS_PER_SECOND)
-        .setKinematics(Drive.Constants.DRIVE_KINEMATICS);
+      SwerveDrive.Constants.Auto.MAX_SPEED_METERS_PER_SECOND, 
+      SwerveDrive.Constants.Auto.MAX_ACCELERATION_METERS_PER_SECOND)
+        .setKinematics(SwerveDrive.Constants.DRIVE_KINEMATICS);
 
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       new Pose2d(),
@@ -93,19 +91,19 @@ public class RobotContainer {
       trajectoryConfig
       );
 
-    PIDController xController = new PIDController(Drive.Constants.Auto.TRANSLATIONAL_KP, 0, 0);
-    PIDController yController = new PIDController(Drive.Constants.Auto.TRANSLATIONAL_KP, 0, 0);
+    PIDController xController = new PIDController(SwerveDrive.Constants.Auto.TRANSLATIONAL_KP, 0, 0);
+    PIDController yController = new PIDController(SwerveDrive.Constants.Auto.TRANSLATIONAL_KP, 0, 0);
     ProfiledPIDController thetaController = new ProfiledPIDController(
-      Drive.Constants.Auto.THETA_KP, 
+      SwerveDrive.Constants.Auto.THETA_KP, 
       0, 
       0, 
-      Drive.Constants.Auto.THETA_CONSTRAINTS);
+      SwerveDrive.Constants.Auto.THETA_CONSTRAINTS);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
       trajectory,
       drive::getPose,
-      Drive.Constants.DRIVE_KINEMATICS,
+      SwerveDrive.Constants.DRIVE_KINEMATICS,
       xController,
       yController,
       thetaController,

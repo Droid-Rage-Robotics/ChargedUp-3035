@@ -6,11 +6,11 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Gamepad;
 import frc.robot.subsystems.SwerveModule;
 
-public class SwerveDrive extends CommandBase {
+public class SwerveDriveCommand extends CommandBase {
     public static class Constants {
         public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;
         public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;
@@ -19,11 +19,11 @@ public class SwerveDrive extends CommandBase {
         public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND= SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 4;
     }
 
-    private final Drive drive;
+    private final SwerveDrive drive;
     private final Supplier<Double> x, y, turn;
     private final Supplier<Boolean> isFieldOriented;
     private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
-    public SwerveDrive(Drive drive,
+    public SwerveDriveCommand(SwerveDrive drive,
             Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
             Supplier<Boolean> isFieldOriented) {
         this.drive = drive;
@@ -66,7 +66,7 @@ public class SwerveDrive extends CommandBase {
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
         }
 
-        SwerveModuleState[] states = Drive.Constants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+        SwerveModuleState[] states = SwerveDrive.Constants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
 
         drive.setModuleStates(states);
     }

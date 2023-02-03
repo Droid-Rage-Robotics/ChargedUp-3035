@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Drive extends SubsystemBase {
+public class SwerveDrive extends SubsystemBase {
     public static class Constants {
         public static class Auto {
             public static final double MAX_SPEED_METERS_PER_SECOND = 2;
@@ -142,7 +142,7 @@ public class Drive extends SubsystemBase {
         getModulePositions()
     );
 
-    public Drive() {
+    public SwerveDrive() {
 
         new Thread(() -> {
             try {
