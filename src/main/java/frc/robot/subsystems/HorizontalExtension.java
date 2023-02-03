@@ -33,52 +33,38 @@ public class HorizontalExtension extends SubsystemBase {
   
   /** Creates a new ExampleSubsystem. */
   public HorizontalExtension() {
-    elevMotor = new CANSparkMax(0, MotorType.kBrushless);
+    elevMotor = new CANSparkMax(0, MotorType.kBrushless); //TODO: change
     elevEncoder = new DutyCycleEncoder(0);
     elevMotor.setIdleMode(IdleMode.kBrake);
     elevController = new PIDController(0, 0, 0);
     elevController.setTolerance(5);
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+ 
   public CommandBase toIntake() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(HorizontalSetPoints.INTAKE_POS);
-        });
+    return runOnce(() -> elevController.setSetpoint(HorizontalSetPoints.INTAKE_POS));
   }
+
   public CommandBase toBottom() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(HorizontalSetPoints.BOTTOM_POS);
-        });
+    return runOnce(() -> elevController.setSetpoint(HorizontalSetPoints.BOTTOM_POS));
   }
+
   public CommandBase toMid() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(HorizontalSetPoints.MID_POS);
-        });
+    return runOnce(() -> {elevController.setSetpoint(HorizontalSetPoints.MID_POS);});
   }
+
   public CommandBase toTop() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(HorizontalSetPoints.TOP_POS);
-        });
+    return runOnce(() -> elevController.setSetpoint(HorizontalSetPoints.TOP_POS));
   }
 
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     SmartDashboard.putNumber("Horizontal Encoder Pos", elevEncoder.get());
   }
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+    periodic();
   }
 }

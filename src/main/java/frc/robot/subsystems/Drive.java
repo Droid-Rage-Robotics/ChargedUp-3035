@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,53 +35,53 @@ public class Drive extends SubsystemBase {
                     MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED
                 );
 
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND = 0; //CHECK THIS
+            public static final double MAX_ACCELERATION_METERS_PER_SECOND = 0; //TODO: CHECK THIS
         }
         public static class FrontLeft {
-            public static final int DRIVE_MOTOR_PORT = 0;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;
+            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int ABSOLUTE_ENCODER_PORT = 0;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;
+            public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
         }
 
         public static class FrontRight {
-            public static final int DRIVE_MOTOR_PORT = 0;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;
+            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int ABSOLUTE_ENCODER_PORT = 0;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;
+            public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
         }
 
         public static class BackLeft {
-            public static final int DRIVE_MOTOR_PORT = 0;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;
+            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int ABSOLUTE_ENCODER_PORT = 0;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;
+            public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
         }
 
         public static class BackRight {
-            public static final int DRIVE_MOTOR_PORT = 0;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;
+            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int ABSOLUTE_ENCODER_PORT = 0;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;
+            public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
             public static final boolean ABOSLUTE_ENCODER_REVERSED = false;
         }
 
@@ -148,6 +149,8 @@ public class Drive extends SubsystemBase {
         getModulePositions()
     );
 
+    private volatile boolean isFieldOriented = true;
+
     public Drive() {
 
         new Thread(() -> {
@@ -170,6 +173,18 @@ public class Drive extends SubsystemBase {
         );
         SmartDashboard.putNumber("Robot heading", getHeading());
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+        
+        SmartDashboard.putBoolean("Robot is Field Oriented", isFieldOriented);
+
+        SmartDashboard.putNumber("Front Left Turn Encoder Radians", frontLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Front Right Turn Encoder Radians", frontRight.getTurnEncoderRad());
+        SmartDashboard.putNumber("Back Left Turn Encoder Radians", backLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Back Right Turn Encoder Radians", backRight.getTurnEncoderRad());
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        periodic();
     }
 
     public double getHeading() {
@@ -212,5 +227,17 @@ public class Drive extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         };
+    }
+
+    public boolean isFieldOriented() {
+        return isFieldOriented;
+    }
+
+    public CommandBase toggleFieldOriented() {
+        return runOnce(() -> isFieldOriented = !isFieldOriented);
+    }
+
+    public CommandBase recalibrateHeading() {
+        return runOnce(() -> resetHeading());
     }
 }

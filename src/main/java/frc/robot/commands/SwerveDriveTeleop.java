@@ -10,7 +10,7 @@ import frc.robot.subsystems.Drive;
 import frc.robot.DroidRageConstants;
 import frc.robot.subsystems.SwerveModule;
 
-public class SwerveDriveCommand extends CommandBase {
+public class SwerveDriveTeleop extends CommandBase {
     public static class Constants {
         public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;
         public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;
@@ -23,7 +23,7 @@ public class SwerveDriveCommand extends CommandBase {
     private final Supplier<Double> x, y, turn;
     private final Supplier<Boolean> isFieldOriented;
     private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
-    public SwerveDriveCommand(Drive drive,
+    public SwerveDriveTeleop(Drive drive,
             Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
             Supplier<Boolean> isFieldOriented) {
         this.drive = drive;

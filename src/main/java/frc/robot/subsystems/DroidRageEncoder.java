@@ -4,8 +4,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 public class DroidRageEncoder {
     private final CANCoder canCoder;
-    private double positionConversionFactor;
-    private double velocityConversionFactor;
+    private double positionConversionFactor = 0; //TODO fix
+    private double velocityConversionFactor = 0; //TODO fix
 
     /* Cancoder */
     /* these can be changed with canCoder.configSetCustomParam
@@ -17,11 +17,11 @@ public class DroidRageEncoder {
     */
 
     public DroidRageEncoder(int deviceNumber, String canbus) {
-        canCoder = new CANCoder(0, canbus);
+        canCoder = new CANCoder(deviceNumber, canbus);
     }
 
     public DroidRageEncoder(int deviceNumber) {
-        canCoder = new CANCoder(0);
+        canCoder = new CANCoder(deviceNumber);
     }
 
     public void setPositionConversionFactor(double factor) {

@@ -32,73 +32,45 @@ public class VerticalExtension extends SubsystemBase {
   private final CANSparkMax elevMotor, elevMotorTwo;
   private final DutyCycleEncoder elevEncoder;
   private final PIDController elevController;
-  // private final int VerticalExtensionLocation = 0;
-  //Not Sure which one to use
-  // private final DigitalInput elevLimitSwitch;
-  // private final LimitSwitchNormal limitSwitchNormal;
+
     
-  /** Creates a new ExampleSubsystem. */
   public VerticalExtension() {
     elevMotor = new CANSparkMax(0, MotorType.kBrushless);
-    elevMotorTwo = new CANSparkMax(0, MotorType.kBrushless);
-    elevEncoder = new DutyCycleEncoder(0);  //Where is it plugged in?
+  
+    elevEncoder = new DutyCycleEncoder(0);  //TODO: Where is it plugged in?
     elevController = new PIDController(0, 0, 0);
     elevController.setTolerance(5);
-
-    // elevLimitSwitch = new DigitalInput(2);
-    // limitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-
     elevMotor.setIdleMode(IdleMode.kBrake);
+
+    elevMotorTwo = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
     elevMotorTwo.setIdleMode(IdleMode.kBrake);
     elevMotorTwo.follow(elevMotor, true);
-    // VerticalExtensionLocation = Level.GROUND;
+    
   }
 
 
-  public CommandBase toGroundPos() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(VerticalSetPoints.GROUND_POS);
-        });
+  public CommandBase toGround() {
+    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.GROUND_POS));
   }
-  public CommandBase toMidPos() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(VerticalSetPoints.MID_POS);
-        });
+  public CommandBase toMid() {
+    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.MID_POS));
   }
-  public CommandBase toHighPos() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(VerticalSetPoints.HIGH_POS);
-        });
+  public CommandBase toHigh() {
+    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.HIGH_POS));
   }
-  public CommandBase toIntakePos() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(VerticalSetPoints.INTAKE_POS);
-        });
+  public CommandBase toIntakeHigh() {
+    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.INTAKE_POS));
   }
-//   public boolean isDown() {
-//     return elevLimitSwitch.get();
-// // limitSwitchNormal.
-//   }
+  
+  
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     SmartDashboard.putNumber("Vertical Encoder Pos", elevEncoder.get());
-
-    // if(elevLimitSwitch.get()){
-    //   if (elevMotor.get()<0){
-    //     elevMotor.set(0);
-    //   }
-    // }
   }
 
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }

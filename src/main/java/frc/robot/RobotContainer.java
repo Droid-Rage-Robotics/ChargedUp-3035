@@ -4,12 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.HorizontalExtension;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SwerveDriveTeleop;
 
 import java.util.List;
 
@@ -37,16 +36,21 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-  private final Drive drive = new Drive();
+  private final Drive drive;
+  private final HorizontalExtension hExtension;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController driver =
+      new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController operator =
+      new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    drive = new Drive();
+    hExtension = new HorizontalExtension();
   }
 
   /**
@@ -63,9 +67,23 @@ public class RobotContainer {
     new Trigger(exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(exampleSubsystem));
 
+    
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driverController.b().whileTrue(exampleSubsystem.exampleMethodCommand());
+    driver.b().onTrue(drive.recalibrateHeading());
+
+    driver.a().onTrue(drive.toggleFieldOriented());
+  
+
+    drive.setDefaultCommand(new SwerveDriveTeleop(
+      drive, 
+      () -> driver.getLeftX(), 
+      () -> driver.getLeftY(), 
+      () -> driver.getRightX(),
+      drive::isFieldOriented)
+    );
+      
+      operator.a().whileTrue(hExtension.toBottom());
   }
 
   /**
