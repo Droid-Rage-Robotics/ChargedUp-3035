@@ -12,51 +12,51 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
 
-  // Visit Limelight Web interface at http://10.30.35.11:5801
-  
-  // Initialize Limelight network tables
-  private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  private NetworkTableEntry tx = table.getEntry("tx");
-  private NetworkTableEntry ty = table.getEntry("ty");
-  private NetworkTableEntry ta = table.getEntry("ta");
-  private NetworkTableEntry tv = table.getEntry("tv");
-
-  // Read initial values
-  private double x = tx.getDouble(0.0);
-  private double y = ty.getDouble(0.0);
-  private double area = ta.getDouble(0.0);
-
-  public Vision() {
-    super();
-  }
-
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
-  @Override
-  public void periodic() {
-    // Read values periodically
-    x = tx.getDouble(0.0);
-    y = ty.getDouble(0.0);
-    area = ta.getDouble(0.0);
-
-    // Post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+    // Visit Limelight Web interface at http://10.30.35.11:5801
     
-  }
+    // Initialize Limelight network tables
+    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTableEntry tx = table.getEntry("tx");
+    private NetworkTableEntry ty = table.getEntry("ty");
+    private NetworkTableEntry ta = table.getEntry("ta");
+    private NetworkTableEntry tv = table.getEntry("tv");
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+    // Read initial values
+    private double x = tx.getDouble(0.0);
+    private double y = ty.getDouble(0.0);
+    private double area = ta.getDouble(0.0);
+
+    public Vision() {
+        super();
+    }
+
+
+    /**
+     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+     *
+     * @return value of some boolean subsystem state, such as a digital sensor.
+     */
+    public boolean exampleCondition() {
+        // Query some boolean state, such as a digital sensor.
+        return false;
+    }
+
+    @Override
+    public void periodic() {
+        // Read values periodically
+        x = tx.getDouble(0.0);
+        y = ty.getDouble(0.0);
+        area = ta.getDouble(0.0);
+
+        // Post to smart dashboard periodically
+        SmartDashboard.putNumber("LimelightX", x);
+        SmartDashboard.putNumber("LimelightY", y);
+        SmartDashboard.putNumber("LimelightArea", area);
+
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+    }
 }
