@@ -22,7 +22,7 @@ public class VerticalExtension extends SubsystemBase {
     HIGH,
     INTAKE
   }
-  public static class VerticalSetPoints{
+  public static class VerticalSetPoints{//TODO: Positions
     private static int GROUND_POS = 0,
                 MID_POS = 0,
                 HIGH_POS = 0,

@@ -21,7 +21,7 @@ public class HorizontalExtension extends SubsystemBase {
     MID,
     TOP
   }
-  public static class HorizontalSetPoints{
+  public static class HorizontalSetPoints{//TODO: Positions
     private static int INTAKE_POS  = 0,
                       BOTTOM_POS = 0,
                       MID_POS = 0,

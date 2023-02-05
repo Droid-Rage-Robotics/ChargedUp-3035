@@ -7,8 +7,14 @@ package frc.robot;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HorizontalExtension;
+import frc.robot.subsystems.VerticalExtension;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.Elevator.Ground;
+import frc.robot.commands.Elevator.High;
+import frc.robot.commands.Elevator.IntakeGround;
+import frc.robot.commands.Elevator.IntakeHigh;
+import frc.robot.commands.Elevator.Mid;
 
 import java.util.List;
 
@@ -38,6 +44,7 @@ public class RobotContainer {
   private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   private final Drive drive;
   private final HorizontalExtension hExtension;
+  private final VerticalExtension vExtension;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
@@ -51,7 +58,9 @@ public class RobotContainer {
     configureBindings();
     drive = new Drive();
     hExtension = new HorizontalExtension();
+    vExtension = new VerticalExtension();
   }
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -82,9 +91,14 @@ public class RobotContainer {
       () -> driver.getRightX(),
       drive::isFieldOriented)
     );
-      
-      operator.a().whileTrue(hExtension.toBottom());
+
+    operator.rightTrigger().whileTrue(new IntakeGround(hExtension, vExtension));
+    operator.leftTrigger().whileTrue(new IntakeHigh(hExtension, vExtension));
+    operator.a().whileTrue(new Ground(hExtension, vExtension));
+    operator.x().whileTrue(new Mid(hExtension, vExtension));
+    operator.y().whileTrue(new High(hExtension, vExtension));
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

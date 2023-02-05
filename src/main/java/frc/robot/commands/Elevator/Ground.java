@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /** An example command that uses an example subsystem. */
-public class GroundIntake extends CommandBase {
+public class Ground extends CommandBase {
     private final HorizontalExtension hExtension;
     private final VerticalExtension vExtension;
 
-    public GroundIntake(HorizontalExtension hExtension, VerticalExtension vExtension) {
+    public Ground(HorizontalExtension hExtension, VerticalExtension vExtension) {
         this.hExtension = hExtension;
         this.vExtension = vExtension;
     	// Use addRequirements() here to declare subsystem dependencies.
@@ -30,7 +30,7 @@ public class GroundIntake extends CommandBase {
     public void execute() {
         //Runs Commands Parallelly
         new ParallelCommandGroup(
-            hExtension.toIntake(),
+            hExtension.toBottom(),
             vExtension.toGround()
         );
     }

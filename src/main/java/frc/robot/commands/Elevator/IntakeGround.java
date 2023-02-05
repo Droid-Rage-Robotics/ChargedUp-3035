@@ -7,18 +7,14 @@ package frc.robot.commands.Elevator;
 import frc.robot.subsystems.HorizontalExtension;
 import frc.robot.subsystems.VerticalExtension;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /** An example command that uses an example subsystem. */
-public class GroundIntake extends CommandBase {
+public class IntakeGround extends CommandBase {
     private final HorizontalExtension hExtension;
     private final VerticalExtension vExtension;
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param subsystem The subsystem used by this command.
-     */
-    public GroundIntake(HorizontalExtension hExtension, VerticalExtension vExtension) {
+    public IntakeGround(HorizontalExtension hExtension, VerticalExtension vExtension) {
         this.hExtension = hExtension;
         this.vExtension = vExtension;
     	// Use addRequirements() here to declare subsystem dependencies.
@@ -32,8 +28,11 @@ public class GroundIntake extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        hExtension.toIntake();
-        vExtension.toGround();
+        //Runs Commands Parallelly
+        new ParallelCommandGroup(
+            hExtension.toIntake(),
+            vExtension.toGround()
+        );
     }
 
     // Called once the command ends or is interrupted.
@@ -43,6 +42,6 @@ public class GroundIntake extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
