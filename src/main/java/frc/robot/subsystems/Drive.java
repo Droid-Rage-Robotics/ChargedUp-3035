@@ -38,10 +38,10 @@ public class Drive extends SubsystemBase {
             public static final double MAX_ACCELERATION_METERS_PER_SECOND = 0; //TODO: CHECK THIS
         }
         public static class FrontLeft {
-            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final int DRIVE_MOTOR_PORT = 2;
             public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final int TURN_MOTOR_PORT = 1;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
             public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
@@ -50,10 +50,10 @@ public class Drive extends SubsystemBase {
         }
 
         public static class FrontRight {
-            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final int DRIVE_MOTOR_PORT = 4;
             public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final int TURN_MOTOR_PORT = 3;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
             public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
@@ -62,10 +62,10 @@ public class Drive extends SubsystemBase {
         }
 
         public static class BackLeft {
-            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final int DRIVE_MOTOR_PORT = 8;
             public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final int TURN_MOTOR_PORT = 7;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
             public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
@@ -74,19 +74,19 @@ public class Drive extends SubsystemBase {
         }
 
         public static class BackRight {
-            public static final int DRIVE_MOTOR_PORT = 0;// TODO: change
+            public static final int DRIVE_MOTOR_PORT = 6;
             public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
 
-            public static final int TURN_MOTOR_PORT = 0;// TODO: change
+            public static final int TURN_MOTOR_PORT = 5;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
 
             public static final int ABSOLUTE_ENCODER_PORT = 0;// TODO: change
             public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
         }
 
-        public static final double TRACK_WIDTH = Units.inchesToMeters(21); // TODO: change
-        public static final double WHEEL_BASE = Units.inchesToMeters(25.5); // TODO: Change
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); 
+        public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),   // Front Right
@@ -141,7 +141,7 @@ public class Drive extends SubsystemBase {
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
-    private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private final AHRS gyro = new AHRS(SPI.Port.kMXP); //TODO: Pigeon is CAN 15
 
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
         Constants.DRIVE_KINEMATICS, 
