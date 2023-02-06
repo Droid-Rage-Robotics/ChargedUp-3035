@@ -9,7 +9,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HorizontalExtension;
 import frc.robot.subsystems.VerticalExtension;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.Drive.SlowSwerveDriveTeleop;
+import frc.robot.commands.Drive.SwerveDriveTeleop;
 import frc.robot.commands.Elevator.Ground;
 import frc.robot.commands.Elevator.High;
 import frc.robot.commands.Elevator.IntakeGround;
@@ -80,9 +81,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     driver.b().onTrue(drive.recalibrateHeading());
-
     driver.a().onTrue(drive.toggleFieldOriented());
-  
+    driver.rightBumper().onTrue(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 0.5));
+    drive.setDefaultCommand(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 1));
 
     drive.setDefaultCommand(new SwerveDriveTeleop(
       drive, 

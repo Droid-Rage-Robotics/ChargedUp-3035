@@ -117,4 +117,8 @@ public class SwerveModule {
         driveMotor.set(0);
         turnEncoder.setPosition(0);
     }
+
+    public void setHalfPower(){
+        driveMotor.set(0.5);
+    }
 }

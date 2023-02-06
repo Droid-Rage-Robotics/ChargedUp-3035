@@ -36,7 +36,7 @@ public class HorizontalExtension extends SubsystemBase {
     elevMotor = new CANSparkMax(0, MotorType.kBrushless); //TODO: change
     elevEncoder = new DutyCycleEncoder(0);
     elevMotor.setIdleMode(IdleMode.kBrake);
-    elevController = new PIDController(0, 0, 0);
+    elevController = new PIDController(0, 0, 0); //TODO: change
     elevController.setTolerance(5);
   }
 
