@@ -4,8 +4,8 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 public class DroidRageEncoder {
     private final CANCoder canCoder;
-    private double positionConversionFactor = 0; //TODO fix
-    private double velocityConversionFactor = 0; //TODO fix
+    private double positionConversionFactor = 1; //TODO fix
+    private double velocityConversionFactor = 1; //TODO fix
 
     /* Cancoder */
     /* these can be changed with canCoder.configSetCustomParam
