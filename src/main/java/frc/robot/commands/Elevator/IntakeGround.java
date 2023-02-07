@@ -31,7 +31,7 @@ public class IntakeGround extends CommandBase {
         //Runs Commands Parallelly
         new ParallelCommandGroup(
             hExtension.toIntake(),
-            vExtension.toGround()
+            vExtension.moveMid()
         );
     }
 

@@ -13,36 +13,45 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Claw extends SubsystemBase {
-  public static class ClawSetPoints{
-    private static int OPEN_POS  = 0,
-                      CLOSE_POS = 0;
-  }
-  private final CANSparkMax elevMotor;
-  private final PIDController elevController;
-  public Claw() {
-    elevMotor = new CANSparkMax(0, MotorType.kBrushless);
-    elevMotor.setIdleMode(IdleMode.kBrake);
-    elevController = new PIDController(0, 0, 0);
-    elevController.setTolerance(5);
-  }
+    protected enum Position {
+        OPEN(0),
+        CLOSE(0),
+        ;
 
-  public CommandBase openClaw() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(ClawSetPoints.OPEN_POS);
-        });
-  }
-  public CommandBase closeClaw() {
-    return runOnce(
-        () -> {
-          elevController.setSetpoint(ClawSetPoints.CLOSE_POS);
-        });
-  }
+        protected final double distance;
 
+        private Position(double distance) {
+            this.distance = distance;
+        }
+    }
+
+    private final CANSparkMax elevMotor;
+    private final PIDController elevController;
+
+    public Claw() {
+        elevMotor = new CANSparkMax(0, MotorType.kBrushless);
+        elevMotor.setIdleMode(IdleMode.kBrake);
+        elevController = new PIDController(0, 0, 0);
+        elevController.setTolerance(5);
+    }
+
+    @Override
+    public void periodic() {}
   
-  @Override
-  public void periodic() {}
+    @Override
+    public void simulationPeriodic() {}
 
-  @Override
-  public void simulationPeriodic() {}
+    private CommandBase move(Position position) {
+        return runOnce (() -> elevController.setSetpoint(position.distance));
+    }
+  
+    public CommandBase openClaw() {
+        return move(Position.OPEN);
+    }
+    public CommandBase closeClaw() {
+        return move(Position.CLOSE);
+    }
+  
+    
+    
 }

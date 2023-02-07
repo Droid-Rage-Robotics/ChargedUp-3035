@@ -233,12 +233,26 @@ public class Drive extends SubsystemBase {
         return isFieldOriented;
     }
 
-    public CommandBase toggleFieldOriented() {
-        return runOnce(() -> isFieldOriented = !isFieldOriented);
+    public void toggleFieldOriented() {
+        isFieldOriented = !isFieldOriented;
     }
 
-    public CommandBase recalibrateHeading() {
-        return runOnce(() -> resetHeading());
+    public CommandBase runToggleFieldOriented() {
+        return runOnce(this::toggleFieldOriented);
+    }
+
+    public CommandBase runResetHeading() {
+        return runOnce(this::resetHeading);
+    }
+
+    public void resetEncoders() {
+        for (SwerveModule swerveModule: swerveModules) {
+            swerveModule.resetEncoders();
+        }
+    }
+
+    public CommandBase runResetEncoders() {
+        return runOnce(this::resetEncoders);
     }
 
     

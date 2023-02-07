@@ -15,56 +15,61 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HorizontalExtension extends SubsystemBase {
-  public enum HorizontalLevel{
-    INTAKE,
-    BOTTOM,
-    MID,
-    TOP
-  }
-  public static class HorizontalSetPoints{//TODO: Positions
-    private static int INTAKE_POS  = 0,
-                      BOTTOM_POS = 0,
-                      MID_POS = 0,
-                      TOP_POS = 0;
-  }
-  private final CANSparkMax elevMotor;
-  private final DutyCycleEncoder elevEncoder;
-  private final PIDController elevController;
-  
-  /** Creates a new ExampleSubsystem. */
-  public HorizontalExtension() {
-    elevMotor = new CANSparkMax(0, MotorType.kBrushless); //TODO: change
-    elevEncoder = new DutyCycleEncoder(0);
-    elevMotor.setIdleMode(IdleMode.kBrake);
-    elevController = new PIDController(0, 0, 0); //TODO: change
-    elevController.setTolerance(5);
-  }
+    protected enum Position {
+        INTAKE(0),
+        BOTTOM(0),
+        MID(0),
+        TOP(0),
+        ;
 
- 
-  public CommandBase toIntake() {
-    return runOnce(() -> elevController.setSetpoint(HorizontalSetPoints.INTAKE_POS));
-  }
+        protected final double length_meters;
 
-  public CommandBase toBottom() {
-    return runOnce(() -> elevController.setSetpoint(HorizontalSetPoints.BOTTOM_POS));
-  }
+        private Position(double length_meters) {
+            this.length_meters = length_meters;
+        }
 
-  public CommandBase toMid() {
-    return runOnce(() -> {elevController.setSetpoint(HorizontalSetPoints.MID_POS);});
-  }
+    }
 
-  public CommandBase toTop() {
-    return runOnce(() -> elevController.setSetpoint(HorizontalSetPoints.TOP_POS));
-  }
+    private final CANSparkMax elevMotor;
+    private final DutyCycleEncoder elevEncoder;
+    private final PIDController elevController;
+    
+    /** Creates a new ExampleSubsystem. */
+    public HorizontalExtension() {
+        elevMotor = new CANSparkMax(0, MotorType.kBrushless); //TODO: change
+        elevEncoder = new DutyCycleEncoder(0);
+        elevMotor.setIdleMode(IdleMode.kBrake);
+        elevController = new PIDController(0, 0, 0); //TODO: change
+        elevController.setTolerance(5);
+    } 
+   
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Horizontal Encoder Pos", elevEncoder.get());
+    }
+   
+    @Override
+    public void simulationPeriodic() {
+        periodic();
+    }
 
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Horizontal Encoder Pos", elevEncoder.get());
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    periodic();
-  }
+    private CommandBase move(Position level) {
+        return runOnce(() -> elevController.setSetpoint(level.length_meters));
+    }
+   
+    public CommandBase toIntake() {
+        return move(Position.INTAKE);
+    }
+   
+    public CommandBase toBottom() {
+        return move(Position.BOTTOM);
+    }
+   
+    public CommandBase toMid() {
+        return move(Position.MID);
+    }
+   
+    public CommandBase toTop() {
+        return move(Position.TOP);
+    }
 }

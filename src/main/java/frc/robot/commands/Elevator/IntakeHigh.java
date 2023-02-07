@@ -31,7 +31,7 @@ public class IntakeHigh extends CommandBase {
         //Runs Commands Parallelly
         new ParallelCommandGroup(
             hExtension.toIntake(),
-            vExtension.toIntakeHigh()
+            vExtension.moveIntake()
         );
     }
 

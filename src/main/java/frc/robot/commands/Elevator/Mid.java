@@ -31,7 +31,7 @@ public class Mid extends CommandBase {
         //Runs Commands Parallelly
         new ParallelCommandGroup(
             hExtension.toMid(),
-            vExtension.toMid()
+            vExtension.moveMid()
         );
     }
 

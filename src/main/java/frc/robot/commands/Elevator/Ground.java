@@ -31,7 +31,7 @@ public class Ground extends CommandBase {
         //Runs Commands Parallelly
         new ParallelCommandGroup(
             hExtension.toBottom(),
-            vExtension.toGround()
+            vExtension.moveGround()
         );
     }
 

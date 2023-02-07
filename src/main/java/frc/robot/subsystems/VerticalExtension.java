@@ -14,63 +14,69 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class VerticalExtension extends SubsystemBase {
-  
-  public enum VerticalLevel{
-    GROUND,
-    MID,
-    HIGH,
-    INTAKE
-  }
-  public static class VerticalSetPoints{//TODO: Positions
-    private static int GROUND_POS = 0,
-                MID_POS = 0,
-                HIGH_POS = 0,
-                INTAKE_POS  = 0;
+    protected enum Position {
+        GROUND(0),
+        MID(0),
+        HIGH(0),
+        INTAKE(0),
+        ;
 
-  }
-  private final CANSparkMax elevMotor, elevMotorTwo;
-  private final DutyCycleEncoder elevEncoder;
-  private final PIDController elevController;
+        protected final double height_meters;
+
+        private Position(double hieght_meters) {
+            this.height_meters = hieght_meters;
+        }
+    }
+
+    private final CANSparkMax elevMotor, elevMotorTwo;
+    private final DutyCycleEncoder elevEncoder;
+    private final PIDController elevController;
 
     
-  public VerticalExtension() {
-    elevMotor = new CANSparkMax(0, MotorType.kBrushless);
+    public VerticalExtension() {
+        elevMotor = new CANSparkMax(0, MotorType.kBrushless);
   
-    elevEncoder = new DutyCycleEncoder(0);  //TODO: Where is it plugged in?
-    elevController = new PIDController(0, 0, 0);
-    elevController.setTolerance(5);
-    elevMotor.setIdleMode(IdleMode.kBrake);
+        elevEncoder = new DutyCycleEncoder(0);  //TODO: Where is it plugged in?
+        elevController = new PIDController(0, 0, 0);
+        elevController.setTolerance(5);
+        elevMotor.setIdleMode(IdleMode.kBrake);
 
-    elevMotorTwo = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
-    elevMotorTwo.setIdleMode(IdleMode.kBrake);
-    elevMotorTwo.follow(elevMotor, true);
+        elevMotorTwo = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
+        elevMotorTwo.setIdleMode(IdleMode.kBrake);
+        elevMotorTwo.follow(elevMotor, true);
     
-  }
+    }
 
-
-  public CommandBase toGround() {
-    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.GROUND_POS));
-  }
-  public CommandBase toMid() {
-    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.MID_POS));
-  }
-  public CommandBase toHigh() {
-    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.HIGH_POS));
-  }
-  public CommandBase toIntakeHigh() {
-    return runOnce(() -> elevController.setSetpoint(VerticalSetPoints.INTAKE_POS));
-  }
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Vertical Encoder Pos", elevEncoder.get());
+    }
   
   
+    @Override
+    public void simulationPeriodic() {
+        periodic();
+    }
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Vertical Encoder Pos", elevEncoder.get());
-  }
+    private CommandBase move(Position level) {
+        return runOnce(() -> elevController.setSetpoint(level.height_meters));
+    }
 
+    public CommandBase moveGround() {
+        return move(Position.GROUND);
+    }
 
-  @Override
-  public void simulationPeriodic() {
-  }
-}
+    public CommandBase moveMid() {
+        return move(Position.MID);
+    }
+
+    public CommandBase moveHigh() {
+        return move(Position.HIGH);
+    }
+
+    public CommandBase moveIntake() {
+        return move(Position.INTAKE);
+    }
+}  
