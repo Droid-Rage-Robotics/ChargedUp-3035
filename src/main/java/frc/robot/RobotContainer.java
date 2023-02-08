@@ -52,8 +52,8 @@ public class RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
-    private final CommandXboxController operator =
-        new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
+    // private final CommandXboxController operator =
+    //     new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -92,7 +92,7 @@ public class RobotContainer {
         // driver.rightBumper().onTrue(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 0.5));
         // drive.setDefaultCommand(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 1));
     
-        driver.a().onTrue(drive.runResetHeading());
+        driver.a().onTrue(drive.runResetEncoders());
     
         drive.setDefaultCommand(new SwerveDriveTeleop(
             drive, 
@@ -101,6 +101,12 @@ public class RobotContainer {
             driver::getRightX,
             drive::isFieldOriented)
         );
+
+        // driver.povLeft().whileTrue(drive.frontLeft());
+        // driver.povUp().whileTrue(drive.frontRight());
+        // driver.povDown().whileTrue(drive.backLeft());
+        // driver.povRight().whileTrue(drive.backRight());
+        // driver.povCenter().onTrue(drive.runStop());
     
     
         // operator.rightTrigger().whileTrue(new IntakeGround(hExtension, vExtension));

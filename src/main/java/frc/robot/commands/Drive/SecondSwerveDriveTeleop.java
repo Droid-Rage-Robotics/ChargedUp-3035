@@ -32,9 +32,9 @@ public class SecondSwerveDriveTeleop extends CommandBase {
         this.multiplier = multiplier;
         this.drive = drive;
         this.driver = driver;
-        x = driver.getLeftX()*multiplier; 
-        y = driver.getLeftY()*multiplier; 
-        turn = driver.getRightX()*multiplier;
+        x = this.driver.getLeftX()*this.multiplier; 
+        y = this.driver.getLeftY()*this.multiplier; 
+        turn = driver.getRightX()*this.multiplier;
         this.isFieldOriented = isFieldOriented;
         this.xLimiter = new SlewRateLimiter(Constants.MAX_ACCELERATION_UNITS_PER_SECOND);
         this.yLimiter = new SlewRateLimiter(Constants.MAX_ACCELERATION_UNITS_PER_SECOND);

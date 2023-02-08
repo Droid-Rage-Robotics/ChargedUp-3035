@@ -125,7 +125,8 @@ public class SwerveModule {
         turnMotor.set(0);
     }
 
-    public void setHalfPower(){
-        driveMotor.set(0.5);
+    public void set(double power){
+        // driveMotor.set(power);
+        turnMotor.set(power);
     }
 }

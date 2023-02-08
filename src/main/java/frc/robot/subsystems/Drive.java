@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import org.opencv.core.Mat;
+
+import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -39,7 +43,7 @@ public class Drive extends SubsystemBase {
         }
         public static class FrontLeft {
             public static final int DRIVE_MOTOR_PORT = 2;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 1;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
@@ -51,7 +55,7 @@ public class Drive extends SubsystemBase {
 
         public static class FrontRight {
             public static final int DRIVE_MOTOR_PORT = 4;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 3;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
@@ -63,7 +67,7 @@ public class Drive extends SubsystemBase {
 
         public static class BackLeft {
             public static final int DRIVE_MOTOR_PORT = 8;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 7;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
@@ -75,7 +79,7 @@ public class Drive extends SubsystemBase {
 
         public static class BackRight {
             public static final int DRIVE_MOTOR_PORT = 6;
-            public static final boolean DRIVE_MOTOR_REVERSED = false;// TODO: change
+            public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 5;
             public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
@@ -141,7 +145,8 @@ public class Drive extends SubsystemBase {
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
-    private final AHRS gyro = new AHRS(SPI.Port.kMXP); //TODO: Pigeon is CAN 15
+    // private final AHRS gyro = new AHRS(SPI.Port.kMXP); //TODO: Pigeon is CAN 15
+    private final Pigeon2 pigeon2 = new Pigeon2(15);
 
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
         Constants.DRIVE_KINEMATICS, 
@@ -149,13 +154,15 @@ public class Drive extends SubsystemBase {
         getModulePositions()
     );
 
-    private volatile boolean isFieldOriented = true;
+    private volatile boolean isFieldOriented = true; //TODO:CHSNGE!!
 
     public Drive() {
 
+        
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
+                // pigeon2.configMountPose(AxisDirection.NegativeZ, AxisDirection.PositiveZ);
                 resetHeading();
             } catch (Exception ignoredException) {
                 // TODO: add an error message or something here if possible
@@ -180,6 +187,11 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Front Right Turn Encoder Radians", frontRight.getTurnEncoderRad());
         SmartDashboard.putNumber("Back Left Turn Encoder Radians", backLeft.getTurnEncoderRad());
         SmartDashboard.putNumber("Back Right Turn Encoder Radians", backRight.getTurnEncoderRad());
+
+        SmartDashboard.putNumber("Front Left Drive Encoder Meters", frontLeft.getDrivePos());
+        SmartDashboard.putNumber("Front Right Drive Encoder Meters", frontRight.getDrivePos());
+        SmartDashboard.putNumber("Back Left Drive Encoder Meters", backLeft.getDrivePos());
+        SmartDashboard.putNumber("Back Right Drive Encoder Meters", backRight.getDrivePos());
     }
 
     @Override
@@ -188,11 +200,13 @@ public class Drive extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        // return Math.IEEEremainder(gyro.getAngle(), 360);
+        return Math.IEEEremainder(pigeon2.getYaw(), 360);
     }
     
     public void resetHeading() {
-        gyro.reset();
+        // gyro.reset();
+        pigeon2.configMountPose(POWER, POWER, POWER, 0);
     }
 
     public Rotation2d getRotation2d() {
@@ -253,6 +267,26 @@ public class Drive extends SubsystemBase {
 
     public CommandBase runResetEncoders() {
         return runOnce(this::resetEncoders);
+    }
+
+    private static final double POWER = 0.1;
+
+    public CommandBase frontLeft() {
+        return runOnce(() -> frontLeft.set(POWER));
+    }
+
+    public CommandBase frontRight() {
+        return runOnce(() -> frontRight.set(POWER));
+    }
+    public CommandBase backLeft() {
+        return runOnce(() -> backLeft.set(POWER));
+    }
+    public CommandBase backRight() {
+        return runOnce(() -> backRight.set(POWER));
+    }
+
+    public CommandBase runStop() {
+        return runOnce(this::stop);
     }
 
     
