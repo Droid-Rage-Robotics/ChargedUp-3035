@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.DroidRageConstants;
@@ -15,8 +16,8 @@ public class SwerveDriveTeleop extends CommandBase {
         public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;
         public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;
         
-        public static final double MAX_SPEED_METERS_PER_SECOND = SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
-        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND= SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 4;
+        public static final double MAX_SPEED_METERS_PER_SECOND = SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 2;
+        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND= SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 2;
     }
 
     private final Drive drive;
@@ -30,6 +31,8 @@ public class SwerveDriveTeleop extends CommandBase {
         this.x = x;
         this.y = y;
         this.turn = turn;
+        double tempTurn = turn.get();
+        SmartDashboard.putNumber("first turn", tempTurn);
         this.isFieldOriented = isFieldOriented;
         this.xLimiter = new SlewRateLimiter(Constants.MAX_ACCELERATION_UNITS_PER_SECOND);
         this.yLimiter = new SlewRateLimiter(Constants.MAX_ACCELERATION_UNITS_PER_SECOND);
@@ -48,14 +51,17 @@ public class SwerveDriveTeleop extends CommandBase {
         double xSpeed = x.get();
         double ySpeed = y.get();
         double turnSpeed = turn.get();
+        SmartDashboard.putNumber("turnspeed", turnSpeed);
 
         xSpeed = Math.abs(xSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? ySpeed : 0.0;
         turnSpeed = Math.abs(turnSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? turnSpeed : 0.0;
+        SmartDashboard.putNumber("turnspeed absolute", turnSpeed);
 
         xSpeed = xLimiter.calculate(xSpeed) * Constants.MAX_SPEED_METERS_PER_SECOND;
         ySpeed = yLimiter.calculate(ySpeed) * Constants.MAX_SPEED_METERS_PER_SECOND;
         turnSpeed = turnLimiter.calculate(turnSpeed) * Constants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND;
+        SmartDashboard.putNumber("turnspeed turnlimiter", turnSpeed);
 
         ChassisSpeeds chassisSpeeds;
         if (isFieldOriented.get()) {
@@ -67,7 +73,7 @@ public class SwerveDriveTeleop extends CommandBase {
         }
 
         SwerveModuleState[] states = Drive.Constants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-
+        SmartDashboard.putNumber("setPower", turnSpeed);
         drive.setModuleStates(states);
     }
 

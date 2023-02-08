@@ -5,34 +5,10 @@
 package frc.robot;
 
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.HorizontalExtension;
-import frc.robot.subsystems.VerticalExtension;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Drive.SlowSwerveDriveTeleop;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
-import frc.robot.commands.Elevator.Ground;
-import frc.robot.commands.Elevator.High;
-import frc.robot.commands.Elevator.IntakeGround;
-import frc.robot.commands.Elevator.IntakeHigh;
-import frc.robot.commands.Elevator.Mid;
-
-import java.util.List;
-
-import com.ctre.phoenix.sensors.CANCoder;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -93,7 +69,10 @@ public class RobotContainer {
         // drive.setDefaultCommand(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 1));
     
         driver.a().onTrue(drive.runResetEncoders());
+        driver.b().onTrue(drive.runResetHeading());
+        driver.y().onTrue(drive.runToggleFieldOriented());
     
+        SmartDashboard.putNumber("driver value", driver.getRightX());
         drive.setDefaultCommand(new SwerveDriveTeleop(
             drive, 
             driver::getLeftX, 
