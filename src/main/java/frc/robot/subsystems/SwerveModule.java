@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
@@ -30,7 +31,7 @@ public class SwerveModule {
     private final CANSparkMax driveMotor;
     private final CANSparkMax turnMotor;
 
-    // private final DroidRageEncoder turnEncoder;
+    private final DroidRageEncoder turnEncoder;
     // turnEncoder.getAbosolutePosition();
     
     private final PIDController turningPidController;
@@ -44,7 +45,7 @@ public class SwerveModule {
         
         this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
-        // turnEncoder = new DroidRageEncoder(absoluteEncoderId);
+        turnEncoder = new DroidRageEncoder(absoluteEncoderId);
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
@@ -54,11 +55,12 @@ public class SwerveModule {
 
         driveMotor.getEncoder().setPositionConversionFactor(Constants.DRIVE_ENCODER_ROT_2_METER);
         driveMotor.getEncoder().setVelocityConversionFactor(Constants.DRIVE_ENCODER_RPM_2_METER_PER_SEC);
-        // turnEncoder.setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
-        // turnEncoder.setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
 
-        turnMotor.getEncoder().setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
-        turnMotor.getEncoder().setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
+        turnEncoder.setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
+        turnEncoder.setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
+
+        // turnMotor.getEncoder().setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
+        // turnMotor.getEncoder().setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
 
         turningPidController = new PIDController(Constants.TURN_P, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -71,8 +73,8 @@ public class SwerveModule {
     }
 
     public double getTurningPosition() {
-        // return turnEncoder.getPosition();
-        return turnMotor.getEncoder().getPosition();
+        return turnEncoder.getPosition();
+        // return turnMotor.getEncoder().getPosition();
     }
 
     public double getDriveVelocity(){
@@ -80,24 +82,24 @@ public class SwerveModule {
     }
 
     public double getTurningVelocity(){
-        // return turnEncoder.getVelocity();
-        return turnMotor.getEncoder().getVelocity();
+        return turnEncoder.getVelocity();
+        // return turnMotor.getEncoder().getVelocity();
     }
 
     public double getTurnEncoderRad() {
-        // double angle = turnEncoder.getVoltage() / RobotController.getVoltage5V();
-        // angle *= 2.0 * Math.PI;
-        // angle -= absoluteEncoderOffsetRad;
-        // if (absoluteEncoderReversed) angle = -angle;
+        double angle = turnEncoder.getVoltage() / RobotController.getVoltage5V();
+        angle *= 2.0 * Math.PI;
+        angle -= absoluteEncoderOffsetRad;
+        if (absoluteEncoderReversed) angle = -angle;
 
-        // return angle;
-        return getTurningPosition();
+        return angle;
+        // return getTurningPosition();
     }
     
     public void resetEncoders(){
         driveMotor.getEncoder().setPosition(0);
-        // turnEncoder.setPosition(getTurnEncoderRad());
-        turnMotor.getEncoder().setPosition(0);
+        turnEncoder.setPosition(getTurnEncoderRad());
+        // turnMotor.getEncoder().setPosition(0);
     }
 
     public SwerveModulePosition getPosition() {

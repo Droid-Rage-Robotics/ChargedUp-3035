@@ -183,15 +183,20 @@ public class Drive extends SubsystemBase {
         
         SmartDashboard.putBoolean("Robot is Field Oriented", isFieldOriented);
 
-        SmartDashboard.putNumber("Front Left Turn Encoder Radians", frontLeft.getTurnEncoderRad());
-        SmartDashboard.putNumber("Front Right Turn Encoder Radians", frontRight.getTurnEncoderRad());
-        SmartDashboard.putNumber("Back Left Turn Encoder Radians", backLeft.getTurnEncoderRad());
-        SmartDashboard.putNumber("Back Right Turn Encoder Radians", backRight.getTurnEncoderRad());
+        SmartDashboard.putNumber("Front Left Turn Distance", frontLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Front Right Turn Distance", frontRight.getTurnEncoderRad());
+        SmartDashboard.putNumber("Back Left Turn Distance", backLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Back Right Turn Distance", backRight.getTurningPosition());
 
-        SmartDashboard.putNumber("Front Left Drive Encoder Meters", frontLeft.getDrivePos());
-        SmartDashboard.putNumber("Front Right Drive Encoder Meters", frontRight.getDrivePos());
-        SmartDashboard.putNumber("Back Left Drive Encoder Meters", backLeft.getDrivePos());
-        SmartDashboard.putNumber("Back Right Drive Encoder Meters", backRight.getDrivePos());
+        SmartDashboard.putNumber("Front Left Turn Angle Radians", frontLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Front Right Turn Angle Radians", frontRight.getTurnEncoderRad());
+        SmartDashboard.putNumber("Back Left Turn Angle Radians", backLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Back Right Turn Angle Radians", backRight.getTurnEncoderRad());
+
+        SmartDashboard.putNumber("Front Left Drive Distance Meters", frontLeft.getDrivePos());
+        SmartDashboard.putNumber("Front Right Drive Distance Meters", frontRight.getDrivePos());
+        SmartDashboard.putNumber("Back Left Drive Distance Meters", backLeft.getDrivePos());
+        SmartDashboard.putNumber("Back Right Drive Distance Meters", backRight.getDrivePos());
     }
 
     @Override
