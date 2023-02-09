@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix.sensors.SensorTimeBase;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -9,9 +14,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SwerveModuleWOCan {
+public class SwerveModuleAbsolute {
     public static class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
         public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.75;
@@ -19,8 +25,7 @@ public class SwerveModuleWOCan {
 
         public static final double DRIVE_ENCODER_ROT_2_METER = DRIVE_MOTOR_GEAR_RATIO * Math.PI * WHEEL_DIAMETER_METERS;
         public static final double DRIVE_ENCODER_RPM_2_METER_PER_SEC = DRIVE_ENCODER_ROT_2_METER / 60;
-        public static final double TURN_ENCODER_ROT_2_RAD = TURN_MOTOR_GEAR_RATIO * 2 * Math.PI;
-        public static final double TURN_ENCODER_RPM_2_RAD_PER_SEC = TURN_ENCODER_ROT_2_RAD / 60;
+        public static final double TURN_ENCODER_ROT_2_RAD = 2 * Math.PI / 4096.0;
 
         public static final double TURN_P = 0.5;
 
@@ -30,14 +35,29 @@ public class SwerveModuleWOCan {
 
     private final CANSparkMax driveMotor;
     private final CANSparkMax turnMotor;
-    private final double resetPosition;
+
+    private final double absoluteEncoderOffsetRad;
+
+    private final CANCoder turnEncoder;
+
     private final PIDController turningPidController;
 
-    public SwerveModuleWOCan(int driveMotorId, int turnMotorId, double resetPosition, boolean driveMotorReversed, boolean turningMotorReversed) {
+    public SwerveModuleAbsolute(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
+            int absoluteEncoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
+        
+        this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
+
+        turnEncoder = new CANCoder(absoluteEncoderId);
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition; // TODO: change to absolute eventually
+        config.sensorDirection = absoluteEncoderReversed;
+        config.sensorCoefficient = Constants.TURN_ENCODER_ROT_2_RAD; // cancoder reads in radians
+        config.unitString = "rad";
+        config.sensorTimeBase = SensorTimeBase.PerSecond;
+        turnEncoder.configAllSettings(config);
+
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
-
-        this.resetPosition = resetPosition;
 
         driveMotor.setInverted(driveMotorReversed);
         turnMotor.setInverted(turningMotorReversed);
@@ -45,13 +65,12 @@ public class SwerveModuleWOCan {
         driveMotor.getEncoder().setPositionConversionFactor(Constants.DRIVE_ENCODER_ROT_2_METER);
         driveMotor.getEncoder().setVelocityConversionFactor(Constants.DRIVE_ENCODER_RPM_2_METER_PER_SEC);
 
-        turnMotor.getEncoder().setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
-        turnMotor.getEncoder().setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
+
 
         turningPidController = new PIDController(Constants.TURN_P, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
-        resetEncoders();
+        resetDriveEncoder();
     }
 
     public double getDrivePos() {
@@ -59,7 +78,7 @@ public class SwerveModuleWOCan {
     }
 
     public double getTurningPosition() {
-        return turnMotor.getEncoder().getPosition();
+        return turnEncoder.getAbsolutePosition() + absoluteEncoderOffsetRad;
     }
 
     public double getDriveVelocity(){
@@ -67,16 +86,15 @@ public class SwerveModuleWOCan {
     }
 
     public double getTurningVelocity(){
-        return turnMotor.getEncoder().getVelocity();
+        return turnEncoder.getVelocity();
     }
 
     public double getTurnEncoderRad() {
         return getTurningPosition();
     }
     
-    public void resetEncoders(){
+    public void resetDriveEncoder(){
         driveMotor.getEncoder().setPosition(0);
-        turnMotor.getEncoder().setPosition(resetPosition);
     }
 
     public SwerveModulePosition getPosition() {
@@ -103,13 +121,7 @@ public class SwerveModuleWOCan {
         driveMotor.set(0);
         turnMotor.set(0);
     }
-
-    public void set(double power){
-        driveMotor.set(power);
-        // turnMotor.set(power);
-    }
-
-    public void breakMode() {
+    public void coastMode() {
         driveMotor.setIdleMode(IdleMode.kCoast);
         turnMotor.setIdleMode(IdleMode.kCoast);
     }

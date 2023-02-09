@@ -9,10 +9,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SwerveModuleWCan {
+public class SwerveModuleRelative {
     public static class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
         public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.75;
@@ -31,24 +30,9 @@ public class SwerveModuleWCan {
 
     private final CANSparkMax driveMotor;
     private final CANSparkMax turnMotor;
-    // private final double resetPosition;//TODO:Keep or NO Keep
-
-    private final DroidRageEncoder turnEncoder;
-    // turnEncoder.getAbosolutePosition();
-    
     private final PIDController turningPidController;
 
-    // private final AnalogInput 
-    private final boolean absoluteEncoderReversed;
-    private final double absoluteEncoderOffsetRad;   //TODO:UNDO
-
-    public SwerveModuleWCan(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
-            int absoluteEncoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
-        
-        this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
-        this.absoluteEncoderReversed = absoluteEncoderReversed;
-        turnEncoder = new DroidRageEncoder(absoluteEncoderId);
-
+    public SwerveModuleRelative(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed) {
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
 
@@ -58,8 +42,8 @@ public class SwerveModuleWCan {
         driveMotor.getEncoder().setPositionConversionFactor(Constants.DRIVE_ENCODER_ROT_2_METER);
         driveMotor.getEncoder().setVelocityConversionFactor(Constants.DRIVE_ENCODER_RPM_2_METER_PER_SEC);
 
-        turnEncoder.setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
-        turnEncoder.setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
+        turnMotor.getEncoder().setPositionConversionFactor(Constants.TURN_ENCODER_ROT_2_RAD);
+        turnMotor.getEncoder().setVelocityConversionFactor(Constants.TURN_ENCODER_RPM_2_RAD_PER_SEC);
 
         turningPidController = new PIDController(Constants.TURN_P, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -72,29 +56,24 @@ public class SwerveModuleWCan {
     }
 
     public double getTurningPosition() {
-        return turnEncoder.getPosition();
+        return turnMotor.getEncoder().getPosition();
     }
 
     public double getDriveVelocity(){
-        return turnEncoder.getVelocity();
+        return driveMotor.getEncoder().getVelocity();
     }
 
     public double getTurningVelocity(){
-        return turnEncoder.getVelocity();
+        return turnMotor.getEncoder().getVelocity();
     }
 
     public double getTurnEncoderRad() {
-        double angle = turnEncoder.getVoltage() / RobotController.getVoltage5V();
-        angle *= 2.0 * Math.PI;
-        angle -= absoluteEncoderOffsetRad;
-        if (absoluteEncoderReversed) angle = -angle;
-
-        return angle;
+        return getTurningPosition();
     }
     
     public void resetEncoders(){
         driveMotor.getEncoder().setPosition(0);
-        turnEncoder.setPosition(getTurnEncoderRad());
+        turnMotor.getEncoder().setPosition(Math.PI / 2);
     }
 
     public SwerveModulePosition getPosition() {
@@ -122,13 +101,13 @@ public class SwerveModuleWCan {
         turnMotor.set(0);
     }
 
-    public void set(double power){
-        driveMotor.set(power);
-        // turnMotor.set(power);
+    public void coastMode() {
+        driveMotor.setIdleMode(IdleMode.kCoast);
+        turnMotor.setIdleMode(IdleMode.kCoast);
     }
 
     public void breakMode() {
-        driveMotor.setIdleMode(IdleMode.kCoast);
-        turnMotor.setIdleMode(IdleMode.kCoast);
+        driveMotor.setIdleMode(IdleMode.kBrake);
+        turnMotor.setIdleMode(IdleMode.kBrake);
     }
 }

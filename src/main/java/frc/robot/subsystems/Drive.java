@@ -18,12 +18,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase {
     public static class Constants {
+
+        /* Autonomous Constants */
         public static class Auto {
             public static final double MAX_SPEED_METERS_PER_SECOND = 
-                SwerveModuleWOCan.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
+                SwerveModuleRelative.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
 
             public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
-                SwerveModuleWOCan.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
+                SwerveModuleRelative.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
 
             public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
             public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
@@ -37,114 +39,127 @@ public class Drive extends SubsystemBase {
 
             public static final double MAX_ACCELERATION_METERS_PER_SECOND = 0; //TODO: CHECK THIS
         }
+
+        private static enum Speed {
+            TURBO(1),
+            NORMAL(0.9),
+            SLOW(0.5),
+            ;
+
+            private volatile double speed;
+
+            private Speed(double speed) {
+                this.speed = speed;
+            } 
+        }
+
+
+
+
         public static class FrontLeft {
-            public static final int DRIVE_MOTOR_PORT = 2;
+            public static final int DRIVE_MOTOR_PORT = 62; //2
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 1;
-            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
+            public static final int TURN_MOTOR_PORT = 61; //1
+            public static final boolean TURN_MOTOR_REVERSED = false;
 
-            public static final int ABSOLUTE_ENCODER_PORT = 11;// TODO: change
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
+            public static final int ABSOLUTE_ENCODER_PORT = 11;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -1.24;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
         }
 
         public static class FrontRight {
-            public static final int DRIVE_MOTOR_PORT = 4;
+            public static final int DRIVE_MOTOR_PORT = 60; // 4
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 3;
-            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
+            public static final int TURN_MOTOR_PORT = 59; //3
+            public static final boolean TURN_MOTOR_REVERSED = false;
 
-            public static final int ABSOLUTE_ENCODER_PORT = 12;// TODO: change
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
+            public static final int ABSOLUTE_ENCODER_PORT = 12;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -2.26;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
         }
 
         public static class BackLeft {
-            public static final int DRIVE_MOTOR_PORT = 8;
+            public static final int DRIVE_MOTOR_PORT = 58; //8
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 7;
-            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
+            public static final int TURN_MOTOR_PORT = 57; //7
+            public static final boolean TURN_MOTOR_REVERSED = false;
 
-            public static final int ABSOLUTE_ENCODER_PORT = 14;// TODO: change
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
+            public static final int ABSOLUTE_ENCODER_PORT = 14;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -0.99;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
         }
 
         public static class BackRight {
-            public static final int DRIVE_MOTOR_PORT = 6;
+            public static final int DRIVE_MOTOR_PORT = 56; //6
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 5;
-            public static final boolean TURN_MOTOR_REVERSED = false;// TODO: change
+            public static final int TURN_MOTOR_PORT = 55; //5
+            public static final boolean TURN_MOTOR_REVERSED = false;
 
-            public static final int ABSOLUTE_ENCODER_PORT = 13;// TODO: change
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0;// TODO: change
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = false;// TODO: change
+            public static final int ABSOLUTE_ENCODER_PORT = 13;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -1.74;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
         }
 
         public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); 
         public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left
-            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right
-            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2), // Back Left
-            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2)   // Back Right
+            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left --
+            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
+            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2), // Back Left -+
+            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2)   // Back Right ++
         );
     }
 
-    private final SwerveModuleWOCan frontLeft = new SwerveModuleWOCan(
+    private final SwerveModuleAbsolute frontLeft = new SwerveModuleAbsolute(
         Constants.FrontLeft.DRIVE_MOTOR_PORT,
-        Constants.FrontLeft.TURN_MOTOR_PORT, 
-        Math.PI / 2,
+        Constants.FrontLeft.TURN_MOTOR_PORT,
 
         Constants.FrontLeft.DRIVE_MOTOR_REVERSED, 
-        Constants.FrontLeft.TURN_MOTOR_REVERSED
+        Constants.FrontLeft.TURN_MOTOR_REVERSED,
 
-        // Constants.FrontLeft.ABSOLUTE_ENCODER_PORT, 
-        // Constants.FrontLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        // Constants.FrontLeft.ABOSLUTE_ENCODER_REVERSED
+        Constants.FrontLeft.ABSOLUTE_ENCODER_PORT, 
+        Constants.FrontLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        Constants.FrontLeft.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleWOCan frontRight = new SwerveModuleWOCan(
+    private final SwerveModuleAbsolute frontRight = new SwerveModuleAbsolute(
         Constants.FrontRight.DRIVE_MOTOR_PORT,
-        Constants.FrontRight.TURN_MOTOR_PORT, 
-        Math.PI / 2,
+        Constants.FrontRight.TURN_MOTOR_PORT,
 
         Constants.FrontRight.DRIVE_MOTOR_REVERSED, 
-        Constants.FrontRight.TURN_MOTOR_REVERSED
+        Constants.FrontRight.TURN_MOTOR_REVERSED,
 
-        // Constants.FrontRight.ABSOLUTE_ENCODER_PORT, 
-        // Constants.FrontRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        // Constants.FrontRight.ABOSLUTE_ENCODER_REVERSED
+        Constants.FrontRight.ABSOLUTE_ENCODER_PORT, 
+        Constants.FrontRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        Constants.FrontRight.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleWOCan backLeft = new SwerveModuleWOCan(
+    private final SwerveModuleAbsolute backLeft = new SwerveModuleAbsolute(
         Constants.BackLeft.DRIVE_MOTOR_PORT,
-        Constants.BackLeft.TURN_MOTOR_PORT, 
-        Math.PI / 2,
+        Constants.BackLeft.TURN_MOTOR_PORT,
 
         Constants.BackLeft.DRIVE_MOTOR_REVERSED, 
-        Constants.BackLeft.TURN_MOTOR_REVERSED
+        Constants.BackLeft.TURN_MOTOR_REVERSED,
 
-        // Constants.BackLeft.ABSOLUTE_ENCODER_PORT, 
-        // Constants.BackLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        // Constants.BackLeft.ABOSLUTE_ENCODER_REVERSED
+        Constants.BackLeft.ABSOLUTE_ENCODER_PORT, 
+        Constants.BackLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        Constants.BackLeft.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleWOCan backRight = new SwerveModuleWOCan(
+    private final SwerveModuleAbsolute backRight = new SwerveModuleAbsolute(
         Constants.BackRight.DRIVE_MOTOR_PORT,
-        Constants.BackRight.TURN_MOTOR_PORT, 
-        Math.PI / 2,
+        Constants.BackRight.TURN_MOTOR_PORT,
         
 
         Constants.BackRight.DRIVE_MOTOR_REVERSED, 
-        Constants.BackRight.TURN_MOTOR_REVERSED
+        Constants.BackRight.TURN_MOTOR_REVERSED,
 
-        // Constants.BackRight.ABSOLUTE_ENCODER_PORT, 
-        // Constants.BackRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        // Constants.BackRight.ABOSLUTE_ENCODER_REVERSED
+        Constants.BackRight.ABSOLUTE_ENCODER_PORT, 
+        Constants.BackRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        Constants.BackRight.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleWOCan[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
+    private final SwerveModuleAbsolute[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
     // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final Pigeon2 pigeon2 = new Pigeon2(15);
@@ -155,25 +170,17 @@ public class Drive extends SubsystemBase {
         getModulePositions()
     );
 
-    private volatile boolean isFieldOriented = true; //TODO:CHSNGE!!
+    private volatile boolean isFieldOriented = true;
+    private volatile double speedMultiplier = 1.0;
+
 
     public Drive() {
         //TODO: Make sure IMU RESETS
-        for (SwerveModuleWOCan swerveModule: swerveModules) {
-            swerveModule.breakMode();
+        for (SwerveModuleAbsolute swerveModule: swerveModules) {
+            swerveModule.coastMode();
         }
 
         pigeon2.configMountPose(AxisDirection.NegativeX, AxisDirection.PositiveZ);
-        // new Thread(() -> {
-        //     try {
-        //         Thread.sleep(1000);
-        //         resetHeading();
-        //     } catch (Exception ignoredException) {
-        //         // TODO: add an error message or something here if possible
-        //     }
-        // }).start();
-
-
     }
 
     @Override
@@ -209,7 +216,7 @@ public class Drive extends SubsystemBase {
         periodic();
     }
 
-    private double headingOffset = 0;
+    private double headingOffset = -90;
 
     public double getHeading() {
         // return Math.IEEEremainder(gyro.getAngle(), 360);
@@ -236,13 +243,13 @@ public class Drive extends SubsystemBase {
     }
 
     public void stop() {
-        for (SwerveModuleWOCan swerveModule: swerveModules) {
+        for (SwerveModuleAbsolute swerveModule: swerveModules) {
             swerveModule.stop();
         }
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModuleWOCan.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModuleAbsolute.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
         for (int i = 0; i < 4; i++) {
             swerveModules[i].setState(states[i]);
         }
@@ -261,49 +268,29 @@ public class Drive extends SubsystemBase {
         return isFieldOriented;
     }
 
-    public void toggleFieldOriented() {
-        isFieldOriented = !isFieldOriented;
+    public double getSpeedMultiplier() {
+        return speedMultiplier;
     }
 
+    // public 
+
     public CommandBase runToggleFieldOriented() {
-        return runOnce(this::toggleFieldOriented);
+        return runOnce(() -> isFieldOriented = !isFieldOriented);
     }
 
     public CommandBase runResetHeading() {
         return runOnce(this::resetHeading);
     }
 
-    public void resetEncoders() {
-        for (SwerveModuleWOCan swerveModule: swerveModules) {
-            swerveModule.resetEncoders();
-        }
-    }
-
-    public CommandBase runResetEncoders() {
-        return runOnce(this::resetEncoders);
-    }
-
-    private static final double POWER = 0.1;
-
-    public CommandBase frontLeft() {
-        return runOnce(() -> frontLeft.set(POWER));
-    }
-
-    public CommandBase frontRight() {
-        return runOnce(() -> frontRight.set(POWER));
-    }
-    public CommandBase backLeft() {
-        return runOnce(() -> backLeft.set(POWER));
-    }
-    public CommandBase backRight() {
-        return runOnce(() -> backRight.set(POWER));
+    public CommandBase resetEncoders() {
+        return runOnce(() -> {
+            for (SwerveModuleAbsolute swerveModule: swerveModules) {
+                swerveModule.resetDriveEncoder();
+            }
+        });
     }
 
     public CommandBase runStop() {
         return runOnce(this::stop);
     }
-
-    
-    
-        
 }

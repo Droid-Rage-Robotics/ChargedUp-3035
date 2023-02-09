@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.DroidRageConstants;
 
 public class VerticalExtension extends SubsystemBase {
     protected enum Position {
-        GROUND(0),
+        GROUND(DroidRageConstants.getNumber("VE_GROUND", 0)),
         MID(0),
         HIGH(0),
         INTAKE(0),

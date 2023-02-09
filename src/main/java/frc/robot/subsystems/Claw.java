@@ -18,21 +18,21 @@ public class Claw extends SubsystemBase {
         CLOSE(0),
         ;
 
-        protected final double distance;
+        protected final double angleDegrees;
 
-        private Position(double distance) {
-            this.distance = distance;
+        private Position(double angleDegrees) {
+            this.angleDegrees = angleDegrees;
         }
     }
 
-    private final CANSparkMax elevMotor;
-    private final PIDController elevController;
+    private final CANSparkMax elevatorMotor;
+    private final PIDController elevatorController;
 
     public Claw() {
-        elevMotor = new CANSparkMax(0, MotorType.kBrushless);
-        elevMotor.setIdleMode(IdleMode.kBrake);
-        elevController = new PIDController(0, 0, 0);
-        elevController.setTolerance(5);
+        elevatorMotor = new CANSparkMax(0, MotorType.kBrushless);
+        elevatorMotor.setIdleMode(IdleMode.kBrake);
+        elevatorController = new PIDController(0, 0, 0);
+        elevatorController.setTolerance(5);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Claw extends SubsystemBase {
     public void simulationPeriodic() {}
 
     private CommandBase move(Position position) {
-        return runOnce (() -> elevController.setSetpoint(position.distance));
+        return runOnce (() -> elevatorController.setSetpoint(position.angleDegrees));
     }
   
     public CommandBase openClaw() {

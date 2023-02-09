@@ -68,9 +68,8 @@ public class RobotContainer {
         // driver.rightBumper().onTrue(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 0.5));
         // drive.setDefaultCommand(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 1));
     
-        driver.a().onTrue(drive.runResetEncoders());
-        driver.b().onTrue(drive.runResetHeading());
-        driver.y().onTrue(drive.runToggleFieldOriented());
+        driver.a().onTrue(drive.runResetHeading());
+        driver.back().onTrue(drive.runToggleFieldOriented());
     
         SmartDashboard.putNumber("driver value", driver.getRightX());
         drive.setDefaultCommand(new SwerveDriveTeleop(
