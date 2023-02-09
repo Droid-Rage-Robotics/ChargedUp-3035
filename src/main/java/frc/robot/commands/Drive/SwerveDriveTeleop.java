@@ -49,7 +49,7 @@ public class SwerveDriveTeleop extends CommandBase {
     @Override
     public void execute() {
         double xSpeed = x.get();
-        double ySpeed = y.get();
+        double ySpeed = -y.get();
         double turnSpeed = turn.get();
         SmartDashboard.putNumber("xSpeed", xSpeed);
         SmartDashboard.putNumber("ySpeed", ySpeed);
