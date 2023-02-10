@@ -170,7 +170,7 @@ public class Drive extends SubsystemBase {
 
     private volatile boolean isFieldOriented = true;
     private volatile double speedMultiplier = 1.0;
-
+    private volatile double headingOffset = -90;
 
     public Drive() {
         //TODO: Make sure IMU RESETS
@@ -193,9 +193,9 @@ public class Drive extends SubsystemBase {
         
         SmartDashboard.putBoolean("Robot is Field Oriented", isFieldOriented);
 
-        SmartDashboard.putNumber("Front Left Turn Distance", frontLeft.getTurnEncoderRad());
-        SmartDashboard.putNumber("Front Right Turn Distance", frontRight.getTurnEncoderRad());
-        SmartDashboard.putNumber("Back Left Turn Distance", backLeft.getTurnEncoderRad());
+        SmartDashboard.putNumber("Front Left Turn Distance", frontLeft.getTurningPosition());
+        SmartDashboard.putNumber("Front Right Turn Distance", frontRight.getTurningPosition());
+        SmartDashboard.putNumber("Back Left Turn Distance", backLeft.getTurningPosition());
         SmartDashboard.putNumber("Back Right Turn Distance", backRight.getTurningPosition());
 
         SmartDashboard.putNumber("Front Left Turn Angle Radians", frontLeft.getTurnEncoderRad());
@@ -214,18 +214,18 @@ public class Drive extends SubsystemBase {
         periodic();
     }
 
-    private double headingOffset = -90;
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+    }
 
     public double getHeading() {
         // return Math.IEEEremainder(gyro.getAngle(), 360);
         return Math.IEEEremainder(-pigeon2.getYaw(), 360) - headingOffset;
-    }
-    
-    public void resetHeading() {
-        headingOffset += getHeading();
-        // gyro.reset();
-        // pigeon2.zeroGyroBiasNow();
-        // pigeon2.setYaw(0);
     }
 
     public Rotation2d getRotation2d() {
@@ -240,10 +240,16 @@ public class Drive extends SubsystemBase {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
-    public void stop() {
-        for (SwerveModule swerveModule: swerveModules) {
-            swerveModule.stop();
-        }
+    public boolean isFieldOriented() {
+        return isFieldOriented;
+    }
+
+    public double getSpeedMultiplier() {
+        return speedMultiplier;
+    }
+
+    public double getHeadingOffset() {
+        return headingOffset;
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
@@ -253,31 +259,10 @@ public class Drive extends SubsystemBase {
         }
     }
 
-    public SwerveModulePosition[] getModulePositions() {
-        return new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
-        };
-    }
-
-    public boolean isFieldOriented() {
-        return isFieldOriented;
-    }
-
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
-    }
-
-    // public 
-
-    public CommandBase runToggleFieldOriented() {
-        return runOnce(() -> isFieldOriented = !isFieldOriented);
-    }
-
-    public CommandBase runResetHeading() {
-        return runOnce(this::resetHeading);
+    public void stop() {
+        for (SwerveModule swerveModule: swerveModules) {
+            swerveModule.stop();
+        }
     }
 
     public CommandBase resetEncoders() {
@@ -288,7 +273,16 @@ public class Drive extends SubsystemBase {
         });
     }
 
+    public CommandBase resetHeading() {
+        return runOnce(() -> headingOffset += getHeading());
+    }
+
+    public CommandBase toggleFieldOriented() {
+        return runOnce(() -> isFieldOriented = !isFieldOriented);
+    }
+
     public CommandBase runStop() {
         return runOnce(this::stop);
     }
+    
 }

@@ -120,6 +120,7 @@ public class SwerveModule {
         driveMotor.set(0);
         turnMotor.set(0);
     }
+    
     public void coastMode() {
         driveMotor.setIdleMode(IdleMode.kCoast);
         turnMotor.setIdleMode(IdleMode.kCoast);

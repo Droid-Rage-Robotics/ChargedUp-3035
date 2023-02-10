@@ -7,17 +7,18 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.SwerveModule;
 import frc.robot.DroidRageConstants;
-import frc.robot.subsystems.SwerveModuleRelative;
 
 public class SwerveDriveTeleop extends CommandBase {
     public static class Constants {
         public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;
         public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;
         
-        public static final double MAX_SPEED_METERS_PER_SECOND = SwerveModuleRelative.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 2;
-        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND= SwerveModuleRelative.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 2;
+        public static final double MAX_SPEED_METERS_PER_SECOND = SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 2;
+        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND= SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 2;
     }
 
     private final Drive drive;

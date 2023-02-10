@@ -12,50 +12,21 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     // private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-    private final Drive drive;
+    private final Drive drive = new Drive();;
     // private final HorizontalExtension hExtension;
     // private final VerticalExtension vExtension;
     
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
-    // private final CommandXboxController operator =
-    //     new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
+    private final CommandXboxController operator =
+        new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        // Configure the trigger bindings
-        
-        drive = new Drive();
-        // hExtension = new HorizontalExtension();
-        // vExtension = new VerticalExtension();
-      
-      
-        
-        configureBindings();
-        
-    }
-    
-    
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
-    private void configureBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         // new Trigger(exampleSubsystem::exampleCondition)
             // .onTrue(new ExampleCommand(exampleSubsystem));
@@ -68,8 +39,8 @@ public class RobotContainer {
         // driver.rightBumper().onTrue(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 0.5));
         // drive.setDefaultCommand(new SlowSwerveDriveTeleop(drive, driver, drive::isFieldOriented, 1));
     
-        driver.a().onTrue(drive.runResetHeading());
-        driver.back().onTrue(drive.runToggleFieldOriented());
+        driver.a().onTrue(drive.resetHeading());
+        driver.back().onTrue(drive.toggleFieldOriented());
     
         SmartDashboard.putNumber("driver value", driver.getRightX());
         drive.setDefaultCommand(new SwerveDriveTeleop(
@@ -79,13 +50,6 @@ public class RobotContainer {
             driver::getRightX,
             drive::isFieldOriented)
         );
-
-        // driver.povLeft().whileTrue(drive.frontLeft());
-        // driver.povUp().whileTrue(drive.frontRight());
-        // driver.povDown().whileTrue(drive.backLeft());
-        // driver.povRight().whileTrue(drive.backRight());
-        // driver.povCenter().onTrue(drive.runStop());
-    
     
         // operator.rightTrigger().whileTrue(new IntakeGround(hExtension, vExtension));
         // operator.leftTrigger().whileTrue(new IntakeHigh(hExtension, vExtension));
@@ -94,12 +58,6 @@ public class RobotContainer {
         // operator.y().whileTrue(new High(hExtension, vExtension));
     }
     
-    
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
         // return Autos.exampleAuto(exampleSubsystem);
