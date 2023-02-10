@@ -54,9 +54,9 @@ public class SwerveDriveTeleop extends CommandBase {
         if (Math.abs(turnSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE) turnSpeed = 0;
 
         // Smooth Driving and applpy speed
-        xSpeed = xLimiter.calculate(xSpeed) * SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.5;
-        ySpeed = yLimiter.calculate(ySpeed) * SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.5;
-        turnSpeed = turnLimiter.calculate(turnSpeed) * Drive.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND * 0.5;
+        xSpeed = xLimiter.calculate(xSpeed) * SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * drive.getTranslationalSpeed();
+        ySpeed = yLimiter.calculate(ySpeed) * SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * drive.getTranslationalSpeed();
+        turnSpeed = turnLimiter.calculate(turnSpeed) * Drive.SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND * drive.getAngularSpeed();
 
         // Apply speeds
         ChassisSpeeds chassisSpeeds;
@@ -68,7 +68,7 @@ public class SwerveDriveTeleop extends CommandBase {
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
         }
 
-        SwerveModuleState[] states = Drive.Constants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+        SwerveModuleState[] states = Drive.SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
         drive.setModuleStates(states);
     }
 
