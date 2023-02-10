@@ -27,7 +27,7 @@ public class Drive extends SubsystemBase {
             public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
                 SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
 
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.9; // 3 meters per second per second
+            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
             public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
             public static final double TRANSLATIONAL_KP = 1.5;
             public static final double THETA_KP = 3;
@@ -36,8 +36,6 @@ public class Drive extends SubsystemBase {
                     MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
                     MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED
                 );
-
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND = 0; //TODO: CHECK THIS
         }
 
         private static enum Speed {
