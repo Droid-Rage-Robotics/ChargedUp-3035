@@ -32,4 +32,16 @@ public final class DroidRageConstants {
         }
         return myValue;
     }
+
+    public static void putNumber(String name, double value) {
+        SmartDashboard.putNumber(name, value);
+    }
+
+    public static void putBoolean(String name, boolean value) {
+        SmartDashboard.putBoolean(name, value);
+    }
+
+    public static void putString(String name, String value) {
+        SmartDashboard.putString(name, value);
+    }
 }
