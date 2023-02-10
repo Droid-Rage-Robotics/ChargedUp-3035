@@ -21,6 +21,7 @@ public class Vision extends SubsystemBase {
     private double x = tx.getDouble(0.0);
     private double y = ty.getDouble(0.0);
     private double area = ta.getDouble(0.0);
+    private double v = tv.getDouble(0.0);
 
     public Vision() {
         super();
@@ -37,6 +38,7 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("LimelightX", x);
         SmartDashboard.putNumber("LimelightY", y);
         SmartDashboard.putNumber("LimelightArea", area);
+        SmartDashboard.putNumber("LimelightV", v);
 
     }
 
