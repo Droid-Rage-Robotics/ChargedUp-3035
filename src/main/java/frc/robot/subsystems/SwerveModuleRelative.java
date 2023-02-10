@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+@Deprecated
 public class SwerveModuleRelative {
     public static class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
@@ -24,7 +25,7 @@ public class SwerveModuleRelative {
 
         public static final double TURN_P = 0.5;
 
-        public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.4;//TODO:CHECk
+        public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.4;//TODO:CHECk // 14.5ft/sec = 4.4 m/sec
         public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI); // 2 revolutions per second
     }
 
