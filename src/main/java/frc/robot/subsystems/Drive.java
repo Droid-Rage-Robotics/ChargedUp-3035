@@ -17,44 +17,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase {
-    public static class Constants {
+    public static class AutoConstants {
+        public static final double MAX_SPEED_METERS_PER_SECOND = 
+            SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
+
+        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
+            SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
+
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
+        public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
+        public static final double TRANSLATIONAL_KP = 1.5;
+        public static final double THETA_KP = 3;
+        public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
+            new TrapezoidProfile.Constraints(
+                MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
+                MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED
+            );
+    }
+
+    public static class SwerveConstants {
         public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI); // 2 revolutions per second // I thought it was 4.41 before but no
-
-        /* Autonomous Constants */
-        public static class Auto {
-            public static final double MAX_SPEED_METERS_PER_SECOND = 
-                SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
-
-            public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
-                PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
-
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
-            public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
-            public static final double TRANSLATIONAL_KP = 1.5;
-            public static final double THETA_KP = 3;
-            public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
-                new TrapezoidProfile.Constraints(
-                    MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
-                    MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED
-                );
-        }
-
-        private static enum Speed {
-            TURBO(1),
-            NORMAL(0.9),
-            SLOW(0.5),
-            ;
-
-            private volatile double speed;
-
-            private Speed(double speed) {
-                this.speed = speed;
-            } 
-        }
-
-
-
-
+              
         public static class FrontLeft {
             public static final int DRIVE_MOTOR_PORT = 2; //2
             public static final boolean DRIVE_MOTOR_REVERSED = true;
@@ -113,50 +96,65 @@ public class Drive extends SubsystemBase {
         );
     }
 
+    private enum Speed {
+        TURBO(1, 1),
+        NORMAL(0.5, 0.5),
+        SLOW(0.25, 0.25),
+        ;
+
+        private final double translationalSpeed;
+        private final double angularSpeed;
+
+        private Speed(double translationalSpeed, double angularSpeed) {
+            this.translationalSpeed = translationalSpeed;
+            this.angularSpeed = angularSpeed;
+        } 
+    }
+
     private final SwerveModule frontLeft = new SwerveModule(
-        Constants.FrontLeft.DRIVE_MOTOR_PORT,
-        Constants.FrontLeft.TURN_MOTOR_PORT,
+        SwerveConstants.FrontLeft.DRIVE_MOTOR_PORT,
+        SwerveConstants.FrontLeft.TURN_MOTOR_PORT,
 
-        Constants.FrontLeft.DRIVE_MOTOR_REVERSED, 
-        Constants.FrontLeft.TURN_MOTOR_REVERSED,
+        SwerveConstants.FrontLeft.DRIVE_MOTOR_REVERSED, 
+        SwerveConstants.FrontLeft.TURN_MOTOR_REVERSED,
 
-        Constants.FrontLeft.ABSOLUTE_ENCODER_PORT, 
-        Constants.FrontLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        Constants.FrontLeft.ABOSLUTE_ENCODER_REVERSED
+        SwerveConstants.FrontLeft.ABSOLUTE_ENCODER_PORT, 
+        SwerveConstants.FrontLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        SwerveConstants.FrontLeft.ABOSLUTE_ENCODER_REVERSED
     );
     private final SwerveModule frontRight = new SwerveModule(
-        Constants.FrontRight.DRIVE_MOTOR_PORT,
-        Constants.FrontRight.TURN_MOTOR_PORT,
+        SwerveConstants.FrontRight.DRIVE_MOTOR_PORT,
+        SwerveConstants.FrontRight.TURN_MOTOR_PORT,
 
-        Constants.FrontRight.DRIVE_MOTOR_REVERSED, 
-        Constants.FrontRight.TURN_MOTOR_REVERSED,
+        SwerveConstants.FrontRight.DRIVE_MOTOR_REVERSED, 
+        SwerveConstants.FrontRight.TURN_MOTOR_REVERSED,
 
-        Constants.FrontRight.ABSOLUTE_ENCODER_PORT, 
-        Constants.FrontRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        Constants.FrontRight.ABOSLUTE_ENCODER_REVERSED
+        SwerveConstants.FrontRight.ABSOLUTE_ENCODER_PORT, 
+        SwerveConstants.FrontRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        SwerveConstants.FrontRight.ABOSLUTE_ENCODER_REVERSED
     );
     private final SwerveModule backLeft = new SwerveModule(
-        Constants.BackLeft.DRIVE_MOTOR_PORT,
-        Constants.BackLeft.TURN_MOTOR_PORT,
+        SwerveConstants.BackLeft.DRIVE_MOTOR_PORT,
+        SwerveConstants.BackLeft.TURN_MOTOR_PORT,
 
-        Constants.BackLeft.DRIVE_MOTOR_REVERSED, 
-        Constants.BackLeft.TURN_MOTOR_REVERSED,
+        SwerveConstants.BackLeft.DRIVE_MOTOR_REVERSED, 
+        SwerveConstants.BackLeft.TURN_MOTOR_REVERSED,
 
-        Constants.BackLeft.ABSOLUTE_ENCODER_PORT, 
-        Constants.BackLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        Constants.BackLeft.ABOSLUTE_ENCODER_REVERSED
+        SwerveConstants.BackLeft.ABSOLUTE_ENCODER_PORT, 
+        SwerveConstants.BackLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        SwerveConstants.BackLeft.ABOSLUTE_ENCODER_REVERSED
     );
     private final SwerveModule backRight = new SwerveModule(
-        Constants.BackRight.DRIVE_MOTOR_PORT,
-        Constants.BackRight.TURN_MOTOR_PORT,
+        SwerveConstants.BackRight.DRIVE_MOTOR_PORT,
+        SwerveConstants.BackRight.TURN_MOTOR_PORT,
         
 
-        Constants.BackRight.DRIVE_MOTOR_REVERSED, 
-        Constants.BackRight.TURN_MOTOR_REVERSED,
+        SwerveConstants.BackRight.DRIVE_MOTOR_REVERSED, 
+        SwerveConstants.BackRight.TURN_MOTOR_REVERSED,
 
-        Constants.BackRight.ABSOLUTE_ENCODER_PORT, 
-        Constants.BackRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
-        Constants.BackRight.ABOSLUTE_ENCODER_REVERSED
+        SwerveConstants.BackRight.ABSOLUTE_ENCODER_PORT, 
+        SwerveConstants.BackRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
+        SwerveConstants.BackRight.ABOSLUTE_ENCODER_REVERSED
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
@@ -164,13 +162,13 @@ public class Drive extends SubsystemBase {
     private final Pigeon2 pigeon2 = new Pigeon2(15);
 
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
-        Constants.DRIVE_KINEMATICS, 
+        SwerveConstants.DRIVE_KINEMATICS, 
         new Rotation2d(0), 
         getModulePositions()
     );
 
     private volatile boolean isFieldOriented = true;
-    private volatile double speedMultiplier = 1.0;
+    private volatile Speed speed = Speed.NORMAL;
     private volatile double headingOffset = -90;
 
     public Drive() {
@@ -245,8 +243,12 @@ public class Drive extends SubsystemBase {
         return isFieldOriented;
     }
 
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
+    public double getTranslationalSpeed() {
+        return speed.translationalSpeed;
+    }
+
+    public double getAngularSpeed() {
+        return speed.angularSpeed;
     }
 
     public double getHeadingOffset() {
@@ -264,6 +266,22 @@ public class Drive extends SubsystemBase {
         for (SwerveModule swerveModule: swerveModules) {
             swerveModule.stop();
         }
+    }
+
+    private CommandBase setSpeed(Speed speed) {
+        return runOnce(() -> this.speed = speed);
+    }
+
+    public CommandBase setTurboSpeed() {
+        return setSpeed(Speed.TURBO);
+    }
+
+    public CommandBase setNormalSpeed() {
+        return setSpeed(Speed.NORMAL);
+    }
+
+    public CommandBase setSlowSpeed() {
+        return setSpeed(Speed.SLOW);
     }
 
     public CommandBase resetEncoders() {
