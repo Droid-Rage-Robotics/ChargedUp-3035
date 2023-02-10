@@ -16,17 +16,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
 
 public class VerticalExtension extends SubsystemBase {
-    protected enum Position {
+    private enum Position {
         GROUND(DroidRageConstants.getNumber("VE_GROUND", 0)),
-        MID(0),
-        HIGH(0),
-        INTAKE(0),
+        MID(DroidRageConstants.getNumber("VE_MID", 0)),
+        HIGH(DroidRageConstants.getNumber("VE_HIGH", 0)),
+        INTAKE(DroidRageConstants.getNumber("VE_INTAKE", 0)),
         ;
 
-        protected final double height_meters;
+        private volatile double height_meters;
 
-        private Position(double hieght_meters) {
-            this.height_meters = hieght_meters;
+        private Position(double height_meters) {
+            this.height_meters = height_meters;
         }
     }
 
@@ -54,10 +54,13 @@ public class VerticalExtension extends SubsystemBase {
         SmartDashboard.putNumber("Vertical Encoder Pos", elevEncoder.get());
     }
   
-  
     @Override
     public void simulationPeriodic() {
         periodic();
+    }
+
+    public void setPosition(Position position, double height_meters) {
+        position.height_meters = height_meters;
     }
 
     private CommandBase move(Position level) {
