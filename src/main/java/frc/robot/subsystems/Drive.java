@@ -22,12 +22,12 @@ public class Drive extends SubsystemBase {
         /* Autonomous Constants */
         public static class Auto {
             public static final double MAX_SPEED_METERS_PER_SECOND = 
-                SwerveModuleAbsolute.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
+                SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
 
             public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
-                SwerveModuleAbsolute.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
+                SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
 
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = SwerveModuleAbsolute.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.9; // 3 meters per second per second
+            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.9; // 3 meters per second per second
             public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
             public static final double TRANSLATIONAL_KP = 1.5;
             public static final double THETA_KP = 3;
@@ -114,7 +114,7 @@ public class Drive extends SubsystemBase {
         );
     }
 
-    private final SwerveModuleAbsolute frontLeft = new SwerveModuleAbsolute(
+    private final SwerveModule frontLeft = new SwerveModule(
         Constants.FrontLeft.DRIVE_MOTOR_PORT,
         Constants.FrontLeft.TURN_MOTOR_PORT,
 
@@ -125,7 +125,7 @@ public class Drive extends SubsystemBase {
         Constants.FrontLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
         Constants.FrontLeft.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleAbsolute frontRight = new SwerveModuleAbsolute(
+    private final SwerveModule frontRight = new SwerveModule(
         Constants.FrontRight.DRIVE_MOTOR_PORT,
         Constants.FrontRight.TURN_MOTOR_PORT,
 
@@ -136,7 +136,7 @@ public class Drive extends SubsystemBase {
         Constants.FrontRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
         Constants.FrontRight.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleAbsolute backLeft = new SwerveModuleAbsolute(
+    private final SwerveModule backLeft = new SwerveModule(
         Constants.BackLeft.DRIVE_MOTOR_PORT,
         Constants.BackLeft.TURN_MOTOR_PORT,
 
@@ -147,7 +147,7 @@ public class Drive extends SubsystemBase {
         Constants.BackLeft.ABSOLUTE_ENCODER_OFFSET_RAD, 
         Constants.BackLeft.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleAbsolute backRight = new SwerveModuleAbsolute(
+    private final SwerveModule backRight = new SwerveModule(
         Constants.BackRight.DRIVE_MOTOR_PORT,
         Constants.BackRight.TURN_MOTOR_PORT,
         
@@ -159,7 +159,7 @@ public class Drive extends SubsystemBase {
         Constants.BackRight.ABSOLUTE_ENCODER_OFFSET_RAD, 
         Constants.BackRight.ABOSLUTE_ENCODER_REVERSED
     );
-    private final SwerveModuleAbsolute[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
+    private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
     // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final Pigeon2 pigeon2 = new Pigeon2(15);
@@ -176,7 +176,7 @@ public class Drive extends SubsystemBase {
 
     public Drive() {
         //TODO: Make sure IMU RESETS
-        for (SwerveModuleAbsolute swerveModule: swerveModules) {
+        for (SwerveModule swerveModule: swerveModules) {
             swerveModule.coastMode();
         }
 
@@ -243,13 +243,13 @@ public class Drive extends SubsystemBase {
     }
 
     public void stop() {
-        for (SwerveModuleAbsolute swerveModule: swerveModules) {
+        for (SwerveModule swerveModule: swerveModules) {
             swerveModule.stop();
         }
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModuleAbsolute.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
         for (int i = 0; i < 4; i++) {
             swerveModules[i].setState(states[i]);
         }
@@ -284,7 +284,7 @@ public class Drive extends SubsystemBase {
 
     public CommandBase resetEncoders() {
         return runOnce(() -> {
-            for (SwerveModuleAbsolute swerveModule: swerveModules) {
+            for (SwerveModule swerveModule: swerveModules) {
                 swerveModule.resetDriveEncoder();
             }
         });

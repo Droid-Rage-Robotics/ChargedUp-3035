@@ -15,7 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SwerveModuleAbsolute {
+public class SwerveModule {
     public static class Constants {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
         public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.75;
@@ -41,7 +41,7 @@ public class SwerveModuleAbsolute {
 
     private final PIDController turningPidController;
 
-    public SwerveModuleAbsolute(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
+    public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
         
         this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
