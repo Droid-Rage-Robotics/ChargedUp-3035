@@ -57,10 +57,10 @@ public class Drive extends SubsystemBase {
 
 
         public static class FrontLeft {
-            public static final int DRIVE_MOTOR_PORT = 62; //2
+            public static final int DRIVE_MOTOR_PORT = 2; //2
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 61; //1
+            public static final int TURN_MOTOR_PORT = 1; //1
             public static final boolean TURN_MOTOR_REVERSED = false;
 
             public static final int ABSOLUTE_ENCODER_PORT = 11;
@@ -69,10 +69,10 @@ public class Drive extends SubsystemBase {
         }
 
         public static class FrontRight {
-            public static final int DRIVE_MOTOR_PORT = 60; // 4
+            public static final int DRIVE_MOTOR_PORT = 4; // 4
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 59; //3
+            public static final int TURN_MOTOR_PORT = 3; //3
             public static final boolean TURN_MOTOR_REVERSED = false;
 
             public static final int ABSOLUTE_ENCODER_PORT = 12;
@@ -81,10 +81,10 @@ public class Drive extends SubsystemBase {
         }
 
         public static class BackLeft {
-            public static final int DRIVE_MOTOR_PORT = 58; //8
+            public static final int DRIVE_MOTOR_PORT = 8; //8
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 57; //7
+            public static final int TURN_MOTOR_PORT = 7; //7
             public static final boolean TURN_MOTOR_REVERSED = false;
 
             public static final int ABSOLUTE_ENCODER_PORT = 14;
@@ -93,10 +93,10 @@ public class Drive extends SubsystemBase {
         }
 
         public static class BackRight {
-            public static final int DRIVE_MOTOR_PORT = 56; //6
+            public static final int DRIVE_MOTOR_PORT = 6; //6
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
-            public static final int TURN_MOTOR_PORT = 55; //5
+            public static final int TURN_MOTOR_PORT = 5; //5
             public static final boolean TURN_MOTOR_REVERSED = false;
 
             public static final int ABSOLUTE_ENCODER_PORT = 13;
