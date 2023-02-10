@@ -23,12 +23,13 @@ public class SwerveModuleAbsolute {
 
         public static final double DRIVE_ENCODER_ROT_2_METER = DRIVE_MOTOR_GEAR_RATIO * Math.PI * WHEEL_DIAMETER_METERS;
         public static final double DRIVE_ENCODER_RPM_2_METER_PER_SEC = DRIVE_ENCODER_ROT_2_METER / 60;
-        public static final double TURN_ENCODER_ROT_2_RAD = 2 * Math.PI / 4096.0;
+        public static final double ENCODER_TICKS = 4096;
+        public static final double TURN_ENCODER_ROT_2_RAD = 2 * Math.PI / ENCODER_TICKS;
 
         public static final double TURN_P = 0.5;
 
-        public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.4;//TODO:CHECk
-        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI); // 2 revolutions per second
+        public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.47;
+        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 4.41 * (2 * Math.PI); // 4.41 revolutions per second
     }
 
     private final CANSparkMax driveMotor;
