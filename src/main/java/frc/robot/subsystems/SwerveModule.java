@@ -23,8 +23,8 @@ public class SwerveModule {
 
         public static final double DRIVE_ENCODER_ROT_2_METER = DRIVE_MOTOR_GEAR_RATIO * Math.PI * WHEEL_DIAMETER_METERS;
         public static final double DRIVE_ENCODER_RPM_2_METER_PER_SEC = DRIVE_ENCODER_ROT_2_METER / 60;
-        public static final double TICK_PER_REVOLUTION = 4096;
-        public static final double TURN_ENCODER_ROT_2_RAD = 2 * Math.PI / TICK_PER_REVOLUTION;
+        public static final double TICKS_PER_REVOLUTION = 4096;
+        public static final double TURN_ENCODER_ROT_2_RAD = 2 * Math.PI / TICKS_PER_REVOLUTION;
 
         public static final double TURN_P = 0.5;
 
