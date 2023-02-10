@@ -22,12 +22,12 @@ public class Drive extends SubsystemBase {
         /* Autonomous Constants */
         public static class Auto {
             public static final double MAX_SPEED_METERS_PER_SECOND = 
-                SwerveModuleRelative.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
+                SwerveModuleAbsolute.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
 
             public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
-                SwerveModuleRelative.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
+                SwerveModuleAbsolute.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
 
-            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
+            public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = SwerveModuleAbsolute.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.9; // 3 meters per second per second
             public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
             public static final double TRANSLATIONAL_KP = 1.5;
             public static final double THETA_KP = 3;
@@ -61,11 +61,11 @@ public class Drive extends SubsystemBase {
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 1; //1
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final boolean TURN_MOTOR_REVERSED = true;
 
             public static final int ABSOLUTE_ENCODER_PORT = 11;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -1.24;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 1.24;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
         }
 
         public static class FrontRight {
@@ -73,11 +73,11 @@ public class Drive extends SubsystemBase {
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 3; //3
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final boolean TURN_MOTOR_REVERSED = true;
 
             public static final int ABSOLUTE_ENCODER_PORT = 12;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -2.26;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 2.26;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
         }
 
         public static class BackLeft {
@@ -85,11 +85,11 @@ public class Drive extends SubsystemBase {
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 7; //7
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final boolean TURN_MOTOR_REVERSED = true;
 
             public static final int ABSOLUTE_ENCODER_PORT = 14;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -0.99;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0.99;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
         }
 
         public static class BackRight {
@@ -97,20 +97,20 @@ public class Drive extends SubsystemBase {
             public static final boolean DRIVE_MOTOR_REVERSED = true;
 
             public static final int TURN_MOTOR_PORT = 5; //5
-            public static final boolean TURN_MOTOR_REVERSED = false;
+            public static final boolean TURN_MOTOR_REVERSED = true;
 
             public static final int ABSOLUTE_ENCODER_PORT = 13;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = -1.74;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = true;
+            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 1.74;
+            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
         }
 
         public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); 
         public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left --
-            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
-            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2), // Back Left -+
-            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2)   // Back Right ++
+            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left --
+            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
+            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // Back Left -+
+            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2)   // Back Right ++
         );
     }
 
