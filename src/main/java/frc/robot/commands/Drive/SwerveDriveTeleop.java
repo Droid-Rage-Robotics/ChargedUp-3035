@@ -5,9 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.DroidRageConstants;
@@ -16,15 +14,13 @@ public class SwerveDriveTeleop extends CommandBase {
     public static class Constants {
         public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;
         public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;
-        
-        public static final double MAX_SPEED_METERS_PER_SECOND = SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 2;
-        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND= SwerveModule.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 2;
     }
 
     private final Drive drive;
     private final Supplier<Double> x, y, turn;
     private final Supplier<Boolean> isFieldOriented;
     private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
+    private volatile double xSpeed, ySpeed, turnSpeed;
     public SwerveDriveTeleop(Drive drive,
             Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn,
             Supplier<Boolean> isFieldOriented) {
@@ -32,9 +28,8 @@ public class SwerveDriveTeleop extends CommandBase {
         this.x = x;
         this.y = y;
         this.turn = turn;
-        double tempTurn = turn.get();
-        SmartDashboard.putNumber("first turn", tempTurn);
         this.isFieldOriented = isFieldOriented;
+
         this.xLimiter = new SlewRateLimiter(Constants.MAX_ACCELERATION_UNITS_PER_SECOND);
         this.yLimiter = new SlewRateLimiter(Constants.MAX_ACCELERATION_UNITS_PER_SECOND);
         this.turnLimiter = new SlewRateLimiter(Constants.MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND);
@@ -49,21 +44,21 @@ public class SwerveDriveTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        double xSpeed = x.get();
-        double ySpeed = -y.get();
-        double turnSpeed = turn.get();
-        SmartDashboard.putNumber("xSpeed", xSpeed);
-        SmartDashboard.putNumber("ySpeed", ySpeed);
-        SmartDashboard.putNumber("turnsSpeed", turnSpeed);
+        xSpeed = x.get();
+        ySpeed = -y.get();
+        turnSpeed = turn.get();
 
-        xSpeed = Math.abs(xSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? ySpeed : 0.0;
-        turnSpeed = Math.abs(turnSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE ? turnSpeed : 0.0;
+        // Apply deadband
+        if (Math.abs(xSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE) xSpeed = 0;
+        if (Math.abs(ySpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE) ySpeed = 0;
+        if (Math.abs(turnSpeed) > DroidRageConstants.Gamepad.STICK_DEADZONE) turnSpeed = 0;
 
-        xSpeed = xLimiter.calculate(xSpeed) * Constants.MAX_SPEED_METERS_PER_SECOND;
-        ySpeed = yLimiter.calculate(ySpeed) * Constants.MAX_SPEED_METERS_PER_SECOND;
-        turnSpeed = turnLimiter.calculate(turnSpeed) * Constants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND;
+        // Smooth Driving and applpy speed
+        xSpeed = xLimiter.calculate(xSpeed) * SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.5;
+        ySpeed = yLimiter.calculate(ySpeed) * SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 0.5;
+        turnSpeed = turnLimiter.calculate(turnSpeed) * Drive.Constants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND * 0.5;
 
+        // Apply speeds
         ChassisSpeeds chassisSpeeds;
         if (isFieldOriented.get()) {
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -74,7 +69,6 @@ public class SwerveDriveTeleop extends CommandBase {
         }
 
         SwerveModuleState[] states = Drive.Constants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
-        SmartDashboard.putNumber("setPower", turnSpeed);
         drive.setModuleStates(states);
     }
 
