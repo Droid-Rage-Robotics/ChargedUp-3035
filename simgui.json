@@ -24,6 +24,18 @@
         }
       },
       "SmartDashboard": {
+        "Drive": {
+          "Speed Multiplier": {
+            "Angular": {
+              "open": true
+            },
+            "Translational": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
         "open": true
       }
     }

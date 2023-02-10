@@ -13,8 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DroidRageConstants;
 
 public class Drive extends SubsystemBase {
     public static class AutoConstants {
@@ -108,7 +108,7 @@ public class Drive extends SubsystemBase {
         private Speed(double translationalSpeed, double angularSpeed) {
             this.translationalSpeed = translationalSpeed;
             this.angularSpeed = angularSpeed;
-        } 
+        }
     }
 
     private final SwerveModule frontLeft = new SwerveModule(
@@ -161,15 +161,13 @@ public class Drive extends SubsystemBase {
     // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final Pigeon2 pigeon2 = new Pigeon2(15);
 
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry (
         SwerveConstants.DRIVE_KINEMATICS, 
         new Rotation2d(0), 
         getModulePositions()
     );
 
-    private volatile boolean isFieldOriented = true;
     private volatile Speed speed = Speed.NORMAL;
-    private volatile double headingOffset = -90;
 
     public Drive() {
         //TODO: Make sure IMU RESETS
@@ -186,26 +184,24 @@ public class Drive extends SubsystemBase {
             getRotation2d(),
             getModulePositions()
         );
-        SmartDashboard.putNumber("Robot Heading Offset", headingOffset);
-        SmartDashboard.putNumber("Robot heading", getHeading());
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-        
-        SmartDashboard.putBoolean("Robot is Field Oriented", isFieldOriented);
 
-        SmartDashboard.putNumber("Front Left Turn Distance", frontLeft.getTurningPosition());
-        SmartDashboard.putNumber("Front Right Turn Distance", frontRight.getTurningPosition());
-        SmartDashboard.putNumber("Back Left Turn Distance", backLeft.getTurningPosition());
-        SmartDashboard.putNumber("Back Right Turn Distance", backRight.getTurningPosition());
+        DroidRageConstants.putNumber("Drive/Robot heading", getHeading());
+        DroidRageConstants.putString("Drive/Robot Location", getPose().getTranslation().toString());
 
-        SmartDashboard.putNumber("Front Left Turn Angle Radians", frontLeft.getTurnEncoderRad());
-        SmartDashboard.putNumber("Front Right Turn Angle Radians", frontRight.getTurnEncoderRad());
-        SmartDashboard.putNumber("Back Left Turn Angle Radians", backLeft.getTurnEncoderRad());
-        SmartDashboard.putNumber("Back Right Turn Angle Radians", backRight.getTurnEncoderRad());
+        DroidRageConstants.putNumber("Drive/Turn/Position/Front Left", frontLeft.getTurningPosition());
+        DroidRageConstants.putNumber("Drive/Turn/Position/Front Right", frontRight.getTurningPosition());
+        DroidRageConstants.putNumber("Drive/Turn/Position/Back Left", backLeft.getTurningPosition());
+        DroidRageConstants.putNumber("Drive/Turn/Position/Back Right", backRight.getTurningPosition());
 
-        SmartDashboard.putNumber("Front Left Drive Distance Meters", frontLeft.getDrivePos());
-        SmartDashboard.putNumber("Front Right Drive Distance Meters", frontRight.getDrivePos());
-        SmartDashboard.putNumber("Back Left Drive Distance Meters", backLeft.getDrivePos());
-        SmartDashboard.putNumber("Back Right Drive Distance Meters", backRight.getDrivePos());
+        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Front Left", frontLeft.getTurnEncoderRad());
+        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Front Right", frontRight.getTurnEncoderRad());
+        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Back Left", backLeft.getTurnEncoderRad());
+        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Back Right", backRight.getTurnEncoderRad());
+
+        DroidRageConstants.putNumber("Drive/Drive/Distance/Front Left", frontLeft.getDrivePos());
+        DroidRageConstants.putNumber("Drive/Drive/Distance/Front Right", frontRight.getDrivePos());
+        DroidRageConstants.putNumber("Drive/Drive/Distance/Back Left", backLeft.getDrivePos());
+        DroidRageConstants.putNumber("Drive/Drive/Distance/Back Right", backRight.getDrivePos());
     }
 
     @Override
@@ -224,7 +220,7 @@ public class Drive extends SubsystemBase {
 
     public double getHeading() {
         // return Math.IEEEremainder(gyro.getAngle(), 360);
-        return Math.IEEEremainder(-pigeon2.getYaw(), 360) - headingOffset;
+        return Math.IEEEremainder(-pigeon2.getYaw(), 360) - getHeadingOffset();
     }
 
     public Rotation2d getRotation2d() {
@@ -240,23 +236,27 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean isFieldOriented() {
-        return isFieldOriented;
+        return DroidRageConstants.getBoolean("Drive/Field Oriented", true);
     }
 
     public double getTranslationalSpeed() {
-        return speed.translationalSpeed;
+        return DroidRageConstants.getNumber("Drive/Speed Multiplier/Translational/"+ speed.name(), speed.translationalSpeed);
     }
 
     public double getAngularSpeed() {
-        return speed.angularSpeed;
+        return DroidRageConstants.getNumber("Drive/Speed Multiplier/Angular/"+ speed.name(), speed.angularSpeed);
     }
 
     public double getHeadingOffset() {
-        return headingOffset;
+        return DroidRageConstants.getNumber("Drive/Heading Offset", -90);
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+            states, 
+            SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND
+        );
+
         for (int i = 0; i < 4; i++) {
             swerveModules[i].setState(states[i]);
         }
@@ -269,7 +269,10 @@ public class Drive extends SubsystemBase {
     }
 
     private CommandBase setSpeed(Speed speed) {
-        return runOnce(() -> this.speed = speed);
+        return runOnce(() -> {
+            this.speed = speed;
+            DroidRageConstants.putString("Drive/Current Speed", speed.name());
+        });
     }
 
     public CommandBase setTurboSpeed() {
@@ -293,11 +296,14 @@ public class Drive extends SubsystemBase {
     }
 
     public CommandBase resetHeading() {
-        return runOnce(() -> headingOffset += getHeading());
+        return runOnce(() -> DroidRageConstants.putNumber(
+                "Drive/Heading Offset", getHeadingOffset() + getHeading()
+            ));
     }
 
     public CommandBase toggleFieldOriented() {
-        return runOnce(() -> isFieldOriented = !isFieldOriented);
+        return runOnce(() -> DroidRageConstants.putBoolean(
+            "Drive/Field Oriented", !isFieldOriented()));
     }
 
     public CommandBase runStop() {
