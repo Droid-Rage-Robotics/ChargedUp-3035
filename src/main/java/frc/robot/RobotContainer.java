@@ -16,6 +16,15 @@ public class RobotContainer {
     //TODO: Ideas
     // all abort button
     // override button for when sensors fail
+    // read about shuffleboard and do great things
+    // find out how to make a field graph with robot pose on it and preferably a visual for path following
+    // custom shuffleboard droid rage theme
+    // Consider setitng drive motor to break and turn to coast
+    // Bright Color on shuffleboard when block is detected
+    // path weaver vs path planner
+    // Desaturate wheels speeds
+    // reset network tables button
+    // auto align 
     
     private final Drive drive = new Drive();
     private final Elevator elevator = new Elevator();
@@ -132,6 +141,8 @@ public class RobotContainer {
         //   drive::setModuleStates,
         //   drive
         // );
+        // SwerveControllerCommand a = new SwerveControllerCommand(null, null, null, null, null, null)
+        // RamseteCommand ramseteCommand = new RamseteCommand(null, null, null, null, null, null, null, null, null, null)
         
         
         // return new SequentialCommandGroup(
