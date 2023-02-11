@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.VerticalExtension;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -8,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
     private final Drive drive = new Drive();
-    // private final HorizontalExtension hExtension;
-    // private final VerticalExtension vExtension;
+    // private final HorizontalExtension horizontalExtension = new HorizontalExtension();
+    // private final VerticalExtension verticalExtension = new VerticalExtension();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -20,6 +21,8 @@ public class RobotContainer {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         // new Trigger(exampleSubsystem::exampleCondition)
             // .onTrue(new ExampleCommand(exampleSubsystem));
+
+        // verticalExtension.setDefaultCommand(verticalExtension.moveToPosition());
 
         drive.setDefaultCommand(new SwerveDriveTeleop(
             drive, 

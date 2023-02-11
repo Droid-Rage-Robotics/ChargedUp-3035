@@ -6,48 +6,59 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
 
 public class VerticalExtension extends SubsystemBase {
+    public static class Constants {
+        public static final double GEAR_RATIO = 1 / 1;
+        public static final double GEAR_DIAMETER_METERS = 0.0481; // 1.893 inches
+        public static final double ROT_TO_METER = (GEAR_RATIO * Math.PI * GEAR_DIAMETER_METERS);
+        
+
+    }
     private enum Position {
-        GROUND(DroidRageConstants.getNumber("VE_GROUND", 0)),
-        MID(DroidRageConstants.getNumber("VE_MID", 0)),
-        HIGH(DroidRageConstants.getNumber("VE_HIGH", 0)),
-        INTAKE(DroidRageConstants.getNumber("VE_INTAKE", 0)),
+        GROUND(0),
+        MID(0),
+        HIGH(0),
+        INTAKE(0),
         ;
 
-        private volatile double height_meters;
+        private final double height_meters;
 
         private Position(double height_meters) {
             this.height_meters = height_meters;
         }
     }
-
-    private final CANSparkMax elevMotor, elevMotorTwo;
-    private final DutyCycleEncoder elevEncoder;
-    private final PIDController elevController;
+    
+    private final CANSparkMax leftElevator, rightElevator;
+    private final DutyCycleEncoder encoder;
+    private final PIDController controller;
+    private volatile Position position;
 
     
     public VerticalExtension() {
-        elevMotor = new CANSparkMax(0, MotorType.kBrushless);
-  
-        elevEncoder = new DutyCycleEncoder(0);  //TODO: Where is it plugged in?
-        elevController = new PIDController(0, 0, 0);
-        elevController.setTolerance(5);
-        elevMotor.setIdleMode(IdleMode.kBrake);
+        leftElevator = new CANSparkMax(0, MotorType.kBrushless);
+        rightElevator = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
 
-        elevMotorTwo = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
-        elevMotorTwo.setIdleMode(IdleMode.kBrake);
-        elevMotorTwo.follow(elevMotor, true);
-    
+        leftElevator.setIdleMode(IdleMode.kBrake);
+        rightElevator.setIdleMode(IdleMode.kBrake);
+        rightElevator.follow(leftElevator, true);
+
+  
+        encoder = new DutyCycleEncoder(0);  //TODO: Where is it plugged in?
+        encoder.setDistancePerRotation(Constants.ROT_TO_METER);
+
+        controller = new PIDController(0, 0, 0);
+        controller.setTolerance(0.10); // meters
+
+        setPosition(Position.GROUND);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Vertical Encoder Pos", elevEncoder.get());
+        DroidRageConstants.putNumber("Vertical Elevator/Height", encoder.get());
     }
   
     @Override
@@ -55,27 +66,35 @@ public class VerticalExtension extends SubsystemBase {
         periodic();
     }
 
-    public void setPosition(Position position, double height_meters) {
-        position.height_meters = height_meters;
+    public double getTargetHeight() {
+        return DroidRageConstants.getNumber("Vertical Elevator/Position/"+ position.name(), position.height_meters);
     }
 
-    private CommandBase move(Position level) {
-        return runOnce(() -> elevController.setSetpoint(level.height_meters));
+    private CommandBase setPosition(Position position) {
+        return runOnce(() -> {
+            this.position = position;
+            controller.setSetpoint(getTargetHeight());
+            DroidRageConstants.putString("Vertical Elevator/Position", position.name());
+        });
     }
 
     public CommandBase moveGround() {
-        return move(Position.GROUND);
+        return setPosition(Position.GROUND);
     }
 
     public CommandBase moveMid() {
-        return move(Position.MID);
+        return setPosition(Position.MID);
     }
 
     public CommandBase moveHigh() {
-        return move(Position.HIGH);
+        return setPosition(Position.HIGH);
     }
 
     public CommandBase moveIntake() {
-        return move(Position.INTAKE);
+        return setPosition(Position.INTAKE);
+    }
+
+    public CommandBase moveToPosition() {
+        return runOnce(() -> leftElevator.set(controller.calculate(encoder.get())));
     }
 }  
