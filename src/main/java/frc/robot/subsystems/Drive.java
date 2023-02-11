@@ -95,8 +95,10 @@ public class Drive extends SubsystemBase {
 
         private static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
         private static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
-        private static final double TRANSLATIONAL_KP = 1.5;
+        //TODO: these will change probably
+        private static final double TRANSLATIONAL_KP = 1.5; // this could probably be about 2.29
         private static final double THETA_KP = 3;
+
         private static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
             new TrapezoidProfile.Constraints(
                 MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
