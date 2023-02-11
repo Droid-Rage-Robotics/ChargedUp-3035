@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -34,14 +36,14 @@ public class SwerveModule {
     private final CANSparkMax driveMotor;
     private final CANSparkMax turnMotor;
 
-    private final double absoluteEncoderOffsetRad;
+    private final Supplier<Double> absoluteEncoderOffsetRad;
 
     private final CANCoder turnEncoder;
 
     private final PIDController turningPidController;
 
     public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
-            int absoluteEncoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
+            int absoluteEncoderId, Supplier<Double> absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
         
         this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
 
@@ -63,8 +65,6 @@ public class SwerveModule {
         driveMotor.getEncoder().setPositionConversionFactor(Constants.DRIVE_ENCODER_ROT_2_METER);
         driveMotor.getEncoder().setVelocityConversionFactor(Constants.DRIVE_ENCODER_RPM_2_METER_PER_SEC);
 
-
-
         turningPidController = new PIDController(Constants.TURN_P, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -76,7 +76,7 @@ public class SwerveModule {
     }
 
     public double getTurningPosition() {
-        return turnEncoder.getAbsolutePosition() + absoluteEncoderOffsetRad;
+        return turnEncoder.getAbsolutePosition() + absoluteEncoderOffsetRad.get();
     }
 
     public double getDriveVelocity(){
