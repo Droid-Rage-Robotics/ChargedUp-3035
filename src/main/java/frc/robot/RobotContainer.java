@@ -1,36 +1,43 @@
 package frc.robot;
 
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.VerticalExtension;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.commands.ManualArm;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
+    //TODO: Ideas
+    // all abort button
+    // override button for when sensors fail
+    
     private final Drive drive = new Drive();
-    // private final HorizontalExtension horizontalExtension = new HorizontalExtension();
-    // private final VerticalExtension verticalExtension = new VerticalExtension();
+    private final Elevator elevator = new Elevator();
+    private final Arm arm = new Arm();
+    private final Claw claw = new Claw();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
     private final CommandXboxController operator =
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
-    public RobotContainer() {
+    public void configureTeleOpBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         // new Trigger(exampleSubsystem::exampleCondition)
             // .onTrue(new ExampleCommand(exampleSubsystem));
-
-        // verticalExtension.setDefaultCommand(verticalExtension.moveToPosition());
 
         drive.setDefaultCommand(new SwerveDriveTeleop(
             drive, 
             driver::getLeftX, 
             driver::getLeftY, 
-            driver::getRightX,
-            drive::isFieldOriented)
-        );
+            driver::getRightX
+        ));
 
         driver.rightBumper()
             .onTrue(drive.setTurboSpeed())
@@ -45,6 +52,46 @@ public class RobotContainer {
 
         driver.back()
             .onTrue(drive.toggleFieldOriented());
+        driver.rightBumper()
+            .onTrue(claw.toggleClaw()); 
+    
+        driver.rightTrigger()
+            .onTrue(claw.intake()) 
+            .onFalse(claw.stopIntake());
+        driver.rightTrigger()
+            .onTrue(claw.outtake())
+            .onFalse(claw.stopIntake());
+
+
+
+        //Buttons to add: Toggle Button for Cone/Cube
+        arm.setDefaultCommand(new ManualArm(operator, arm));
+
+        operator.a()
+            .onTrue(
+                new ParallelCommandGroup(
+                    elevator.moveLow(),
+                    arm.moveLow()
+                )
+            );
+        operator.x()
+            .onTrue(
+                new ParallelCommandGroup(
+                    elevator.moveMid(),
+                    arm.moveMid()
+                )
+            );
+        operator.y()
+            .onTrue(
+                new ParallelCommandGroup(
+                    elevator.moveHigh(),
+                    arm.moveHigh()
+                )
+            );
+    }
+
+    public void configureTestBindings() {
+        
     }
     
     public Command getAutonomousCommand() {
