@@ -11,9 +11,9 @@ public final class DroidRageConstants {
     
     public static double getNumber(String name, double value) {
         double myValue = SmartDashboard.getNumber(name, value);
-        if (myValue == value) {
-            SmartDashboard.putNumber(name, value);
-        }
+        // if (myValue == value) {
+        //     SmartDashboard.putNumber(name, value);
+        // }
         return myValue;
     }
 
