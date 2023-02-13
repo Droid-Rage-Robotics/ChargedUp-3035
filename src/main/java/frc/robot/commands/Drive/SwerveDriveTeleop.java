@@ -89,9 +89,9 @@ public class SwerveDriveTeleop extends CommandBase {
             case AUTO_BALANCE:
             case AUTO_BALANCE_ANTI_TIP:
                 if (Math.abs(xTilt) > Drive.TeleOpConstants.getAutoBalanceXThreshold())
-                    xSpeed = -autoBalanceX.calculate(xSpeed, xTilt);
+                    xSpeed = autoBalanceX.calculate(xSpeed, xTilt);
                 if (Math.abs(yTilt) > Drive.TeleOpConstants.getAutoBalanceYThreshold())
-                    ySpeed = -autoBalanceX.calculate(ySpeed, yTilt);
+                    ySpeed = autoBalanceX.calculate(ySpeed, yTilt);
                 break;
             case NO_TIP_CORRECTION:
                 break;            
