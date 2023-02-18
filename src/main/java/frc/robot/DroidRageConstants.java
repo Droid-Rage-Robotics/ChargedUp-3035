@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class DroidRageConstants {
@@ -7,6 +11,11 @@ public final class DroidRageConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final int OPERATOR_CONTROLLER_PORT = 1;
         public static final double STICK_DEADZONE = 0.2;
+    }
+
+    public static SuppliedValueWidget<Double> makeShuffleboardDouble(DoubleSupplier valueSupplier, String title, String tab) {
+        return Shuffleboard.getTab(tab)
+            .addDouble(title, valueSupplier);
     }
     
     public static double getNumber(String name, double value) {
