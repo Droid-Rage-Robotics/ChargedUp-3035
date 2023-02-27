@@ -21,16 +21,16 @@ public class Drive extends SubsystemBase {
         public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;//TODO find what feels best
         public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;//TODO find what feels best
 
-        private static final double ANTI_TIPPING_X_THRESHOLD_DEGREES = 10;//TODO
-        private static final double ANTI_TIPPING_X_P = 0; //TODO this might be negative
+        private static final double ANTI_TIPPING_X_THRESHOLD_DEGREES = 3;//TODO
+        private static final double ANTI_TIPPING_X_P = -0.1; //TODO this might be negative
         private static final double ANTI_TIPPING_X_D = 0; //TODO
 
         private static final double ANTI_TIPPING_Y_THRESHOLD_DEGREES = ANTI_TIPPING_X_THRESHOLD_DEGREES;//TODO
         private static final double ANTI_TIPPING_Y_P = ANTI_TIPPING_X_P; //TODO
         private static final double ANTI_TIPPING_Y_D = ANTI_TIPPING_X_D; //TODO
 
-        private static final double AUTO_BALANCE_X_THRESHOLD_DEGREES = 0;//TODO
-        private static final double AUTO_BALANCE_X_P = 0;//TODO this might be negative
+        private static final double AUTO_BALANCE_X_THRESHOLD_DEGREES = 1;//TODO
+        private static final double AUTO_BALANCE_X_P = 0.1;//TODO this might be negative
         private static final double AUTO_BALANCE_X_D = 0;//TODO
 
         private static final double AUTO_BALANCE_Y_THRESHOLD_DEGREES = AUTO_BALANCE_X_THRESHOLD_DEGREES;//TODO
@@ -38,51 +38,63 @@ public class Drive extends SubsystemBase {
         private static final double AUTO_BALANCE_Y_D = AUTO_BALANCE_X_D;//TODO
 
         public static double getAntiTippingXThresholdDegrees() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_THRESHOLD_DEGREES", ANTI_TIPPING_X_THRESHOLD_DEGREES);
+            return ANTI_TIPPING_X_THRESHOLD_DEGREES;
+            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_THRESHOLD_DEGREES", ANTI_TIPPING_X_THRESHOLD_DEGREES);
         }
 
         public static double getAntiTippingXP() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_P", ANTI_TIPPING_X_P);
+            
+            return ANTI_TIPPING_X_P;
         }
 
         public static double getAntiTippingXD() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_D", ANTI_TIPPING_X_D);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_D", ANTI_TIPPING_X_D);
+            return ANTI_TIPPING_X_D;
         }
 
         public static double getAntiTippingYThresholdDegrees() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_THRESHOLD_DEGREES", ANTI_TIPPING_Y_THRESHOLD_DEGREES);
+            return ANTI_TIPPING_Y_THRESHOLD_DEGREES;
+            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_THRESHOLD_DEGREES", ANTI_TIPPING_Y_THRESHOLD_DEGREES);
         }
 
         public static double getAntiTippingYP() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_P", ANTI_TIPPING_Y_P);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_P", ANTI_TIPPING_Y_P);
+            return ANTI_TIPPING_Y_P;
         }
 
         public static double getAntiTippingYD() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_D", ANTI_TIPPING_Y_D);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_D", ANTI_TIPPING_Y_D);
+            return ANTI_TIPPING_Y_D;
         }
 
         public static double getAutoBalanceXThreshold() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_THRESHOLD_DEGREES", AUTO_BALANCE_X_THRESHOLD_DEGREES);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_THRESHOLD_DEGREES", AUTO_BALANCE_X_THRESHOLD_DEGREES);
+            return AUTO_BALANCE_X_THRESHOLD_DEGREES;
         }
 
         public static double getAutoBalanceXP() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_P", AUTO_BALANCE_X_P);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_P", AUTO_BALANCE_X_P);
+            return AUTO_BALANCE_X_P;
         }
 
         public static double getAutoBalanceXD() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_D", AUTO_BALANCE_X_D);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_D", AUTO_BALANCE_X_D);
+            return AUTO_BALANCE_X_D;
         }
 
         public static double getAutoBalanceYThreshold() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/UTO_BALANCE_Y_THRESHOLD_DEGREES", AUTO_BALANCE_Y_THRESHOLD_DEGREES);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/UTO_BALANCE_Y_THRESHOLD_DEGREES", AUTO_BALANCE_Y_THRESHOLD_DEGREES);
+            return AUTO_BALANCE_Y_THRESHOLD_DEGREES;
         }
 
         public static double getAutoBalanceYP() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_Y_P", AUTO_BALANCE_Y_P);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_Y_P", AUTO_BALANCE_Y_P);
+            return AUTO_BALANCE_Y_P;
         }
 
         public static double getAutoBalanceYD() {
-            return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_Y_D", AUTO_BALANCE_Y_D);
+            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_Y_D", AUTO_BALANCE_Y_D);
+            return AUTO_BALANCE_Y_D;
         }
     }
     
@@ -95,8 +107,10 @@ public class Drive extends SubsystemBase {
 
         private static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
         private static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
-        private static final double TRANSLATIONAL_KP = 1.5;
+        //TODO: these will change probably
+        private static final double TRANSLATIONAL_KP = 1.5; // this could probably be about 2.29
         private static final double THETA_KP = 3;
+
         private static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
             new TrapezoidProfile.Constraints(
                 MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
@@ -202,8 +216,8 @@ public class Drive extends SubsystemBase {
             }
         }
 
-        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); 
-        public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); // 0.5271
+        public static final double WHEEL_BASE = Units.inchesToMeters(23.75); // 0.6033
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left --
             new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
@@ -231,7 +245,8 @@ public class Drive extends SubsystemBase {
         NO_TIP_CORRECTION,
         ANTI_TIP,
         AUTO_BALANCE,
-        AUTO_BALANCE_ANTI_TIP
+        AUTO_BALANCE_ANTI_TIP,
+        ;
     }
 
     private final SwerveModule frontLeft = new SwerveModule(
@@ -310,6 +325,8 @@ public class Drive extends SubsystemBase {
         );
 
         DroidRageConstants.putNumber("Drive/Robot heading (Degrees)", getHeading());
+        DroidRageConstants.putNumber("Drive/Robot roll (Degrees)", getRoll());
+        DroidRageConstants.putNumber("Drive/Robot pitch (Degrees)", getPitch());
         DroidRageConstants.putString("Drive/Robot Location", getPose().getTranslation().toString());
 
         DroidRageConstants.putNumber("Drive/Turn/Position/Front Left (Radians)", frontLeft.getTurningPosition());
@@ -343,6 +360,7 @@ public class Drive extends SubsystemBase {
     }
 
     public TippingState getTippingState() {
+        DroidRageConstants.putString("Drive/Tipping State", tippingState.name());
         return tippingState;
     }
 
@@ -472,6 +490,7 @@ public class Drive extends SubsystemBase {
                     tippingState = TippingState.ANTI_TIP;
                     break;
             }
+            getTippingState();
         });
     }
 

@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -31,6 +32,10 @@ public class SwerveModule {
         public static final double TURN_P = 0.5;
 
         public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.47;
+
+        // private static final double DRIVE_KA = 0.12; 
+        private static final double DRIVE_KV = 2.3; // this value is multiplied by veloicty in meteres per second
+        private static final double DRIVE_KS = 0.5; //this value is the voltage that iwll be constantly applied
     }
 
     private final CANSparkMax driveMotor;
@@ -41,6 +46,8 @@ public class SwerveModule {
     private final CANCoder turnEncoder;
 
     private final PIDController turningPidController;
+
+    private final SimpleMotorFeedforward feedforward;
 
     public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, Supplier<Double> absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
@@ -67,6 +74,8 @@ public class SwerveModule {
 
         turningPidController = new PIDController(Constants.TURN_P, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
+
+        feedforward = new SimpleMotorFeedforward(Constants.DRIVE_KS, Constants.DRIVE_KV);
 
         resetDriveEncoder();
     }
@@ -110,6 +119,18 @@ public class SwerveModule {
         }
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
+        turnMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        SmartDashboard.putString("Swerve[" + turnEncoder.getDeviceID() + "] state", state.toString());
+        SmartDashboard.putString("Swerve[" + turnMotor.getDeviceId() + "] state", state.toString());
+    }
+
+    public void setFeedforwardState(SwerveModuleState state) {
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+        state = SwerveModuleState.optimize(state, getState().angle);
+        driveMotor.setVoltage(feedforward.calculate(state.speedMetersPerSecond));
         turnMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
         SmartDashboard.putString("Swerve[" + turnEncoder.getDeviceID() + "] state", state.toString());
         SmartDashboard.putString("Swerve[" + turnMotor.getDeviceId() + "] state", state.toString());
