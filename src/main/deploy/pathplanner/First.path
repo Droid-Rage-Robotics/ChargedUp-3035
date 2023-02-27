@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 4.0,
+        "y": 1.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.028629485830401258,
-        "y": 1.0449762328096086
+        "x": 3.446188178090642,
+        "y": 0.9999999999999999
       },
-      "holonomicAngle": 90.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": 0.3,
       "isLocked": true,
@@ -24,18 +24,68 @@
     },
     {
       "anchorPoint": {
-        "x": 0.5,
-        "y": 1.3
+        "x": 1.9,
+        "y": 1.0
       },
       "prevControl": {
-        "x": 0.5429442287456014,
-        "y": 0.3409122246815921
+        "x": 1.900598403286624,
+        "y": 0.9866356599320592
       },
-      "nextControl": null,
-      "holonomicAngle": 90.0,
+      "nextControl": {
+        "x": 1.8994015967133757,
+        "y": 1.0133643400679408
+      },
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": 0.3,
       "isLocked": true,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.5,
+        "y": 1.0
+      },
+      "prevControl": {
+        "x": 2.994295114826012,
+        "y": -0.2759722283249464
+      },
+      "nextControl": {
+        "x": 2.994295114826012,
+        "y": -0.2759722283249464
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9,
+        "y": 1.0
+      },
+      "prevControl": {
+        "x": 1.9,
+        "y": -0.5885502357033436
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
@@ -45,5 +95,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "Start"
+      ]
+    }
+  ]
 }
