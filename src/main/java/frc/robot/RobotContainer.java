@@ -2,14 +2,12 @@ package frc.robot;
 
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Drive.TeleOpConstants;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
+// import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualElevator;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,20 +17,20 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+// import edu.wpi.first.math.controller.PIDController;
+// import edu.wpi.first.math.controller.ProfiledPIDController;
+// import edu.wpi.first.math.geometry.Pose2d;
+// import edu.wpi.first.math.geometry.Rotation2d;
+// import edu.wpi.first.math.geometry.Translation2d;
+// import edu.wpi.first.math.trajectory.Trajectory;
+// import edu.wpi.first.math.trajectory.TrajectoryConfig;
+// import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+// import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -82,7 +80,6 @@ public class RobotContainer {
         driver.rightBumper()
             .onTrue(drive.setTurboSpeed())
             .onFalse(drive.setNormalSpeed());
-        
         driver.leftBumper()
             .onTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
@@ -96,9 +93,8 @@ public class RobotContainer {
             .onTrue(drive.toggleAntiTipping());
         driver.povDown()
             .onTrue(drive.toggleAutoBalance());
-    //     driver.rightBumper()
+    //     driver.y()
     //         .onTrue(claw.toggleClaw()); 
-    
     //     driver.rightTrigger()
     //         .onTrue(claw.intake()) 
     //         .onFalse(claw.stopIntake());
