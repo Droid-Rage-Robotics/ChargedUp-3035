@@ -2,15 +2,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.PIvot;
 
 public class ManualArm extends CommandBase {
     public static class Constants {    }
 
-    private final Arm arm;
+    private final PIvot arm;
     private final CommandXboxController operator;
     
-    public ManualArm(CommandXboxController operator, Arm arm) {
+    public ManualArm(CommandXboxController operator, PIvot arm) {
         this.arm = arm;
         this.operator = operator;
 

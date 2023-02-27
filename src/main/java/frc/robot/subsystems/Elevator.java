@@ -165,7 +165,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveHigh() {
-        switch (TrackedElement.get()) {
+        retur switch (TrackedElement.get()) {
             case CONE:
                 return setPosition(Position.HIGHCONE);
             case CUBE:

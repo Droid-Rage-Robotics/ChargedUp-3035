@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
 
-public class Arm extends SubsystemBase {
+public class PIvot extends SubsystemBase {
     public static class Constants {
         public static final double GEAR_RATIO = 1 / 1;
         public static final double GEAR_DIAMETER_METERS = 0.0481; // 1.893 inches
@@ -31,7 +31,8 @@ public class Arm extends SubsystemBase {
         HIGHCONE(0),
         HIGHCUBE(0),
 
-        INTAKEHIGH(0)
+        INTAKEHIGH(0),
+        HOLD(0),
         ;
 
         private final double position;
@@ -40,19 +41,19 @@ public class Arm extends SubsystemBase {
             this.position = position;
         }
     }
-    private final CANSparkMax armMotor;
+    private final CANSparkMax pivotMotor;
     private final PIDController controller;
     private volatile ArmPos armPos;
-    private final AbsoluteEncoder armAbsoluteEncoder;
+    private final AbsoluteEncoder pivotAbsoluteEncoder;
     // private final double manualSpeed = 0.4;
     
-    public Arm() {
-        armMotor = new CANSparkMax(18, MotorType.kBrushless);//TODO: Where is it plugged in?
+    public PIvot() {
+        pivotMotor = new CANSparkMax(18, MotorType.kBrushless);//TODO: Where is it plugged in?
 
-        armMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
 
-        armAbsoluteEncoder = armMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
-        armAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
+        pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
         // armAbsoluteEncoder.setInverted(false);
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
@@ -65,7 +66,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // DroidRageConstants.putNumber("Arm Position", armMotor.);
+        DroidRageConstants.putNumber("Arm Position", pivotAbsoluteEncoder.getPosition());
     }
   
     @Override
@@ -74,7 +75,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getTargetHeight() {
-        return DroidRageConstants.getNumber("Arm Encoder"+ armPos.name(), armAbsoluteEncoder.getPosition());
+        return DroidRageConstants.getNumber("Arm Encoder"+ armPos.name(), pivotAbsoluteEncoder.getPosition());
     }
 
     private CommandBase setArmPosition(ArmPos position) {
@@ -131,8 +132,12 @@ public class Arm extends SubsystemBase {
         }
     }
 
+    public CommandBase moveHold() {
+        return setArmPosition(ArmPos.HOLD);
+    }
+
     public CommandBase moveToPosition() {
-        return runOnce(() -> armMotor.set(controller.calculate(getTargetHeight())));
+        return runOnce(() -> pivotMotor.set(controller.calculate(getTargetHeight())));
     }
     public double getArmPosition(){
         return 0;

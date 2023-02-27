@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
 import frc.robot.subsystems.TrackedElement.Element;
 
-public class Claw extends SubsystemBase {
+public class Intake extends SubsystemBase {
     
 
 
@@ -21,7 +21,7 @@ public class Claw extends SubsystemBase {
     private final double intakeSpeed = 0.3;
     private final double outtakeSpeed = -0.3;
 
-    public Claw() {
+    public Intake() {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
         clawMotor.setIdleMode(IdleMode.kBrake);
 

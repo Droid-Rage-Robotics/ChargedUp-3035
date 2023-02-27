@@ -2,7 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.PIvot;
 // import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualElevator;
@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -57,7 +58,7 @@ public class RobotContainer {
     private final Drive drive = new Drive();
 
     private final Elevator elevator = new Elevator();
-    private final Arm arm = new Arm();
+    private final PIvot arm = new PIvot();
     // private final Claw claw = new Claw();
 
     private final CommandXboxController driver =
@@ -79,10 +80,10 @@ public class RobotContainer {
 
         driver.rightBumper()
             .onTrue(drive.setTurboSpeed())
-            .onFalse(drive.setNormalSpeed());
+            .onFalse(drive.setTurboSpeed());
         driver.leftBumper()
             .onTrue(drive.setSlowSpeed())
-            .onFalse(drive.setNormalSpeed());
+            .onFalse(drive.setTurboSpeed());
 
         driver.a()
             .onTrue(drive.resetHeading());
@@ -93,7 +94,37 @@ public class RobotContainer {
             .onTrue(drive.toggleAntiTipping());
         driver.povDown()
             .onTrue(drive.toggleAutoBalance());
-    //     driver.y()
+        driver.y()
+            .onTrue(
+                new SequentialCommandGroup(
+                    elevator.moveIntakeLow(),
+                    arm.moveIntakeLow()
+                    // claw.intake
+                )
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    arm.moveHold()
+                    // claw.outtake
+                )
+            );
+        driver.x()
+            .onTrue(
+                new SequentialCommandGroup(
+                    elevator.moveIntakeHigh(),
+                    arm.moveIntakeHigh()
+                    // claw.intake
+                )
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    elevator.moveMid(),
+                    arm.moveHold()
+                    // claw.outtake
+                )
+            );
+
+    //Wants a button to get cone off ground
     //         .onTrue(claw.toggleClaw()); 
     //     driver.rightTrigger()
     //         .onTrue(claw.intake()) 
@@ -132,9 +163,9 @@ public class RobotContainer {
         operator.povUp()
             .onTrue(elevator.moveIntakeHigh()
             );
-        operator.povDown()
-            .onTrue(elevator.moveIntakeLow()
-            );
+        // operator.povDown()
+        //     .onTrue(elevator.moveIntakeLow()
+        //     );
     //     //Buttons to add: Toggle Button for Cone/Cube
     //     arm.setDefaultCommand(new ManualArm(operator, arm));
 
