@@ -5,6 +5,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
+import frc.robot.commands.ManualElevator;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,6 +67,7 @@ public class RobotContainer {
 
         //Buttons to add: Toggle Button for Cone/Cube
         arm.setDefaultCommand(new ManualArm(operator, arm));
+        elevator.setDefaultCommand(new ManualElevator(operator, elevator));
 
         operator.a()
             .onTrue(
@@ -87,6 +89,12 @@ public class RobotContainer {
                     elevator.moveHigh(),
                     arm.moveHigh()
                 )
+            );
+        operator.povUp()
+            .onTrue(elevator.moveIntakeHigh()
+            );
+        operator.povDown()
+            .onTrue(elevator.moveIntakeLow()
             );
     }
 
