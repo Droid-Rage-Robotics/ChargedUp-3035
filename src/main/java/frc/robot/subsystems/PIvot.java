@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
 
-public class PIvot extends SubsystemBase {
+public class Pivot extends SubsystemBase {
     public static class Constants {
         public static final double GEAR_RATIO = 1 / 1;
-        public static final double GEAR_DIAMETER_METERS = 0.0481; // 1.893 inches
-        public static final double ROT_TO_METER = (GEAR_RATIO * Math.PI * GEAR_DIAMETER_METERS);
+        public static final double READINGS_PER_REVOLUTION = 1;
+        public static final double ROTATIONS_TO_DEGREES = (GEAR_RATIO * READINGS_PER_REVOLUTION / 360);
     }
 
     private enum ArmPos {
@@ -35,25 +35,24 @@ public class PIvot extends SubsystemBase {
         HOLD(0),
         ;
 
-        private final double position;
+        private final double degrees;
 
-        private ArmPos(double position) {
-            this.position = position;
+        private ArmPos(double degrees) {
+            this.degrees = degrees;
         }
     }
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
     private volatile ArmPos armPos;
     private final AbsoluteEncoder pivotAbsoluteEncoder;
-    // private final double manualSpeed = 0.4;
     
-    public PIvot() {
+    public Pivot() {
         pivotMotor = new CANSparkMax(18, MotorType.kBrushless);//TODO: Where is it plugged in?
 
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
-        pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROTATIONS_TO_DEGREES);
         // armAbsoluteEncoder.setInverted(false);
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
@@ -61,12 +60,12 @@ public class PIvot extends SubsystemBase {
         controller = new PIDController(0, 0, 0);
         controller.setTolerance(0.10); // meters
 
-        setArmPosition(ArmPos.START);
+        setTargetPosition(ArmPos.START);
     }
 
     @Override
     public void periodic() {
-        DroidRageConstants.putNumber("Arm Position", pivotAbsoluteEncoder.getPosition());
+        
     }
   
     @Override
@@ -74,74 +73,66 @@ public class PIvot extends SubsystemBase {
         periodic();
     }
 
-    public double getTargetHeight() {
+    public double getTargetPosition() {
         return DroidRageConstants.getNumber("Arm Encoder"+ armPos.name(), pivotAbsoluteEncoder.getPosition());
     }
 
-    private CommandBase setArmPosition(ArmPos position) {
+    private CommandBase setTargetPosition(ArmPos position) {
         return runOnce(() -> {
-            this.armPos = position;
-            controller.setSetpoint(getTargetHeight());
-            DroidRageConstants.putString("ArmPosition", position.name());
+            setTargetPosition(position.degrees).execute();
+            armPos = position;
+            DroidRageConstants.putString("Arm Position", position.name());
         });
     }
-    public CommandBase setArmPosition(double position) {
+    public CommandBase setTargetPosition(double position) {
         return runOnce(() -> {
             controller.setSetpoint(position);
-            DroidRageConstants.putNumber("ArmPosition", position);
+            DroidRageConstants.putNumber("Arm Position (Degrees)", position);
         });
     }
 
     public CommandBase moveIntakeLow() {
-        return setArmPosition(ArmPos.INTAKELOW);
+        return setTargetPosition(ArmPos.INTAKELOW);
     }
     public CommandBase moveIntakeHigh() {
-        return setArmPosition(ArmPos.INTAKEHIGH);
+        return setTargetPosition(ArmPos.INTAKEHIGH);
     }
     
     public CommandBase moveLow() {
-        switch (TrackedElement.get()) {
-            case CONE:
-                return setArmPosition(ArmPos.LOWCONE);
-            case CUBE:
-            case NONE:
-            default:
-                return setArmPosition(ArmPos.LOWCUBE);
-        }
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> ArmPos.LOWCONE;
+                case CUBE -> ArmPos.LOWCUBE;
+                case NONE -> ArmPos.LOWCUBE;
+            }
+        );
     }
 
     public CommandBase moveMid() {
-        switch (TrackedElement.get()) {
-            case CONE:
-                return setArmPosition(ArmPos.MIDCONE);
-            case CUBE:
-            case NONE:
-            default:
-                return setArmPosition(ArmPos.MIDCUBE);
-        }
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> ArmPos.MIDCONE;
+                case CUBE -> ArmPos.MIDCUBE;
+                case NONE -> ArmPos.MIDCUBE;
+            }
+        );
     }
 
     public CommandBase moveHigh() {
-        switch (TrackedElement.get()) {
-            case CONE:
-                return setArmPosition(ArmPos.HIGHCONE);
-            case CUBE:
-            case NONE:
-            default:
-                return setArmPosition(ArmPos.HIGHCUBE);
-        }
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> ArmPos.HIGHCONE;
+                case CUBE -> ArmPos.HIGHCUBE;
+                case NONE -> ArmPos.HIGHCUBE;
+            }
+        );
     }
 
     public CommandBase moveHold() {
-        return setArmPosition(ArmPos.HOLD);
+        return setTargetPosition(ArmPos.HOLD);
     }
 
-    public CommandBase moveToPosition() {
-        return runOnce(() -> pivotMotor.set(controller.calculate(getTargetHeight())));
-    }
-    public double getArmPosition(){
-        return 0;
-        // return armMotor.
-        //TODO:FIX!!
-    }
+    // public CommandBase moveToPosition() {
+    //     return runOnce(() -> pivotMotor.set(controller.calculate(getTargetPosition())));
+    // }
 }  
