@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -49,6 +51,7 @@ public class Elevator extends SubsystemBase {
     private final PIDController vertController;
     private final PIDController horizController;
     private volatile Position position;
+    private final SparkMaxAbsoluteEncoder absoluteEncoder;
     
     public Elevator() {
         leftElevator = new CANSparkMax(0, MotorType.kBrushless);
@@ -70,10 +73,14 @@ public class Elevator extends SubsystemBase {
         horizController.setTolerance(0.10); // meters
 
         setPosition(Position.START);
+
+        absoluteEncoder = leftElevator.getAbsoluteEncoder(Type.kDutyCycle);//TODO:TEST
     }
 
     @Override
     public void periodic() {
+        
+        DroidRageConstants.putNumber("Vertical Elevator/Height", absoluteEncoder.getPosition());
         DroidRageConstants.putNumber("Vertical Elevator/Height", encoder.getPosition());
 
         vertController.setPID(
@@ -84,7 +91,7 @@ public class Elevator extends SubsystemBase {
             vertController.setTolerance(
                 DroidRageConstants.getNumber("Vertical Eleveator/Tolerance", vertController.getPositionTolerance())
             );
-
+ 
             horizController.setPID(
                 DroidRageConstants.getNumber("Horizontal Eleveator/P", horizController.getP()),
                 DroidRageConstants.getNumber("Horizontal Eleveator/I", horizController.getI()),
@@ -108,13 +115,22 @@ public class Elevator extends SubsystemBase {
         return DroidRageConstants.getNumber("Horizontal Elevator/Position/"+ position.name(), position.horizontalMeters);
     }
 
-    private CommandBase setPosition(Position position) {
+    public CommandBase setPosition(Position position) {
         return runOnce(() -> {
             this.position = position;
-            vertController.setSetpoint(getTargetVerticalHeight());
-            DroidRageConstants.putString("Vertical Elevator/Position", position.name());
+            DroidRageConstants.putString("Elevator Position", position.name());
 
+            vertController.setSetpoint(getTargetVerticalHeight());
             horizController.setSetpoint(getTargetHorizontalDistance());
+        });
+    }
+    public CommandBase setPosition(double vertPosition, double horizPosition) {
+        return runOnce(() -> {
+            DroidRageConstants.putNumber("Vertical Elevator Position ", vertPosition);
+            DroidRageConstants.putNumber("Vertical Elevator Position ", horizPosition);
+
+            vertController.setSetpoint(vertPosition);
+            horizController.setSetpoint(horizPosition);
         });
     }
 
