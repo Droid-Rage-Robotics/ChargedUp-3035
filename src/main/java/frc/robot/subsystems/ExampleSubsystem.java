@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
+import frc.robot.utilities.MutableDouble;
 
 public class ExampleSubsystem extends SubsystemBase {
 
@@ -17,13 +18,14 @@ public class ExampleSubsystem extends SubsystemBase {
         ;
 
         // Even though this field is final, it can be changed bc the getters check network table
-        private final double first; 
-        private final double second;
+        private final MutableDouble first; 
+        private final MutableDouble second;
 
         private State(double first, double second) {
-            this.first = first;
-            this.second = second;
+            this.first = new MutableDouble(1, name()+"/First", "Example subysystem");
+            this.second = new MutableDouble(1, name()+"/Second", "Example subysystem");
         }
+        
     }
 
     private State state;
