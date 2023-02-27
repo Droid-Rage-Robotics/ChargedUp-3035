@@ -6,6 +6,7 @@ import frc.robot.subsystems.Drive.TeleOpConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
+import frc.robot.commands.ManualElevator;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 
 import java.util.ArrayList;
@@ -57,8 +58,8 @@ public class RobotContainer {
 
     private final Drive drive = new Drive();
 
-    // private final Elevator elevator = new Elevator();
-    // private final Arm arm = new Arm();
+    private final Elevator elevator = new Elevator();
+    private final Arm arm = new Arm();
     // private final Claw claw = new Claw();
 
     private final CommandXboxController driver =
@@ -107,6 +108,37 @@ public class RobotContainer {
 
 
 
+        //Buttons to add: Toggle Button for Cone/Cube
+        arm.setDefaultCommand(new ManualArm(operator, arm));
+        elevator.setDefaultCommand(new ManualElevator(operator, elevator));
+
+        operator.a()
+            .onTrue(
+                new ParallelCommandGroup(
+                    elevator.moveLow(),
+                    arm.moveLow()
+                )
+            );
+        operator.x()
+            .onTrue(
+                new ParallelCommandGroup(
+                    elevator.moveMid(),
+                    arm.moveMid()
+                )
+            );
+        operator.y()
+            .onTrue(
+                new ParallelCommandGroup(
+                    elevator.moveHigh(),
+                    arm.moveHigh()
+                )
+            );
+        operator.povUp()
+            .onTrue(elevator.moveIntakeHigh()
+            );
+        operator.povDown()
+            .onTrue(elevator.moveIntakeLow()
+            );
     //     //Buttons to add: Toggle Button for Cone/Cube
     //     arm.setDefaultCommand(new ManualArm(operator, arm));
 
