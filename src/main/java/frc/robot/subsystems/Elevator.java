@@ -1,12 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,16 +44,16 @@ public class Elevator extends SubsystemBase {
     }
     
     private final CANSparkMax leftElevator, rightElevator, horizMotor;
-    private final RelativeEncoder encoder;
+    // private final RelativeEncoder encoder;
     private final PIDController vertController;
     private final PIDController horizController;
     private volatile Position position;
-    private final SparkMaxAbsoluteEncoder absoluteEncoder;
+    private final SparkMaxAbsoluteEncoder rightAbsoluteEncoder, horizAbsoluteEncoder;
     
     public Elevator() {
-        leftElevator = new CANSparkMax(0, MotorType.kBrushless);
-        rightElevator = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
-        horizMotor = new CANSparkMax(0, MotorType.kBrushless);
+        leftElevator = new CANSparkMax(16, MotorType.kBrushless);
+        rightElevator = new CANSparkMax(15, MotorType.kBrushless);//TODO: Where is it plugged in?
+        horizMotor = new CANSparkMax(17, MotorType.kBrushless);
 
         leftElevator.setIdleMode(IdleMode.kBrake);
         rightElevator.setIdleMode(IdleMode.kBrake);
@@ -64,8 +61,8 @@ public class Elevator extends SubsystemBase {
 
         rightElevator.follow(leftElevator, true);
   
-        encoder = leftElevator.getEncoder();  //TODO: Where is it plugged in?
-        encoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        // encoder = leftElevator.getEncoder();  //TODO: Where is it plugged in?
+        // encoder.setPositionConversionFactor(Constants.ROT_TO_METER);
 
         vertController = new PIDController(0, 0, 0);
         vertController.setTolerance(0.10); // meters
@@ -74,14 +71,18 @@ public class Elevator extends SubsystemBase {
 
         setPosition(Position.START);
 
-        absoluteEncoder = leftElevator.getAbsoluteEncoder(Type.kDutyCycle);//TODO:TEST
+        rightAbsoluteEncoder = rightElevator.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
+        rightAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        horizAbsoluteEncoder = horizMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
+        horizAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
     }
 
     @Override
     public void periodic() {
         
-        DroidRageConstants.putNumber("Vertical Elevator/Height", absoluteEncoder.getPosition());
-        DroidRageConstants.putNumber("Vertical Elevator/Height", encoder.getPosition());
+        DroidRageConstants.putNumber("Vertical Elevator/Height", rightAbsoluteEncoder.getPosition());
+        DroidRageConstants.putNumber("Horizontal Distance", horizAbsoluteEncoder.getPosition());
+        // DroidRageConstants.putNumber("Vertical Elevator/Height", enco 3der.getPosition());
 
         vertController.setPID(
                 DroidRageConstants.getNumber("Vertical Eleveator/P", vertController.getP()),

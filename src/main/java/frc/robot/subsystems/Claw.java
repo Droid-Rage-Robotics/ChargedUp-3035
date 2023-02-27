@@ -22,7 +22,7 @@ public class Claw extends SubsystemBase {
     private final double outtakeSpeed = -0.3;
 
     public Claw() {
-        clawMotor = new CANSparkMax(0, MotorType.kBrushless);
+        clawMotor = new CANSparkMax(19, MotorType.kBrushless);
         clawMotor.setIdleMode(IdleMode.kBrake);
 
         intakeSolenoid = new DoubleSolenoid(null, 0, 0);//TODO:change

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -42,14 +43,17 @@ public class Arm extends SubsystemBase {
     private final CANSparkMax armMotor;
     private final PIDController controller;
     private volatile ArmPos armPos;
+    private final AbsoluteEncoder armAbsoluteEncoder;
     // private final double manualSpeed = 0.4;
     
     public Arm() {
-        armMotor = new CANSparkMax(0, MotorType.kBrushless);//TODO: Where is it plugged in?
+        armMotor = new CANSparkMax(18, MotorType.kBrushless);//TODO: Where is it plugged in?
 
         armMotor.setIdleMode(IdleMode.kBrake);
 
-        armMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
+        armAbsoluteEncoder = armMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
+        armAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        // armAbsoluteEncoder.setInverted(false);
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
 
@@ -70,7 +74,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getTargetHeight() {
-        return DroidRageConstants.getNumber("Vertical Elevator/Position/"+ armPos.name(), armPos.position);
+        return DroidRageConstants.getNumber("Arm Encoder"+ armPos.name(), armAbsoluteEncoder.getPosition());
     }
 
     private CommandBase setArmPosition(ArmPos position) {
