@@ -1,0 +1,26 @@
+[
+  {
+    "name": "/Shuffleboard/Drive/TeleOp//Max acceleration",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Drive/YourMom/Max Angular Acceleration",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Drive/TeleOp/Max acceleration",
+    "type": "double",
+    "value": 1.0,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

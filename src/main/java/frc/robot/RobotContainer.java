@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Drive.TeleOpConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
@@ -34,6 +35,10 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
+    public RobotContainer() {
+        Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND.get();
+        Drive.TeleOpConstants.MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND.get();
+    }
     //TODO: Ideas
     // all abort button
     // override button for when sensors fail
@@ -49,8 +54,9 @@ public class RobotContainer {
     // fixnetowrk tables!!!
     // recalibrate pigeon on start
     // why are swerves not simplifying turns
-    
+
     private final Drive drive = new Drive();
+
     // private final Elevator elevator = new Elevator();
     // private final Arm arm = new Arm();
     // private final Claw claw = new Claw();

@@ -13,13 +13,25 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTablesJNI;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
+import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.MutableDoubleBuilder;
 
 public class Drive extends SubsystemBase {
     public static class TeleOpConstants {
-        public static final double MAX_ACCELERATION_UNITS_PER_SECOND = 3;//TODO find what feels best
-        public static final double MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = 3;//TODO find what feels best
+        public static final String tab = "Drive/TeleOp2/";
+        // @Log
+        public static final MutableDouble MAX_ACCELERATION_UNITS_PER_SECOND = 
+            new MutableDoubleBuilder(3, "Max acceleration", tab)
+                .withWidget(BuiltInWidgets.kNumberBar)
+                .build();
+        public static final MutableDouble MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = new MutableDouble(3, "Max Angular Acceleration", "Drive/YourMom"); //TODO find what feels best
 
         private static final double ANTI_TIPPING_X_THRESHOLD_DEGREES = 3;//TODO
         private static final double ANTI_TIPPING_X_P = -0.1; //TODO this might be negative

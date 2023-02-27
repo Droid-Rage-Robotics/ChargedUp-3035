@@ -25,9 +25,9 @@ public class SwerveDriveTeleop extends CommandBase {
         this.y = y;
         this.turn = turn;
 
-        this.xLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND);
-        this.yLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND);
-        this.turnLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND);
+        this.xLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.yLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.turnLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND.get());
 
         antiTipX = new PIDController(Drive.TeleOpConstants.getAntiTippingXP(), 0, Drive.TeleOpConstants.getAntiTippingXD());
         antiTipY = new PIDController(Drive.TeleOpConstants.getAntiTippingYP(), 0, Drive.TeleOpConstants.getAntiTippingYD());
