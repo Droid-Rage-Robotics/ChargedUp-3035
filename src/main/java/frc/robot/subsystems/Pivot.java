@@ -22,7 +22,7 @@ public class Pivot extends SubsystemBase {
         public static final double ROTATIONS_TO_DEGREES = (GEAR_RATIO * READINGS_PER_REVOLUTION / 360);
     }
 
-    private enum ArmPos {
+    private enum Position {
         START(0),
         INTAKELOW(0),//TODO:Change
 
@@ -41,13 +41,13 @@ public class Pivot extends SubsystemBase {
 
         private final MutableDouble degrees;
 
-        private ArmPos(double degrees) {
-            this.degrees = new MutableDouble(degrees, ArmPos.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
+        private Position(double degrees) {
+            this.degrees = new MutableDouble(degrees, Position.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
         }
     }
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
-    private volatile ArmPos armPos = ArmPos.START;
+    private volatile Position position = Position.START;
     private final AbsoluteEncoder pivotAbsoluteEncoder;
 
     private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
@@ -70,12 +70,12 @@ public class Pivot extends SubsystemBase {
         new ComplexWidgetBuilder(controller, "PID Controller", Pivot.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController);
 
-        setTargetPosition(ArmPos.START);
+        setTargetPosition(Position.START);
     }
 
     @Override
     public void periodic() {
-        
+        encoderPositionWriter.set(getPosition());
     }
   
     @Override
@@ -83,13 +83,21 @@ public class Pivot extends SubsystemBase {
         periodic();
     }
 
-    public double getTargetPosition() {
-        return armPos.degrees.get();
+    public void update() {
+        pivotMotor.set(controller.calculate(getPosition()));
     }
 
-    private CommandBase setTargetPosition(ArmPos position) {
+    public double getPosition() {
+        return pivotAbsoluteEncoder.getPosition();
+    }
+
+    public double getTargetPosition() {
+        return position.degrees.get();
+    }
+
+    private CommandBase setTargetPosition(Position position) {
         return runOnce(() -> {
-            armPos = position;
+            this.position = position;
             targetPositionWriter.set(position.degrees.get());
         });
     }
@@ -101,18 +109,18 @@ public class Pivot extends SubsystemBase {
     }
 
     public CommandBase moveIntakeLow() {
-        return setTargetPosition(ArmPos.INTAKELOW);
+        return setTargetPosition(Position.INTAKELOW);
     }
     public CommandBase moveIntakeHigh() {
-        return setTargetPosition(ArmPos.INTAKEHIGH);
+        return setTargetPosition(Position.INTAKEHIGH);
     }
     
     public CommandBase moveLow() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> ArmPos.LOWCONE;
-                case CUBE -> ArmPos.LOWCUBE;
-                case NONE -> ArmPos.LOWCUBE;
+                case CONE -> Position.LOWCONE;
+                case CUBE -> Position.LOWCUBE;
+                case NONE -> Position.LOWCUBE;
             }
         );
     }
@@ -120,9 +128,9 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveMid() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> ArmPos.MIDCONE;
-                case CUBE -> ArmPos.MIDCUBE;
-                case NONE -> ArmPos.MIDCUBE;
+                case CONE -> Position.MIDCONE;
+                case CUBE -> Position.MIDCUBE;
+                case NONE -> Position.MIDCUBE;
             }
         );
     }
@@ -130,15 +138,15 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveHigh() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> ArmPos.HIGHCONE;
-                case CUBE -> ArmPos.HIGHCUBE;
-                case NONE -> ArmPos.HIGHCUBE;
+                case CONE -> Position.HIGHCONE;
+                case CUBE -> Position.HIGHCUBE;
+                case NONE -> Position.HIGHCUBE;
             }
         );
     }
 
     public CommandBase moveHold() {
-        return setTargetPosition(ArmPos.HOLD);
+        return setTargetPosition(Position.HOLD);
     }
 
     // public CommandBase moveToPosition() {
