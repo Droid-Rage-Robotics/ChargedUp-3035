@@ -160,10 +160,10 @@ public class RobotContainer {
                     arm.moveHigh()
                 )
             );
-        operator.povUp()
-            .onTrue(
-                elevator.changePosition()
-            );
+        // operator.povUp()
+        //     .onTrue(
+        //         elevator.changePosition()
+        //     );
     //     //Buttons to add: Toggle Button for Cone/Cube
     //     arm.setDefaultCommand(new ManualArm(operator, arm));
 

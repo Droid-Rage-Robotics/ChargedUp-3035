@@ -18,7 +18,9 @@ public class ManualElevator extends CommandBase {
     }
 
     @Override
-    public void initialize() { }
+    public void initialize() {
+        elevator.isMovingManually = true;
+     }
 
     @Override
     public void execute() {//TODO:Should we make it a different joystick? And move arm to 
@@ -34,6 +36,7 @@ public class ManualElevator extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        elevator.isMovingManually = false;
         return false;
     }
 }

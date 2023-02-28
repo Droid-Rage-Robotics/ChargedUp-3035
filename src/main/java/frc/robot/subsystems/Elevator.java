@@ -49,6 +49,7 @@ public class Elevator extends SubsystemBase {
     private final PIDController horizController;
     private volatile Position position;
     private final SparkMaxAbsoluteEncoder rightAbsoluteEncoder, horizAbsoluteEncoder;
+    public boolean isMovingManually;
     
     public Elevator() {
         leftElevator = new CANSparkMax(16, MotorType.kBrushless);
@@ -75,6 +76,8 @@ public class Elevator extends SubsystemBase {
         rightAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
         horizAbsoluteEncoder = horizMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
         horizAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+
+        isMovingManually = false;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class Elevator extends SubsystemBase {
         
         DroidRageConstants.putNumber("Vertical Elevator/Height", rightAbsoluteEncoder.getPosition());
         DroidRageConstants.putNumber("Horizontal Distance", horizAbsoluteEncoder.getPosition());
-        // DroidRageConstants.putNumber("Vertical Elevator/Height", enco 3der.getPosition());
+        // DroidRageConstants.putNumber("Vertical Elevator/Height", encoder.getPosition());
 
         vertController.setPID(
                 DroidRageConstants.getNumber("Vertical Eleveator/P", vertController.getP()),
@@ -165,6 +168,9 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveHigh() {
+        if(isMovingManually){//TODO:Test
+            changePosition(position);
+        }
         switch (TrackedElement.get()) {
             case CONE:
                 return setPosition(Position.HIGHCONE);
@@ -180,7 +186,7 @@ public class Elevator extends SubsystemBase {
     //     return runOnce(() -> leftElevator.set(vertController.calculate(encoder.getPosition())));
     // }
 
-    public CommandBase changePosition(){
+    public CommandBase changePosition(Position position){
         return runOnce(() ->{
             Position orgPos = position;
             orgPos.verticalMeters = getTargetVerticalHeight();
