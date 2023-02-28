@@ -1,13 +1,18 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.DroidRageConstants;
+import frc.robot.utilities.ComplexWidgetBuilder;
+import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.WriteOnlyDouble;
+import frc.robot.utilities.WriteOnlyString;
 
 public class Elevator extends SubsystemBase {
     public static class Constants {
@@ -34,12 +39,12 @@ public class Elevator extends SubsystemBase {
         
         ;
 
-        private  double verticalMeters;
-        private double horizontalMeters;
+        private MutableDouble verticalMeters;
+        private MutableDouble horizontalMeters;
 
         private Position(double verticalMeters, double horizontalMeters) {
-            this.verticalMeters = verticalMeters;
-            this.horizontalMeters = horizontalMeters;
+            this.verticalMeters = new MutableDouble(verticalMeters, name()+": Vertical (Meters)", Elevator.class.getSimpleName());
+            this.horizontalMeters = new MutableDouble(horizontalMeters, name()+": Horizontal (Meters)", Elevator.class.getSimpleName());
         }
     }
     
@@ -47,9 +52,16 @@ public class Elevator extends SubsystemBase {
     // private final RelativeEncoder encoder;
     private final PIDController vertController;
     private final PIDController horizController;
-    private volatile Position position;
+    private volatile Position position = Position.START;
     private final SparkMaxAbsoluteEncoder rightAbsoluteEncoder, horizAbsoluteEncoder;
     public boolean isMovingManually;
+    private final WriteOnlyString positionWriter = new WriteOnlyString(position.name(), "Elevator Position", Elevator.class.getSimpleName());
+    
+    private final WriteOnlyDouble verticalEncoderPositionWriter = new WriteOnlyDouble(0, "Vertical Encoder Position (Meters)", Elevator.class.getSimpleName());
+    private final WriteOnlyDouble horizontalEncoderPositionWriter = new WriteOnlyDouble(0, "Horizontal Encoder Position (Meters)", Elevator.class.getSimpleName());
+    
+    private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
+    private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
     
     public Elevator() {
         leftElevator = new CANSparkMax(16, MotorType.kBrushless);
@@ -70,6 +82,11 @@ public class Elevator extends SubsystemBase {
         horizController = new PIDController(0, 0, 0);
         horizController.setTolerance(0.10); // meters
 
+        new ComplexWidgetBuilder(vertController, "Vertical PID Controller", Elevator.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+        new ComplexWidgetBuilder(horizController, "Horizontal PID Controller", Elevator.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+
         setPosition(Position.START);
 
         rightAbsoluteEncoder = rightElevator.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
@@ -82,28 +99,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
-        DroidRageConstants.putNumber("Vertical Elevator/Height", rightAbsoluteEncoder.getPosition());
-        DroidRageConstants.putNumber("Horizontal Distance", horizAbsoluteEncoder.getPosition());
-        // DroidRageConstants.putNumber("Vertical Elevator/Height", encoder.getPosition());
-
-        vertController.setPID(
-                DroidRageConstants.getNumber("Vertical Eleveator/P", vertController.getP()),
-                DroidRageConstants.getNumber("Vertical Eleveator/I", vertController.getI()),
-                DroidRageConstants.getNumber("Vertical Eleveator/D", vertController.getD())
-            );
-            vertController.setTolerance(
-                DroidRageConstants.getNumber("Vertical Eleveator/Tolerance", vertController.getPositionTolerance())
-            );
- 
-            horizController.setPID(
-                DroidRageConstants.getNumber("Horizontal Eleveator/P", horizController.getP()),
-                DroidRageConstants.getNumber("Horizontal Eleveator/I", horizController.getI()),
-                DroidRageConstants.getNumber("Horizontal Eleveator/D", horizController.getD())
-            );
-            horizController.setTolerance(
-                DroidRageConstants.getNumber("Horizontal Eleveator/Tolerance", horizController.getPositionTolerance())
-            );
+        verticalEncoderPositionWriter.set(rightAbsoluteEncoder.getPosition());
+        horizontalEncoderPositionWriter.set(horizAbsoluteEncoder.getPosition());
     }
 
     @Override
@@ -111,30 +108,39 @@ public class Elevator extends SubsystemBase {
         periodic();
     }
 
+    public Position getTargetPosition() {
+        return position;
+    }
+
     public double getTargetVerticalHeight() {
-        return DroidRageConstants.getNumber("Vertical Elevator/Position/"+ position.name(), position.verticalMeters);
+        return position.verticalMeters.get();
     }
 
     public double getTargetHorizontalDistance() {
-        return DroidRageConstants.getNumber("Horizontal Elevator/Position/"+ position.name(), position.horizontalMeters);
+        return position.horizontalMeters.get();
     }
 
     public CommandBase setPosition(Position position) {
         return runOnce(() -> {
             this.position = position;
-            DroidRageConstants.putString("Elevator Position", position.name());
 
             vertController.setSetpoint(getTargetVerticalHeight());
             horizController.setSetpoint(getTargetHorizontalDistance());
+
+            positionWriter.set(getTargetPosition().name());
+            verticalTargetPositionWriter.set(getTargetPosition().verticalMeters.get());
+            horizontalTargetPositionWriter.set(getTargetPosition().horizontalMeters.get());
         });
     }
     public CommandBase setPosition(double vertPosition, double horizPosition) {
         return runOnce(() -> {
-            DroidRageConstants.putNumber("Vertical Elevator Position ", vertPosition);
-            DroidRageConstants.putNumber("Vertical Elevator Position ", horizPosition);
-
             vertController.setSetpoint(vertPosition);
             horizController.setSetpoint(horizPosition);
+
+            positionWriter.set(getTargetPosition().name()+" (Modified)");
+            verticalTargetPositionWriter.set(getTargetPosition().verticalMeters.get());
+            horizontalTargetPositionWriter.set(getTargetPosition().horizontalMeters.get());
+
         });
     }
 
@@ -146,51 +152,40 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveLow() {
-        switch (TrackedElement.get()) {
-            case CONE:
-                return setPosition(Position.LOWCONE);
-            case CUBE:
-            case NONE:
-            default:
-                return setPosition(Position.LOWCUBE);
-        }
+        return setPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> Position.LOWCONE;
+                case CUBE -> Position.LOWCUBE;
+                case NONE -> Position.LOWCUBE;
+            }
+        );
     }
 
     public CommandBase moveMid() {
-        switch (TrackedElement.get()) {
-            case CONE:
-                return setPosition(Position.MIDCONE);
-            case CUBE:
-            case NONE:
-            default:
-                return setPosition(Position.MIDCUBE);
-        }
+        return setPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> Position.MIDCONE;
+                case CUBE -> Position.MIDCUBE;
+                case NONE -> Position.MIDCUBE;
+            }
+        );
     }
 
     public CommandBase moveHigh() {
         if(isMovingManually){//TODO:Test
-            changePosition(position);
+            changePosition();
         }
-        switch (TrackedElement.get()) {
-            case CONE:
-                return setPosition(Position.HIGHCONE);
-            case CUBE:
-            case NONE:
-            default:
-                return setPosition(Position.HIGHCUBE);
-        }
+        return setPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> Position.HIGHCONE;
+                case CUBE -> Position.HIGHCUBE;
+                case NONE -> Position.HIGHCUBE;
+            }
+        );
     }
 
-
-    // public CommandBase moveToPosition() {
-    //     return runOnce(() -> leftElevator.set(vertController.calculate(encoder.getPosition())));
-    // }
-
-    public CommandBase changePosition(Position position){
-        return runOnce(() ->{
-            Position orgPos = position;
-            orgPos.verticalMeters = getTargetVerticalHeight();
-            orgPos.horizontalMeters = getTargetHorizontalDistance();
-        });
+    public void changePosition() {
+        position.verticalMeters.set(getTargetVerticalHeight());
+        position.horizontalMeters.set(getTargetHorizontalDistance());
     }
 }  

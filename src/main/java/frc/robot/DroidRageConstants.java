@@ -1,10 +1,8 @@
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-
+import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class DroidRageConstants {
     public static class Gamepad {
@@ -13,44 +11,54 @@ public final class DroidRageConstants {
         public static final double STICK_DEADZONE = 0.2;
     }
 
-    public static SuppliedValueWidget<Double> makeShuffleboardDouble(DoubleSupplier valueSupplier, String title, String tab) {
-        return Shuffleboard.getTab(tab)
-            .addDouble(title, valueSupplier);
+    public static void registerSendable(Sendable sendable, String title, String tab) {
+        Shuffleboard.getTab(tab)
+            .add(title, sendable);
     }
+
+    public static void registerVideo(VideoSource video, String title, String tab) {
+        Shuffleboard.getTab(tab)
+            .add(title, video);
+    }
+
+    // public static SuppliedValueWidget<Double> makeShuffleboardDouble(DoubleSupplier valueSupplier, String title, String tab) {
+    //     return Shuffleboard.getTab(tab)
+    //         .addDouble(title, valueSupplier);
+    // }
     
-    public static double getNumber(String name, double value) {
-        double myValue = SmartDashboard.getNumber(name, value);
-        // if (myValue == value) {
-        //     SmartDashboard.putNumber(name, value);
-        // }
-        return myValue;
-    }
+    // public static double getNumber(String name, double value) {
+    //     double myValue = SmartDashboard.getNumber(name, value);
+    //     // if (myValue == value) {
+    //     //     SmartDashboard.putNumber(name, value);
+    //     // }
+    //     return myValue;
+    // }
 
-    public static boolean getBoolean(String name, boolean value) {
-        boolean myValue = SmartDashboard.getBoolean(name, value);
-        if (myValue == value) {
-            SmartDashboard.putBoolean(name, value);
-        }
-        return myValue;
-    }
+    // public static boolean getBoolean(String name, boolean value) {
+    //     boolean myValue = SmartDashboard.getBoolean(name, value);
+    //     if (myValue == value) {
+    //         SmartDashboard.putBoolean(name, value);
+    //     }
+    //     return myValue;
+    // }
 
-    public static String getString(String name, String value) {
-        String myValue = SmartDashboard.getString(name, value);
-        if (myValue == value) {
-            SmartDashboard.putString(name, value);
-        }
-        return myValue;
-    }
+    // public static String getString(String name, String value) {
+    //     String myValue = SmartDashboard.getString(name, value);
+    //     if (myValue == value) {
+    //         SmartDashboard.putString(name, value);
+    //     }
+    //     return myValue;
+    // }
 
-    public static void putNumber(String name, double value) {
-        SmartDashboard.putNumber(name, value);
-    }
+    // public static void putNumber(String name, double value) {
+    //     SmartDashboard.putNumber(name, value);
+    // }
 
-    public static void putBoolean(String name, boolean value) {
-        SmartDashboard.putBoolean(name, value);
-    }
+    // public static void putBoolean(String name, boolean value) {
+    //     SmartDashboard.putBoolean(name, value);
+    // }
 
-    public static void putString(String name, String value) {
-        SmartDashboard.putString(name, value);
-    }
+    // public static void putString(String name, String value) {
+    //     SmartDashboard.putString(name, value);
+    // }
 }

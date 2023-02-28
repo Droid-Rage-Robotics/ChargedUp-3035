@@ -13,219 +13,67 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
+import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.MutableDoubleBuilder;
+import frc.robot.utilities.MutableInteger;
+import frc.robot.utilities.WriteOnlyDouble;
+import frc.robot.utilities.WriteOnlyString;
 
 public class Drive extends SubsystemBase {
-    public static class TeleOpConstants {
-        public static final String tab = "Drive/TeleOp2/";
-        // @Log
-        public static final MutableDouble MAX_ACCELERATION_UNITS_PER_SECOND = 
-            new MutableDoubleBuilder(3, "Max acceleration", tab)
-                .withWidget(BuiltInWidgets.kNumberBar)
-                .build();
-        public static final MutableDouble MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND = new MutableDouble(3, "Max Angular Acceleration", "Drive/YourMom"); //TODO find what feels best
-
-        private static final double ANTI_TIPPING_X_THRESHOLD_DEGREES = 3;//TODO
-        private static final double ANTI_TIPPING_X_P = -0.1; //TODO this might be negative
-        private static final double ANTI_TIPPING_X_D = 0; //TODO
-
-        private static final double ANTI_TIPPING_Y_THRESHOLD_DEGREES = ANTI_TIPPING_X_THRESHOLD_DEGREES;//TODO
-        private static final double ANTI_TIPPING_Y_P = ANTI_TIPPING_X_P; //TODO
-        private static final double ANTI_TIPPING_Y_D = ANTI_TIPPING_X_D; //TODO
-
-        private static final double AUTO_BALANCE_X_THRESHOLD_DEGREES = 1;//TODO
-        private static final double AUTO_BALANCE_X_P = 0.1;//TODO this might be negative
-        private static final double AUTO_BALANCE_X_D = 0;//TODO
-
-        private static final double AUTO_BALANCE_Y_THRESHOLD_DEGREES = AUTO_BALANCE_X_THRESHOLD_DEGREES;//TODO
-        private static final double AUTO_BALANCE_Y_P = AUTO_BALANCE_X_P;//TODO
-        private static final double AUTO_BALANCE_Y_D = AUTO_BALANCE_X_D;//TODO
-
-        public static double getAntiTippingXThresholdDegrees() {
-            return ANTI_TIPPING_X_THRESHOLD_DEGREES;
-            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_THRESHOLD_DEGREES", ANTI_TIPPING_X_THRESHOLD_DEGREES);
+    public enum TeleOpNumbers {
+        MAX_ACCELERATION_UNITS_PER_SECOND(3),
+        MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND(3),
+        ;
+        public final MutableDouble value;
+        private TeleOpNumbers(double value) {
+            this.value = new MutableDouble(value, TeleOpNumbers.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
         }
+    }
+    public enum TeleOpOptions {
+        IS_FIELD_ORIENTED(true),
+        IS_SQUARED_INPUTS(true),
+        ;
 
-        public static double getAntiTippingXP() {
-            
-            return ANTI_TIPPING_X_P;
-        }
-
-        public static double getAntiTippingXD() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_X_D", ANTI_TIPPING_X_D);
-            return ANTI_TIPPING_X_D;
-        }
-
-        public static double getAntiTippingYThresholdDegrees() {
-            return ANTI_TIPPING_Y_THRESHOLD_DEGREES;
-            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_THRESHOLD_DEGREES", ANTI_TIPPING_Y_THRESHOLD_DEGREES);
-        }
-
-        public static double getAntiTippingYP() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_P", ANTI_TIPPING_Y_P);
-            return ANTI_TIPPING_Y_P;
-        }
-
-        public static double getAntiTippingYD() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/ANTI_TIPPING_Y_D", ANTI_TIPPING_Y_D);
-            return ANTI_TIPPING_Y_D;
-        }
-
-        public static double getAutoBalanceXThreshold() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_THRESHOLD_DEGREES", AUTO_BALANCE_X_THRESHOLD_DEGREES);
-            return AUTO_BALANCE_X_THRESHOLD_DEGREES;
-        }
-
-        public static double getAutoBalanceXP() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_P", AUTO_BALANCE_X_P);
-            return AUTO_BALANCE_X_P;
-        }
-
-        public static double getAutoBalanceXD() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_X_D", AUTO_BALANCE_X_D);
-            return AUTO_BALANCE_X_D;
-        }
-
-        public static double getAutoBalanceYThreshold() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/UTO_BALANCE_Y_THRESHOLD_DEGREES", AUTO_BALANCE_Y_THRESHOLD_DEGREES);
-            return AUTO_BALANCE_Y_THRESHOLD_DEGREES;
-        }
-
-        public static double getAutoBalanceYP() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_Y_P", AUTO_BALANCE_Y_P);
-            return AUTO_BALANCE_Y_P;
-        }
-
-        public static double getAutoBalanceYD() {
-            // return DroidRageConstants.getNumber("Drive/TeleOp/AUTO_BALANCE_Y_D", AUTO_BALANCE_Y_D);
-            return AUTO_BALANCE_Y_D;
+        public final MutableBoolean value;
+        private TeleOpOptions(boolean value) {
+            this.value = new MutableBoolean(value, TeleOpOptions.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
         }
     }
     
-    public static class AutoConstants {
-        private static final double MAX_SPEED_METERS_PER_SECOND = 
-            SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4;
-
-        private static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 
-            SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10;
-
-        private static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // 3 meters per second per second
-        private static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI / 4; // 1 / 8 of a full rotation per second per second
-        //TODO: these will change probably
-        private static final double TRANSLATIONAL_KP = 1.5; // this could probably be about 2.29
-        private static final double THETA_KP = 3;
-
-        private static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = 
-            new TrapezoidProfile.Constraints(
-                MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 
-                MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED
-            );
-
-        public static double getMaxSpeedMetersPerSecond() {
-            return DroidRageConstants.getNumber("Drive/Auto/MAX_SPEED_METERS_PER_SECOND", MAX_SPEED_METERS_PER_SECOND);
+    public enum AutoConfig {
+        MAX_SPEED_METERS_PER_SECOND(SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4),
+        MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10),
+        MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(3),
+        MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(Math.PI / 4), // 1 / 8 of a full rotation per second per second),
+        TRANSLATIONAL_KP(1.5), // this could probably be about 2.29
+        THETA_KP(3),
+        ;
+        public final MutableDouble value;
+        private AutoConfig(double value) {
+            this.value = new MutableDouble(value, AutoConfig.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
         }
+    }
 
-        public static double getMaxAngularSpeedRadiansPerSecond() {
-            return DroidRageConstants.getNumber("Drive/Auto/MAX_ANGULAR_SPEED_RADIANS_PER_SECOND", MAX_ANGULAR_SPEED_RADIANS_PER_SECOND);
-        }
+    public enum SwerveConfig {
+        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(1.24),
+        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(2.26),
+        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0.99),
+        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(1.74),
 
-        public static double getMaxAccelerationMetersPerSecondSquared() {
-            return DroidRageConstants.getNumber("Drive/Auto/MAX_ACCELERATION_METERS_PER_SECOND_SQUARED", MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
-        }
-
-        public static double getMaxAngularAccelerationRadiansPerSecondSquared() {
-            return DroidRageConstants.getNumber("Drive/Auto/MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED", MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED);
-        }
-
-        public static double getTranslationalKp() {
-            return DroidRageConstants.getNumber("Drive/Auto/TRANSLATIONAL_KP", TRANSLATIONAL_KP);
-        }
-
-        public static double getThetaKp() {
-            return DroidRageConstants.getNumber("Drive/Auto/THETA_KP", THETA_KP);
-        }
-
-        public static TrapezoidProfile.Constraints getThetaConstraints() {
-            return new TrapezoidProfile.Constraints(
-                getMaxAngularSpeedRadiansPerSecond(), 
-                getMaxAngularAccelerationRadiansPerSecondSquared()
-            );
+        HEADING_OFFSET(-90)
+        ;
+        public final MutableDouble value;
+        private SwerveConfig(double value) {
+            this.value = new MutableDouble(value, SwerveConfig.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
         }
     }
 
     public static class SwerveConstants {
-        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI); // 2 revolutions per second // I thought it was 4.41 before but no
-              
-        public static class FrontLeft {
-            public static final int DRIVE_MOTOR_PORT = 2; //2
-            public static final boolean DRIVE_MOTOR_REVERSED = true;
-
-            public static final int TURN_MOTOR_PORT = 1; //1
-            public static final boolean TURN_MOTOR_REVERSED = true;
-
-            public static final int ABSOLUTE_ENCODER_PORT = 11;
-            public static final double ABSOLUTE_ENCODER_OFFSET_RAD = 1.24;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
-
-            public static double getAbsoluteEncoderOffsetRad() {
-                return DroidRageConstants.getNumber("Drive/Turn/Absolute Encoder Offset (Radians) Front Left", ABSOLUTE_ENCODER_OFFSET_RAD);
-            }
-        }
-
-        public static class FrontRight {
-            public static final int DRIVE_MOTOR_PORT = 4; // 4
-            public static final boolean DRIVE_MOTOR_REVERSED = true;
-
-            public static final int TURN_MOTOR_PORT = 3; //3
-            public static final boolean TURN_MOTOR_REVERSED = true;
-
-            public static final int ABSOLUTE_ENCODER_PORT = 12;
-            private static final double ABSOLUTE_ENCODER_OFFSET_RAD = 2.26;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
-
-            public static double getAbsoluteEncoderOffsetRad() {
-                return DroidRageConstants.getNumber("Drive/Turn/Absolute Encoder Offset (Radians) Front Right", ABSOLUTE_ENCODER_OFFSET_RAD);
-            }
-        }
-
-        public static class BackLeft {
-            public static final int DRIVE_MOTOR_PORT = 8; //8
-            public static final boolean DRIVE_MOTOR_REVERSED = true;
-
-            public static final int TURN_MOTOR_PORT = 7; //7
-            public static final boolean TURN_MOTOR_REVERSED = true;
-
-            public static final int ABSOLUTE_ENCODER_PORT = 14;
-            private static final double ABSOLUTE_ENCODER_OFFSET_RAD = 0.99;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
-
-            public static double getAbsoluteEncoderOffsetRad() {
-                return DroidRageConstants.getNumber("Drive/Turn/Absolute Encoder Offset (Radians) Back Left", ABSOLUTE_ENCODER_OFFSET_RAD);
-            }
-        }
-
-        public static class BackRight {
-            public static final int DRIVE_MOTOR_PORT = 6; //6
-            public static final boolean DRIVE_MOTOR_REVERSED = true;
-
-            public static final int TURN_MOTOR_PORT = 5; //5
-            public static final boolean TURN_MOTOR_REVERSED = true;
-
-            public static final int ABSOLUTE_ENCODER_PORT = 13;
-            private static final double ABSOLUTE_ENCODER_OFFSET_RAD = 1.74;
-            public static final boolean ABOSLUTE_ENCODER_REVERSED = !TURN_MOTOR_REVERSED;
-
-            public static double getAbsoluteEncoderOffsetRad() {
-                return DroidRageConstants.getNumber("Drive/Turn/Absolute Encoder Offset (Radians) Back Right", ABSOLUTE_ENCODER_OFFSET_RAD);
-            }
-        }
-
-        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75); // 0.5271
-        public static final double WHEEL_BASE = Units.inchesToMeters(23.75); // 0.6033
+        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75);
+        public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left --
             new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
@@ -240,12 +88,12 @@ public class Drive extends SubsystemBase {
         SLOW(0.25, 0.25),
         ;
 
-        private final double translationalSpeed;
-        private final double angularSpeed;
+        private final MutableDouble translationalSpeed;
+        private final MutableDouble angularSpeed;
 
         private Speed(double translationalSpeed, double angularSpeed) {
-            this.translationalSpeed = translationalSpeed;
-            this.angularSpeed = angularSpeed;
+            this.translationalSpeed = new MutableDouble(translationalSpeed, Speed.class.getSimpleName()+"/"+name()+": Translational Speed", Drive.class.getSimpleName());
+            this.angularSpeed = new MutableDouble(angularSpeed, Speed.class.getSimpleName()+"/"+name()+": Angular Speed", Drive.class.getSimpleName());
         }
     }
 
@@ -258,49 +106,49 @@ public class Drive extends SubsystemBase {
     }
 
     private final SwerveModule frontLeft = new SwerveModule(
-        SwerveConstants.FrontLeft.DRIVE_MOTOR_PORT,
-        SwerveConstants.FrontLeft.TURN_MOTOR_PORT,
+        2,
+        1,
 
-        SwerveConstants.FrontLeft.DRIVE_MOTOR_REVERSED, 
-        SwerveConstants.FrontLeft.TURN_MOTOR_REVERSED,
+        true, 
+        true,
 
-        SwerveConstants.FrontLeft.ABSOLUTE_ENCODER_PORT, 
-        SwerveConstants.FrontLeft::getAbsoluteEncoderOffsetRad,
-        SwerveConstants.FrontLeft.ABOSLUTE_ENCODER_REVERSED
+        11, 
+        SwerveConfig.FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        false
     );
     private final SwerveModule frontRight = new SwerveModule(
-        SwerveConstants.FrontRight.DRIVE_MOTOR_PORT,
-        SwerveConstants.FrontRight.TURN_MOTOR_PORT,
+        4,
+        3,
 
-        SwerveConstants.FrontRight.DRIVE_MOTOR_REVERSED, 
-        SwerveConstants.FrontRight.TURN_MOTOR_REVERSED,
+        true, 
+        true,
 
-        SwerveConstants.FrontRight.ABSOLUTE_ENCODER_PORT, 
-        SwerveConstants.FrontRight::getAbsoluteEncoderOffsetRad, 
-        SwerveConstants.FrontRight.ABOSLUTE_ENCODER_REVERSED
+        12, 
+        SwerveConfig.FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        false
     );
     private final SwerveModule backLeft = new SwerveModule(
-        SwerveConstants.BackLeft.DRIVE_MOTOR_PORT,
-        SwerveConstants.BackLeft.TURN_MOTOR_PORT,
+        8,
+        7,
 
-        SwerveConstants.BackLeft.DRIVE_MOTOR_REVERSED, 
-        SwerveConstants.BackLeft.TURN_MOTOR_REVERSED,
+        true, 
+        true,
 
-        SwerveConstants.BackLeft.ABSOLUTE_ENCODER_PORT, 
-        SwerveConstants.BackLeft::getAbsoluteEncoderOffsetRad, 
-        SwerveConstants.BackLeft.ABOSLUTE_ENCODER_REVERSED
+        14, 
+        SwerveConfig.BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        false
     );
     private final SwerveModule backRight = new SwerveModule(
-        SwerveConstants.BackRight.DRIVE_MOTOR_PORT,
-        SwerveConstants.BackRight.TURN_MOTOR_PORT,
+        6,
+        5,
         
 
-        SwerveConstants.BackRight.DRIVE_MOTOR_REVERSED, 
-        SwerveConstants.BackRight.TURN_MOTOR_REVERSED,
+        true, 
+        true,
 
-        SwerveConstants.BackRight.ABSOLUTE_ENCODER_PORT, 
-        SwerveConstants.BackRight::getAbsoluteEncoderOffsetRad, 
-        SwerveConstants.BackRight.ABOSLUTE_ENCODER_REVERSED
+        13, 
+        SwerveConfig.BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        false
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
@@ -315,6 +163,31 @@ public class Drive extends SubsystemBase {
 
     private volatile Speed speed = Speed.NORMAL;
     private volatile TippingState tippingState = TippingState.ANTI_TIP;
+
+    private final WriteOnlyString tippingStateWriter = new WriteOnlyString(tippingState.name(), "Tipping State", Drive.class.getSimpleName());
+    private final WriteOnlyString speedStateWriter = new WriteOnlyString(speed.name(), "Speed State", Drive.class.getSimpleName());
+    
+    private final WriteOnlyDouble headingWriter = new WriteOnlyDouble(0, "Gyro/Heading (Degrees)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble rollWriter = new WriteOnlyDouble(0, "Gyro/Roll (Degrees)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble pitchWriter = new WriteOnlyDouble(0, "Gyro/Pitch (Degrees)", Drive.class.getSimpleName());
+    private final WriteOnlyString locationWriter = new WriteOnlyString("", "Robot Location", Drive.class.getSimpleName());
+
+    private final WriteOnlyDouble frontLeftPositionWriter = new WriteOnlyDouble(0, "Front Left/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Front Left/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftDistanceWriter = new WriteOnlyDouble(0, "Front Left/Drive Position (Radians)", Drive.class.getSimpleName());
+
+    private final WriteOnlyDouble frontRightPositionWriter = new WriteOnlyDouble(0, "Front Right/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Front Right/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightDistanceWriter = new WriteOnlyDouble(0, "Front Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    
+    private final WriteOnlyDouble backLeftPositionWriter = new WriteOnlyDouble(0, "Back Left/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Back Left/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftDistanceWriter = new WriteOnlyDouble(0, "Back Left/Drive Position (Radians)", Drive.class.getSimpleName());
+
+    private final WriteOnlyDouble backRightPositionWriter = new WriteOnlyDouble(0, "Back Right/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightDistanceWriter = new WriteOnlyDouble(0, "Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
+
 
     public Drive() {
         //TODO: Make sure IMU RESETS
@@ -332,25 +205,28 @@ public class Drive extends SubsystemBase {
             getModulePositions()
         );
 
-        DroidRageConstants.putNumber("Drive/Robot heading (Degrees)", getHeading());
-        DroidRageConstants.putNumber("Drive/Robot roll (Degrees)", getRoll());
-        DroidRageConstants.putNumber("Drive/Robot pitch (Degrees)", getPitch());
-        DroidRageConstants.putString("Drive/Robot Location", getPose().getTranslation().toString());
+        headingWriter.set(getHeading());
+        rollWriter.set(getRoll());
+        pitchWriter.set(getPitch());
+        locationWriter.set(getPose().getTranslation().toString());
 
-        DroidRageConstants.putNumber("Drive/Turn/Position/Front Left (Radians)", frontLeft.getTurningPosition());
-        DroidRageConstants.putNumber("Drive/Turn/Position/Front Right (Radians)", frontRight.getTurningPosition());
-        DroidRageConstants.putNumber("Drive/Turn/Position/Back Left (Radians)", backLeft.getTurningPosition());
-        DroidRageConstants.putNumber("Drive/Turn/Position/Back Right (Radians)", backRight.getTurningPosition());
 
-        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Front Left (Radians)", frontLeft.getTurnEncoderRad());
-        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Front Right (Radians)", frontRight.getTurnEncoderRad());
-        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Back Left (Radians)", backLeft.getTurnEncoderRad());
-        DroidRageConstants.putNumber("Drive/Turn/Absolute Position/Back Right (Radians)", backRight.getTurnEncoderRad());
+        frontLeftAbsolutePositionWriter.set(frontLeft.getTurnEncoderRad());
+        frontLeftDistanceWriter.set(frontLeft.getTurningPosition());
+        frontLeftPositionWriter.set(frontLeft.getDrivePos());
 
-        DroidRageConstants.putNumber("Drive/Drive/Distance/Front Left (Radians)", frontLeft.getDrivePos());
-        DroidRageConstants.putNumber("Drive/Drive/Distance/Front Right (Radians)", frontRight.getDrivePos());
-        DroidRageConstants.putNumber("Drive/Drive/Distance/Back Left (Radians)", backLeft.getDrivePos());
-        DroidRageConstants.putNumber("Drive/Drive/Distance/Back Right (Radians)", backRight.getDrivePos());
+        frontRightAbsolutePositionWriter.set(frontRight.getTurnEncoderRad());
+        frontRightDistanceWriter.set(frontRight.getTurningPosition());
+        frontRightPositionWriter.set(frontRight.getDrivePos());
+
+        backLeftAbsolutePositionWriter.set(backLeft.getTurnEncoderRad());
+        backLeftDistanceWriter.set(backLeft.getTurningPosition());
+        backLeftPositionWriter.set(backLeft.getDrivePos());
+
+        backRightAbsolutePositionWriter.set(backRight.getTurnEncoderRad());
+        backRightDistanceWriter.set(backRight.getTurningPosition());
+        backRightPositionWriter.set(backRight.getDrivePos());
+
     }
 
     @Override
@@ -368,7 +244,6 @@ public class Drive extends SubsystemBase {
     }
 
     public TippingState getTippingState() {
-        DroidRageConstants.putString("Drive/Tipping State", tippingState.name());
         return tippingState;
     }
 
@@ -393,23 +268,23 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean isFieldOriented() {
-        return DroidRageConstants.getBoolean("Drive/Field Oriented", true);
+        return TeleOpOptions.IS_FIELD_ORIENTED.value.get();
     }
 
     public boolean isSquaredInputs() {
-        return DroidRageConstants.getBoolean("Drive/Squared Inputs", true);
+        return TeleOpOptions.IS_SQUARED_INPUTS.value.get();
     }
 
     public double getTranslationalSpeed() {
-        return DroidRageConstants.getNumber("Drive/Speed Multiplier/Translational/"+ speed.name(), speed.translationalSpeed);
+        return speed.translationalSpeed.get();
     }
 
     public double getAngularSpeed() {
-        return DroidRageConstants.getNumber("Drive/Speed Multiplier/Angular/"+ speed.name(), speed.angularSpeed);
+        return speed.angularSpeed.get();
     }
 
     public double getHeadingOffset() {
-        return DroidRageConstants.getNumber("Drive/Heading Offset", -90);
+        return SwerveConfig.HEADING_OFFSET.value.get();
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -435,13 +310,13 @@ public class Drive extends SubsystemBase {
 
     public void setTippingState(TippingState tippingState) {
         this.tippingState = tippingState;
-        DroidRageConstants.putString("Drive/Tipping State", tippingState.name());
+        tippingStateWriter.set(tippingState.name());
     }
 
     private CommandBase setSpeed(Speed speed) {
         return runOnce(() -> {
             this.speed = speed;
-            DroidRageConstants.putString("Drive/Current Speed", speed.name());
+            speedStateWriter.set(speed.name());
         });
     }
 
@@ -466,62 +341,56 @@ public class Drive extends SubsystemBase {
     }
 
     public CommandBase resetHeading() {
-        return runOnce(() -> DroidRageConstants.putNumber(
-                "Drive/Heading Offset", getHeadingOffset() + getHeading()
-            ));
+        return runOnce(() -> SwerveConfig.HEADING_OFFSET.value.set(
+                getHeadingOffset() + getHeading()
+            )
+        );
     }
 
     public CommandBase toggleFieldOriented() {
-        return runOnce(() -> DroidRageConstants.putBoolean(
-            "Drive/Field Oriented", !isFieldOriented()));
+        return runOnce(() -> TeleOpOptions.IS_FIELD_ORIENTED.value.set(
+                !isFieldOriented()
+            )
+        );
     }
 
     public CommandBase toggleSquareInputs() {
-        return runOnce(() -> DroidRageConstants.putBoolean(
-            "Drive/Squared Inputs", !isSquaredInputs()));
+        return runOnce(() -> TeleOpOptions.IS_SQUARED_INPUTS.value.set(
+                !isSquaredInputs()
+            )
+        );
     }
 
     public CommandBase toggleAntiTipping() {
         // TODO: if you can upgrade java version to 17 in gradle and it works, you could simplify this switch statement using switch expression
-        return runOnce(() -> {
+        return runOnce(() -> setTippingState(
             switch (tippingState) {
-                case ANTI_TIP: 
-                    tippingState = TippingState.NO_TIP_CORRECTION;
-                    break;
-                case AUTO_BALANCE:
-                    tippingState = TippingState.AUTO_BALANCE_ANTI_TIP;
-                    break;
-                case AUTO_BALANCE_ANTI_TIP:
-                    tippingState = TippingState.AUTO_BALANCE;
-                    break;
-                case NO_TIP_CORRECTION:
-                    tippingState = TippingState.ANTI_TIP;
-                    break;
+                case ANTI_TIP -> TippingState.NO_TIP_CORRECTION;
+                case AUTO_BALANCE -> TippingState.AUTO_BALANCE_ANTI_TIP;
+                case AUTO_BALANCE_ANTI_TIP -> TippingState.AUTO_BALANCE;
+                case NO_TIP_CORRECTION ->TippingState.ANTI_TIP;
             }
-            getTippingState();
-        });
+        ));
     }
 
     public CommandBase toggleAutoBalance() {
-        return runOnce(() -> {
+        return runOnce(() -> setTippingState(
             switch (tippingState) {
-                case ANTI_TIP: 
-                    tippingState = TippingState.AUTO_BALANCE_ANTI_TIP;
-                    break;
-                case AUTO_BALANCE:
-                    tippingState = TippingState.NO_TIP_CORRECTION;
-                    break;
-                case AUTO_BALANCE_ANTI_TIP:
-                    tippingState = TippingState.ANTI_TIP;
-                    break;
-                case NO_TIP_CORRECTION:
-                    tippingState = TippingState.AUTO_BALANCE;
-                    break;
+                case ANTI_TIP -> TippingState.AUTO_BALANCE_ANTI_TIP;
+                case AUTO_BALANCE -> TippingState.NO_TIP_CORRECTION;
+                case AUTO_BALANCE_ANTI_TIP -> TippingState.ANTI_TIP;
+                case NO_TIP_CORRECTION ->TippingState.AUTO_BALANCE;
             }
-        });
+        ));
     }
 
     public CommandBase runStop() {
         return runOnce(this::stop);
+    }
+
+    public TrapezoidProfile.Constraints getThetaConstraints() { //TODO when do you use this? I think for turning
+        return new TrapezoidProfile.Constraints(
+            AutoConfig.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.value.get(),
+            AutoConfig.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.value.get());
     }
 }

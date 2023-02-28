@@ -3,31 +3,27 @@ package frc.robot.utilities;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-public class MutableDouble {
+public class MutableInteger {
     private final GenericEntry entry;
-    private final double defaultValue;
+    private final long defaultValue;
 
-    public MutableDouble(double defaultValue, String title, String tab) {
+    public MutableInteger(long defaultValue, String title, String tab) {
         this.defaultValue = defaultValue;
         entry = Shuffleboard.getTab(tab)
             .add(title, defaultValue)
             .getEntry();
     }
 
-    public MutableDouble(GenericEntry entry, double defaultValue) {
+    public MutableInteger(GenericEntry entry, long defaultValue) {
         this.entry = entry;
         this.defaultValue = defaultValue;
     }
 
-    public double get() {
-        return entry.getDouble(defaultValue);
+    public long get() {
+        return entry.getInteger(defaultValue);
     }
 
-    public void set(double value) {
+    public void set(long value) {
         entry.setDouble(value);
     }
-
-    // protected void finalize() {
-    //     entry.close();
-    // }
 }

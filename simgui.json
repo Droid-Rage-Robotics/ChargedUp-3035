@@ -10,10 +10,23 @@
   },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Elevator/Horizontal PID Controller": "PIDController",
+      "/Shuffleboard/Elevator/Vertical PID Controller": "PIDController",
+      "/Shuffleboard/Pivot/PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Drive/Anti Tip X PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Drive/Anti Tip Y PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Drive/Auto Balance X PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Drive/Auto Balance Y PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Elevator/Horizontal PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Elevator/Vertical PID Controller": "PIDController",
+      "/Shuffleboard/frc.robot.subsystems.Pivot/PID Controller": "PIDController"
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "persistent": {
       "Shuffleboard": {
         "Drive": {

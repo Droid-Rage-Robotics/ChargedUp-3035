@@ -7,9 +7,11 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.DroidRageConstants;
 
 public class SwerveDriveTeleop extends CommandBase {
@@ -25,14 +27,31 @@ public class SwerveDriveTeleop extends CommandBase {
         this.y = y;
         this.turn = turn;
 
-        this.xLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND.get());
-        this.yLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND.get());
-        this.turnLimiter = new SlewRateLimiter(Drive.TeleOpConstants.MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND.get());
+        this.xLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ACCELERATION_UNITS_PER_SECOND.value.get());
+        this.yLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ACCELERATION_UNITS_PER_SECOND.value.get());
+        this.turnLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.value.get());
 
-        antiTipX = new PIDController(Drive.TeleOpConstants.getAntiTippingXP(), 0, Drive.TeleOpConstants.getAntiTippingXD());
-        antiTipY = new PIDController(Drive.TeleOpConstants.getAntiTippingYP(), 0, Drive.TeleOpConstants.getAntiTippingYD());
-        autoBalanceX = new PIDController(Drive.TeleOpConstants.getAutoBalanceXP(), 0, Drive.TeleOpConstants.getAutoBalanceXD());
-        autoBalanceY = new PIDController(Drive.TeleOpConstants.getAutoBalanceYP(), 0, Drive.TeleOpConstants.getAutoBalanceYD());
+        antiTipX = new PIDController(-0.1, 0, 0);
+        antiTipX.setTolerance(3);
+
+        antiTipY = new PIDController(-0.1, 0, 0);
+        antiTipY.setTolerance(3);
+
+        autoBalanceX = new PIDController(0.1, 0, 0);
+        autoBalanceX.setTolerance(1);
+
+        autoBalanceY = new PIDController(0.1, 0, 0);
+        autoBalanceY.setTolerance(1);
+
+        new ComplexWidgetBuilder(antiTipX, "Anti Tip X PID Controller", Drive.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+        new ComplexWidgetBuilder(antiTipY, "Anti Tip Y PID Controller", Drive.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+        new ComplexWidgetBuilder(autoBalanceX, "Auto Balance X PID Controller", Drive.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+        new ComplexWidgetBuilder(autoBalanceY, "Auto Balance Y PID Controller", Drive.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+
 
         addRequirements(drive);
     }
@@ -44,12 +63,6 @@ public class SwerveDriveTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        // Get PID values from dashboard
-        antiTipX.setPID(Drive.TeleOpConstants.getAntiTippingXP(), 0, Drive.TeleOpConstants.getAntiTippingXD());
-        antiTipY.setPID(Drive.TeleOpConstants.getAntiTippingYP(), 0, Drive.TeleOpConstants.getAntiTippingYD());
-        autoBalanceX.setPID(Drive.TeleOpConstants.getAutoBalanceXP(), 0, Drive.TeleOpConstants.getAutoBalanceXD());
-        autoBalanceY.setPID(Drive.TeleOpConstants.getAutoBalanceYP(), 0, Drive.TeleOpConstants.getAutoBalanceYD());
-
         xSpeed = x.get();
         ySpeed = -y.get();
         turnSpeed = turn.get();
@@ -81,16 +94,16 @@ public class SwerveDriveTeleop extends CommandBase {
 
         switch (drive.getTippingState()) {
             case ANTI_TIP:
-                if (Math.abs(xTilt) > Drive.TeleOpConstants.getAntiTippingXThresholdDegrees())
+                if (Math.abs(xTilt) > antiTipX.getPositionTolerance())
                     xSpeed = antiTipX.calculate(xSpeed, xTilt);
-                if (Math.abs(yTilt) > Drive.TeleOpConstants.getAntiTippingYThresholdDegrees())
+                if (Math.abs(yTilt) > antiTipY.getPositionTolerance())
                     ySpeed = antiTipY.calculate(ySpeed, yTilt);
                 break;
             case AUTO_BALANCE:
             case AUTO_BALANCE_ANTI_TIP:
-                if (Math.abs(xTilt) > Drive.TeleOpConstants.getAutoBalanceXThreshold())
+                if (Math.abs(xTilt) > autoBalanceX.getPositionTolerance())
                     xSpeed = autoBalanceX.calculate(xSpeed, xTilt);
-                if (Math.abs(yTilt) > Drive.TeleOpConstants.getAutoBalanceYThreshold())
+                if (Math.abs(yTilt) > autoBalanceY.getPositionTolerance())
                     ySpeed = autoBalanceX.calculate(ySpeed, yTilt);
                 break;
             case NO_TIP_CORRECTION:

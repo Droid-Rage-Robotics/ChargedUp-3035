@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
 import frc.robot.subsystems.TrackedElement.Element;
+import frc.robot.utilities.MutableBoolean;
 
 public class Intake extends SubsystemBase {
     
@@ -17,7 +18,7 @@ public class Intake extends SubsystemBase {
 
     private final CANSparkMax clawMotor;
     private final DoubleSolenoid intakeSolenoid;
-    private boolean isOpen = false;
+    private final MutableBoolean isOpen = new MutableBoolean(false, "Is Open", Intake.class.getSimpleName());
     private final double intakeSpeed = 0.3;
     private final double outtakeSpeed = -0.3;
 
@@ -30,7 +31,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        DroidRageConstants.putBoolean("Intake Solenoid Open", isOpen);
+
     }
   
     @Override
@@ -38,20 +39,20 @@ public class Intake extends SubsystemBase {
   
     public void openClaw(){
         intakeSolenoid.set(Value.kForward);//TODO:change
-        isOpen = true;
+        isOpen.set(true);
         TrackedElement.set(Element.CONE); 
     }
 
     public void closeClaw(){
         intakeSolenoid.set(Value.kReverse);//TODO:change
-        isOpen = false;
+        isOpen.set(false);
         TrackedElement.set(Element.CUBE);
     }
   
     public CommandBase toggleClaw() {
         return runOnce(() -> {
-            if(isOpen) closeClaw();
-            else if(!isOpen) openClaw();
+            if(isOpen.get()) closeClaw();
+            else if(!isOpen.get()) openClaw();
         });
     }
 

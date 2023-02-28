@@ -35,10 +35,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-    public RobotContainer() {
-        Drive.TeleOpConstants.MAX_ACCELERATION_UNITS_PER_SECOND.get();
-        Drive.TeleOpConstants.MAX_ANGULAR_ACCELERATION_UINTS_PER_SECOND.get();
-    }
     //TODO: Ideas
     // all abort button
     // override button for when sensors fail
@@ -262,8 +258,8 @@ public class RobotContainer {
             drive::getPose, // Pose2d supplier
             drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
             Drive.SwerveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
-            new PIDConstants(Drive.AutoConstants.getTranslationalKp(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-            new PIDConstants(Drive.AutoConstants.getThetaKp(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+            new PIDConstants(Drive.AutoConfig.TRANSLATIONAL_KP.value.get(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(Drive.AutoConfig.THETA_KP.value.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
             drive::setModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true

@@ -7,9 +7,13 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DroidRageConstants;
+import frc.robot.utilities.ComplexWidgetBuilder;
+import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.WriteOnlyDouble;
 
 public class Pivot extends SubsystemBase {
     public static class Constants {
@@ -35,16 +39,19 @@ public class Pivot extends SubsystemBase {
         HOLD(0),
         ;
 
-        private final double degrees;
+        private final MutableDouble degrees;
 
         private ArmPos(double degrees) {
-            this.degrees = degrees;
+            this.degrees = new MutableDouble(degrees, ArmPos.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
         }
     }
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
-    private volatile ArmPos armPos;
+    private volatile ArmPos armPos = ArmPos.START;
     private final AbsoluteEncoder pivotAbsoluteEncoder;
+
+    private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
+    private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
     
     public Pivot() {
         pivotMotor = new CANSparkMax(18, MotorType.kBrushless);//TODO: Where is it plugged in?
@@ -60,6 +67,9 @@ public class Pivot extends SubsystemBase {
         controller = new PIDController(0, 0, 0);
         controller.setTolerance(0.10); // meters
 
+        new ComplexWidgetBuilder(controller, "PID Controller", Pivot.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController);
+
         setTargetPosition(ArmPos.START);
     }
 
@@ -74,20 +84,19 @@ public class Pivot extends SubsystemBase {
     }
 
     public double getTargetPosition() {
-        return DroidRageConstants.getNumber("Arm Encoder"+ armPos.name(), pivotAbsoluteEncoder.getPosition());
+        return armPos.degrees.get();
     }
 
     private CommandBase setTargetPosition(ArmPos position) {
         return runOnce(() -> {
-            setTargetPosition(position.degrees).execute();
             armPos = position;
-            DroidRageConstants.putString("Arm Position", position.name());
+            targetPositionWriter.set(position.degrees.get());
         });
     }
     public CommandBase setTargetPosition(double position) {
         return runOnce(() -> {
             controller.setSetpoint(position);
-            DroidRageConstants.putNumber("Arm Position (Degrees)", position);
+            targetPositionWriter.set(position);
         });
     }
 

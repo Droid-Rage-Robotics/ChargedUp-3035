@@ -67,30 +67,30 @@ public class ExampleSubsystem extends SubsystemBase {
         // This method will be called once per scheduler run during simulation
     }
 
-    public double getFirst() {
-        return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.first.get());
-    }
+    // public double getFirst() {
+    //     return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.first.get());
+    // }
 
-    public double getSecond() {
-        return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.second.get());
-    }
+    // public double getSecond() {
+    //     return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.second.get());
+    // }
 
-    private CommandBase setSpeed(State state) {
-        return runOnce(() -> {
-            this.state = state;
-            DroidRageConstants.putString("Example/Current State", state.name());
-        });
-    }
+    // private CommandBase setSpeed(State state) {
+    //     return runOnce(() -> {
+    //         this.state = state;
+    //         DroidRageConstants.putString("Example/Current State", state.name());
+    //     });
+    // }
 
-    public CommandBase setOne() {
-        return setSpeed(State.ONE);
-    }
+    // public CommandBase setOne() {
+    //     return state.;
+    // }
 
-    public CommandBase setTwo() {
-        return setSpeed(State.TWO);
-    }
+    // public CommandBase setTwo() {
+    //     return setSpeed(State.TWO);
+    // }
 
-    public CommandBase setThree() {
-        return setSpeed(State.THREE);
-    }
+    // public CommandBase setThree() {
+    //     return setSpeed(State.THREE);
+    // }
 }
