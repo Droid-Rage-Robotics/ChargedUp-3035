@@ -68,11 +68,11 @@ public class ExampleSubsystem extends SubsystemBase {
     }
 
     public double getFirst() {
-        return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.first);
+        return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.first.get());
     }
 
     public double getSecond() {
-        return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.second);
+        return DroidRageConstants.getNumber("Example/State/"+ state.name(), state.second.get());
     }
 
     private CommandBase setSpeed(State state) {

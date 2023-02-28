@@ -2,7 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.PIvot;
+import frc.robot.subsystems.Pivot;
 // import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualElevator;
@@ -58,7 +58,7 @@ public class RobotContainer {
     private final Drive drive = new Drive();
 
     private final Elevator elevator = new Elevator();
-    private final PIvot arm = new PIvot();
+    private final Pivot arm = new Pivot();
     // private final Claw claw = new Claw();
 
     private final CommandXboxController driver =
@@ -161,11 +161,9 @@ public class RobotContainer {
                 )
             );
         operator.povUp()
-            .onTrue(elevator.moveIntakeHigh()
+            .onTrue(
+                elevator.changePosition()
             );
-        // operator.povDown()
-        //     .onTrue(elevator.moveIntakeLow()
-        //     );
     //     //Buttons to add: Toggle Button for Cone/Cube
     //     arm.setDefaultCommand(new ManualArm(operator, arm));
 
