@@ -43,8 +43,8 @@ public class Elevator extends SubsystemBase {
         private MutableDouble horizontalMeters;
 
         private Position(double verticalMeters, double horizontalMeters) {
-            this.verticalMeters = new MutableDouble(verticalMeters, name()+": Vertical (Meters)", Elevator.class.getSimpleName());
-            this.horizontalMeters = new MutableDouble(horizontalMeters, name()+": Horizontal (Meters)", Elevator.class.getSimpleName());
+            this.verticalMeters = new MutableDouble(verticalMeters, Position.class.getSimpleName()+"/"+name()+"/Vertical (Meters)", Elevator.class.getSimpleName());
+            this.horizontalMeters = new MutableDouble(horizontalMeters, Position.class.getSimpleName()+"/"+name()+"/Horizontal (Meters)", Elevator.class.getSimpleName());
         }
     }
     

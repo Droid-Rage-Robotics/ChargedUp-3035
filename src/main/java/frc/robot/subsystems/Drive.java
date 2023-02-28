@@ -92,8 +92,8 @@ public class Drive extends SubsystemBase {
         private final MutableDouble angularSpeed;
 
         private Speed(double translationalSpeed, double angularSpeed) {
-            this.translationalSpeed = new MutableDouble(translationalSpeed, Speed.class.getSimpleName()+"/"+name()+": Translational Speed", Drive.class.getSimpleName());
-            this.angularSpeed = new MutableDouble(angularSpeed, Speed.class.getSimpleName()+"/"+name()+": Angular Speed", Drive.class.getSimpleName());
+            this.translationalSpeed = new MutableDouble(translationalSpeed, Speed.class.getSimpleName()+"/"+name()+"/Translational Speed", Drive.class.getSimpleName());
+            this.angularSpeed = new MutableDouble(angularSpeed, Speed.class.getSimpleName()+"/"+name()+"/Angular Speed", Drive.class.getSimpleName());
         }
     }
 
@@ -172,21 +172,21 @@ public class Drive extends SubsystemBase {
     private final WriteOnlyDouble pitchWriter = new WriteOnlyDouble(0, "Gyro/Pitch (Degrees)", Drive.class.getSimpleName());
     private final WriteOnlyString locationWriter = new WriteOnlyString("", "Robot Location", Drive.class.getSimpleName());
 
-    private final WriteOnlyDouble frontLeftPositionWriter = new WriteOnlyDouble(0, "Front Left/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Front Left/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontLeftDistanceWriter = new WriteOnlyDouble(0, "Front Left/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final WriteOnlyDouble frontRightPositionWriter = new WriteOnlyDouble(0, "Front Right/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Front Right/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontRightDistanceWriter = new WriteOnlyDouble(0, "Front Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Drive Position (Radians)", Drive.class.getSimpleName());
     
-    private final WriteOnlyDouble backLeftPositionWriter = new WriteOnlyDouble(0, "Back Left/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Back Left/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backLeftDistanceWriter = new WriteOnlyDouble(0, "Back Left/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final WriteOnlyDouble backRightPositionWriter = new WriteOnlyDouble(0, "Back Right/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backRightDistanceWriter = new WriteOnlyDouble(0, "Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
 
 
     public Drive() {
