@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +26,7 @@ public class Intake extends SubsystemBase {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
         clawMotor.setIdleMode(IdleMode.kBrake);
 
-        intakeSolenoid = new DoubleSolenoid(null, 0, 0);//TODO:change
+        intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 9, 10);
     }
 
     @Override
@@ -36,25 +37,24 @@ public class Intake extends SubsystemBase {
     @Override
     public void simulationPeriodic() {}
   
-    public void openClaw(){
+    public void open(){
         intakeSolenoid.set(Value.kForward);//TODO:change
         isOpen.set(true);
         TrackedElement.set(Element.CONE); 
     }
 
-    public void closeClaw(){
+    public void close(){
         intakeSolenoid.set(Value.kReverse);//TODO:change
         isOpen.set(false);
         TrackedElement.set(Element.CUBE);
     }
   
-    public CommandBase toggleClaw() {
+    public CommandBase toggle() {
         return runOnce(() -> {
-            if(isOpen.get()) closeClaw();
-            else if(!isOpen.get()) openClaw();
+            if(isOpen.get()) close();
+            else if(!isOpen.get()) open();
         });
     }
-
 
     public CommandBase intake() {
         return runOnce(() -> {
@@ -73,7 +73,5 @@ public class Intake extends SubsystemBase {
 
     private void setPower(double power){
         clawMotor.set(power);
-    }
-
-    
+    }    
 }
