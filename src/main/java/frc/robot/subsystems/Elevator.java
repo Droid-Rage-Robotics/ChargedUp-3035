@@ -19,23 +19,23 @@ public class Elevator extends SubsystemBase {
     private enum Position {
         START(0,0),//TODO:Input Values
 
-        INTAKELOW(0,0),
+        INTAKELOW(0.3,0.23),
        
-        LOWCONE(0, 0),
-        LOWCUBE(0,0),
+        LOWCONE(0.4, 0.23),
+        LOWCUBE(0.4,0.23),
         
-        MIDCONE(0,0),
-        MIDCUBE(0,0),
+        MIDCONE(0.95,0.56),
+        MIDCUBE(0.64,0.56),
         
-        HIGHCUBE(0,0),
-        HIGHCONE(0,0),
+        HIGHCONE(1.3,1.1),
+        HIGHCUBE(1,1.1),
 
         INTAKEHIGH(0,0)
         
         ;
 
-        private final double verticalMeters;
-        private final double horizontalMeters;
+        private  double verticalMeters;
+        private double horizontalMeters;
 
         private Position(double verticalMeters, double horizontalMeters) {
             this.verticalMeters = verticalMeters;
@@ -165,7 +165,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveHigh() {
-        retur switch (TrackedElement.get()) {
+        switch (TrackedElement.get()) {
             case CONE:
                 return setPosition(Position.HIGHCONE);
             case CUBE:
@@ -179,4 +179,12 @@ public class Elevator extends SubsystemBase {
     // public CommandBase moveToPosition() {
     //     return runOnce(() -> leftElevator.set(vertController.calculate(encoder.getPosition())));
     // }
+
+    public CommandBase changePosition(){
+        return runOnce(() ->{
+            Position orgPos = position;
+            orgPos.verticalMeters = getTargetVerticalHeight();
+            orgPos.horizontalMeters = getTargetHorizontalDistance();
+        });
+    }
 }  
