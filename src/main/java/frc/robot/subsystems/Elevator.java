@@ -101,6 +101,8 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         verticalEncoderPositionWriter.set(rightAbsoluteEncoder.getPosition());
         horizontalEncoderPositionWriter.set(horizAbsoluteEncoder.getPosition());
+        leftElevator.set(vertController.calculate(rightAbsoluteEncoder.getPosition()));
+        horizMotor.set(horizController.calculate(horizAbsoluteEncoder.getPosition()));
     }
 
     @Override
