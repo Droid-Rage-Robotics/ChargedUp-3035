@@ -17,8 +17,8 @@ public class Intake extends SubsystemBase {
 
 
     private final CANSparkMax clawMotor;
-    private final DoubleSolenoid intakeSolenoid;
-    private final MutableBoolean isOpen = new MutableBoolean(false, "Is Open", Intake.class.getSimpleName());
+    // private final DoubleSolenoid intakeSolenoid;
+    // private final MutableBoolean isOpen = new MutableBoolean(false, "Is Open", Intake.class.getSimpleName());
     private final double intakeSpeed = 0.3;
     private final double outtakeSpeed = -0.3;
 
@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
         clawMotor.setIdleMode(IdleMode.kBrake);
 
-        intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 9, 10);
+        // intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 9, 10);
     }
 
     @Override
@@ -38,21 +38,21 @@ public class Intake extends SubsystemBase {
     public void simulationPeriodic() {}
   
     public void open(){
-        intakeSolenoid.set(Value.kForward);//TODO:change
-        isOpen.set(true);
+        // intakeSolenoid.set(Value.kForward);//TODO:change
+        // isOpen.set(true);
         TrackedElement.set(Element.CONE); 
     }
 
     public void close(){
-        intakeSolenoid.set(Value.kReverse);//TODO:change
-        isOpen.set(false);
+        // intakeSolenoid.set(Value.kReverse);//TODO:change
+        // isOpen.set(false);
         TrackedElement.set(Element.CUBE);
     }
   
     public CommandBase toggle() {
         return runOnce(() -> {
-            if(isOpen.get()) close();
-            else if(!isOpen.get()) open();
+            // if(isOpen.get()) close();
+            // else if(!isOpen.get()) open();
         });
     }
 

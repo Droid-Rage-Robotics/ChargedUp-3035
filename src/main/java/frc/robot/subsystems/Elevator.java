@@ -53,15 +53,15 @@ public class Elevator extends SubsystemBase {
     private final PIDController vertController;
     private final PIDController horizController;
     private volatile Position position = Position.START;
-    private final SparkMaxAbsoluteEncoder rightAbsoluteEncoder, horizAbsoluteEncoder;
+    // private final SparkMaxAbsoluteEncoder rightAbsoluteEncoder, horizAbsoluteEncoder;
     public boolean isMovingManually;
     private final WriteOnlyString positionWriter = new WriteOnlyString(position.name(), "Elevator Position", Elevator.class.getSimpleName());
     
     private final WriteOnlyDouble verticalEncoderPositionWriter = new WriteOnlyDouble(0, "Vertical Encoder Position (Meters)", Elevator.class.getSimpleName());
     private final WriteOnlyDouble horizontalEncoderPositionWriter = new WriteOnlyDouble(0, "Horizontal Encoder Position (Meters)", Elevator.class.getSimpleName());
     
-    private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
-    private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
+    // private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
+    // private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
     
     public Elevator() {
         leftElevator = new CANSparkMax(16, MotorType.kBrushless);
@@ -89,20 +89,21 @@ public class Elevator extends SubsystemBase {
 
         setPosition(Position.START);
 
-        rightAbsoluteEncoder = rightElevator.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
-        rightAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
-        horizAbsoluteEncoder = horizMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
-        horizAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        // rightAbsoluteEncoder = rightElevator.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
+        // rightAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
+        // horizAbsoluteEncoder = horizMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);//TODO:TEST
+        // horizAbsoluteEncoder.setPositionConversionFactor(Constants.ROT_TO_METER);
 
         isMovingManually = false;
     }
 
     @Override
     public void periodic() {
-        verticalEncoderPositionWriter.set(rightAbsoluteEncoder.getPosition());
-        horizontalEncoderPositionWriter.set(horizAbsoluteEncoder.getPosition());
-        leftElevator.set(vertController.calculate(rightAbsoluteEncoder.getPosition()));
-        horizMotor.set(horizController.calculate(horizAbsoluteEncoder.getPosition()));
+        // verticalEncoderPositionWriter.set(rightAbsoluteEncoder.getPosition());
+        // horizontalEncoderPositionWriter.set(horizAbsoluteEncoder.getPosition());
+
+        // leftElevator.set(vertController.calculate(rightAbsoluteEncoder.getPosition()));
+        // horizMotor.set(horizController.calculate(horizAbsoluteEncoder.getPosition()));
     }
 
     @Override
@@ -130,8 +131,6 @@ public class Elevator extends SubsystemBase {
             horizController.setSetpoint(getTargetHorizontalDistance());
 
             positionWriter.set(getTargetPosition().name());
-            verticalTargetPositionWriter.set(getTargetPosition().verticalMeters.get());
-            horizontalTargetPositionWriter.set(getTargetPosition().horizontalMeters.get());
         });
     }
     public CommandBase setPosition(double vertPosition, double horizPosition) {
@@ -140,9 +139,6 @@ public class Elevator extends SubsystemBase {
             horizController.setSetpoint(horizPosition);
 
             positionWriter.set(getTargetPosition().name()+" (Modified)");
-            verticalTargetPositionWriter.set(getTargetPosition().verticalMeters.get());
-            horizontalTargetPositionWriter.set(getTargetPosition().horizontalMeters.get());
-
         });
     }
 
@@ -155,21 +151,23 @@ public class Elevator extends SubsystemBase {
 
     public CommandBase moveLow() {
         return setPosition(
-            switch(TrackedElement.get()) {
-                case CONE -> Position.LOWCONE;
-                case CUBE -> Position.LOWCUBE;
-                case NONE -> Position.LOWCUBE;
-            }
+            Position.HIGHCONE
+            // switch(TrackedElement.get()) {
+            //     case CONE -> Position.LOWCONE;
+            //     case CUBE -> Position.LOWCUBE;
+            //     case NONE -> Position.LOWCUBE;
+            // }
         );
     }
 
     public CommandBase moveMid() {
         return setPosition(
-            switch(TrackedElement.get()) {
-                case CONE -> Position.MIDCONE;
-                case CUBE -> Position.MIDCUBE;
-                case NONE -> Position.MIDCUBE;
-            }
+            Position.HIGHCONE
+            // switch(TrackedElement.get()) {
+            //     case CONE -> Position.MIDCONE;
+            //     case CUBE -> Position.MIDCUBE;
+            //     case NONE -> Position.MIDCUBE;
+            // }
         );
     }
 
@@ -178,11 +176,12 @@ public class Elevator extends SubsystemBase {
             changePosition();
         }
         return setPosition(
-            switch(TrackedElement.get()) {
-                case CONE -> Position.HIGHCONE;
-                case CUBE -> Position.HIGHCUBE;
-                case NONE -> Position.HIGHCUBE;
-            }
+            Position.HIGHCONE
+            // switch(TrackedElement.get()) {
+            //     case CONE -> Position.HIGHCONE;
+            //     case CUBE -> Position.HIGHCUBE;
+            //     case NONE -> Position.HIGHCUBE;
+            // }
         );
     }
 

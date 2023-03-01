@@ -364,23 +364,25 @@ public class Drive extends SubsystemBase {
     public CommandBase toggleAntiTipping() {
         // TODO: if you can upgrade java version to 17 in gradle and it works, you could simplify this switch statement using switch expression
         return runOnce(() -> setTippingState(
-            switch (tippingState) {
-                case ANTI_TIP -> TippingState.NO_TIP_CORRECTION;
-                case AUTO_BALANCE -> TippingState.AUTO_BALANCE_ANTI_TIP;
-                case AUTO_BALANCE_ANTI_TIP -> TippingState.AUTO_BALANCE;
-                case NO_TIP_CORRECTION ->TippingState.ANTI_TIP;
-            }
+            TippingState.NO_TIP_CORRECTION
+            // switch (tippingState) {
+            //     case ANTI_TIP -> TippingState.NO_TIP_CORRECTION;
+            //     case AUTO_BALANCE -> TippingState.AUTO_BALANCE_ANTI_TIP;
+            //     case AUTO_BALANCE_ANTI_TIP -> TippingState.AUTO_BALANCE;
+            //     case NO_TIP_CORRECTION ->TippingState.ANTI_TIP;
+            // }
         ));
     }
 
     public CommandBase toggleAutoBalance() {
         return runOnce(() -> setTippingState(
-            switch (tippingState) {
-                case ANTI_TIP -> TippingState.AUTO_BALANCE_ANTI_TIP;
-                case AUTO_BALANCE -> TippingState.NO_TIP_CORRECTION;
-                case AUTO_BALANCE_ANTI_TIP -> TippingState.ANTI_TIP;
-                case NO_TIP_CORRECTION ->TippingState.AUTO_BALANCE;
-            }
+            TippingState.NO_TIP_CORRECTION
+            // switch (tippingState) {
+            //     case ANTI_TIP -> TippingState.AUTO_BALANCE_ANTI_TIP;
+            //     case AUTO_BALANCE -> TippingState.NO_TIP_CORRECTION;
+            //     case AUTO_BALANCE_ANTI_TIP -> TippingState.ANTI_TIP;
+            //     case NO_TIP_CORRECTION ->TippingState.AUTO_BALANCE;
+            // }
         ));
     }
 
