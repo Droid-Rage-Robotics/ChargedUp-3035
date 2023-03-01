@@ -48,18 +48,18 @@ public class Pivot extends SubsystemBase {
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
     private volatile Position position = Position.START;
-    private final AbsoluteEncoder pivotAbsoluteEncoder;
+    // private final AbsoluteEncoder pivotAbsoluteEncoder;
 
-    private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
+    // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
     
     public Pivot() {
-        pivotMotor = new CANSparkMax(18, MotorType.kBrushless);//TODO: Where is it plugged in?
+        pivotMotor = new CANSparkMax(18, MotorType.kBrushless);
 
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
-        pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
-        pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROTATIONS_TO_DEGREES);
+        // pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
+        // pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROTATIONS_TO_DEGREES);
         // armAbsoluteEncoder.setInverted(false);
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
@@ -76,6 +76,7 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
         encoderPositionWriter.set(getPosition());
+        pivotMotor.set(controller.calculate(getPosition()));
     }
   
     @Override
@@ -83,12 +84,10 @@ public class Pivot extends SubsystemBase {
         periodic();
     }
 
-    public void update() {
-        pivotMotor.set(controller.calculate(getPosition()));
-    }
 
     public double getPosition() {
-        return pivotAbsoluteEncoder.getPosition();
+        return 0;//TODO:FIFIIIIIIIIIIIIIIFXXXXXXXXXXXXXXXXXXXXXXXXX FIX
+        // return pivotAbsoluteEncoder.getPosition();
     }
 
     public double getTargetPosition() {
@@ -98,13 +97,12 @@ public class Pivot extends SubsystemBase {
     private CommandBase setTargetPosition(Position position) {
         return runOnce(() -> {
             this.position = position;
-            targetPositionWriter.set(position.degrees.get());
+            controller.setSetpoint(position.degrees.get());
         });
     }
     public CommandBase setTargetPosition(double position) {
         return runOnce(() -> {
             controller.setSetpoint(position);
-            targetPositionWriter.set(position);
         });
     }
 
@@ -117,31 +115,33 @@ public class Pivot extends SubsystemBase {
     
     public CommandBase moveLow() {
         return setTargetPosition(
-            switch(TrackedElement.get()) {
-                case CONE -> Position.LOWCONE;
-                case CUBE -> Position.LOWCUBE;
-                case NONE -> Position.LOWCUBE;
-            }
+            Position.LOWCONE
+            // switch(TrackedElement.get()) {
+            //     case CONE -> Position.LOWCONE;
+            //     case CUBE -> Position.LOWCUBE;
+            //     case NONE -> Position.LOWCUBE;
+            // }
         );
     }
 
     public CommandBase moveMid() {
-        return setTargetPosition(
-            switch(TrackedElement.get()) {
-                case CONE -> Position.MIDCONE;
-                case CUBE -> Position.MIDCUBE;
-                case NONE -> Position.MIDCUBE;
-            }
+        return setTargetPosition(Position.LOWCONE
+            // switch(TrackedElement.get()) {
+            //     case CONE -> Position.MIDCONE;
+            //     case CUBE -> Position.MIDCUBE;
+            //     case NONE -> Position.MIDCUBE;
+            // }
         );
     }
 
     public CommandBase moveHigh() {
         return setTargetPosition(
-            switch(TrackedElement.get()) {
-                case CONE -> Position.HIGHCONE;
-                case CUBE -> Position.HIGHCUBE;
-                case NONE -> Position.HIGHCUBE;
-            }
+            Position.LOWCONE
+            // switch(TrackedElement.get()) {
+            //     case CONE -> Position.HIGHCONE;
+            //     case CUBE -> Position.HIGHCUBE;
+            //     case NONE -> Position.HIGHCUBE;
+            // }
         );
     }
 
