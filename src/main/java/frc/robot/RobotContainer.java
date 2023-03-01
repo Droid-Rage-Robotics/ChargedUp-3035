@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 // import frc.robot.subsystems.Claw;
 import frc.robot.commands.ManualArm;
@@ -26,6 +27,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 // import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -52,10 +54,9 @@ public class RobotContainer {
     // why are swerves not simplifying turns
 
     private final Drive drive = new Drive();
-
-    private final Elevator elevator = new Elevator();
-    private final Pivot arm = new Pivot();
-    // private final Claw claw = new Claw();
+    // private final Elevator elevator = new Elevator();
+    // private final Pivot arm = new Pivot();
+    // private Intake intake = new Intake();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -63,6 +64,12 @@ public class RobotContainer {
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     public void configureTeleOpBindings() {
+        // operator.a()
+        //     .onTrue(intake.intake());
+        // operator.b()
+        //     .onTrue(intake.outtake());
+        // operator.y()
+        //     .onTrue(intake.toggle());
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         // new Trigger(exampleSubsystem::exampleCondition)
             // .onTrue(new ExampleCommand(exampleSubsystem));
@@ -74,94 +81,66 @@ public class RobotContainer {
             driver::getRightX
         ));
 
-        driver.rightBumper()
-            .onTrue(drive.setTurboSpeed())
-            .onFalse(drive.setTurboSpeed());
-        driver.leftBumper()
-            .onTrue(drive.setSlowSpeed())
-            .onFalse(drive.setTurboSpeed());
+    //     driver.rightBumper()
+    //         .onTrue(drive.setTurboSpeed())
+    //         .onFalse(drive.setTurboSpeed());
+    //     driver.leftBumper()
+    //         .onTrue(drive.setSlowSpeed())
+    //         .onFalse(drive.setTurboSpeed());
 
-        driver.a()
-            .onTrue(drive.resetHeading());
+    //     driver.a()
+    //         .onTrue(drive.resetHeading());
 
-        driver.back()
-            .onTrue(drive.toggleFieldOriented());
-        driver.povUp()
-            .onTrue(drive.toggleAntiTipping());
-        driver.povDown()
-            .onTrue(drive.toggleAutoBalance());
-        driver.y()
-            .onTrue(
-                new SequentialCommandGroup(
-                    elevator.moveIntakeLow(),
-                    arm.moveIntakeLow()
-                    // claw.intake
-                )
-            )
-            .onFalse(
-                new SequentialCommandGroup(
-                    arm.moveHold()
-                    // claw.outtake
-                )
-            );
-        driver.x()
-            .onTrue(
-                new SequentialCommandGroup(
-                    elevator.moveIntakeHigh(),
-                    arm.moveIntakeHigh()
-                    // claw.intake
-                )
-            )
-            .onFalse(
-                new SequentialCommandGroup(
-                    elevator.moveMid(),
-                    arm.moveHold()
-                    // claw.outtake
-                )
-            );
+    //     driver.back()
+    //         .onTrue(drive.toggleFieldOriented());
+    //     driver.povUp()
+    //         .onTrue(drive.toggleAntiTipping());
+    //     driver.povDown()
+    //         .onTrue(drive.toggleAutoBalance());
+    //     driver.y()
+    //         .onTrue(
+    //             new SequentialCommandGroup(
+    //                 elevator.moveIntakeLow(),
+    //                 arm.moveIntakeLow()
+    //                 // claw.intake
+    //             )
+    //         )
+    //         .onFalse(
+    //             new SequentialCommandGroup(
+    //                 arm.moveHold()
+    //                 // claw.outtake
+    //             )
+    //         );
+    //     driver.x()
+    //         .onTrue(
+    //             new SequentialCommandGroup(
+    //                 elevator.moveIntakeHigh(),
+    //                 arm.moveIntakeHigh()
+    //                 // claw.intake
+    //             )
+    //         )
+    //         .onFalse(
+    //             new SequentialCommandGroup(
+    //                 elevator.moveMid(),
+    //                 arm.moveHold()
+    //                 // claw.outtake
+    //             )
+    //         );
 
-    //Wants a button to get cone off ground
-    //         .onTrue(claw.toggleClaw()); 
-    //     driver.rightTrigger()
-    //         .onTrue(claw.intake()) 
-    //         .onFalse(claw.stopIntake());
-    //     driver.rightTrigger()
-    //         .onTrue(claw.outtake())
-    //         .onFalse(claw.stopIntake());
+    // //Wants a button to get cone off ground
+    // //         .onTrue(claw.toggleClaw()); 
+    // //     driver.rightTrigger()
+    // //         .onTrue(claw.intake()) 
+    // //         .onFalse(claw.stopIntake());
+    // //     driver.rightTrigger()
+    // //         .onTrue(claw.outtake())
+    // //         .onFalse(claw.stopIntake());
 
 
 
-        //Buttons to add: Toggle Button for Cone/Cube
-        arm.setDefaultCommand(new ManualArm(operator, arm));
-        elevator.setDefaultCommand(new ManualElevator(operator, elevator));
-
-        operator.a()
-            .onTrue(
-                new ParallelCommandGroup(
-                    elevator.moveLow(),
-                    arm.moveLow()
-                )
-            );
-        operator.x()
-            .onTrue(
-                new ParallelCommandGroup(
-                    elevator.moveMid(),
-                    arm.moveMid()
-                )
-            );
-        operator.y()
-            .onTrue(
-                new ParallelCommandGroup(
-                    elevator.moveHigh(),
-                    arm.moveHigh()
-                )
-            );
-        // operator.povUp()
-        //     .onTrue(
-        //         elevator.changePosition()
-        //     );
     //     //Buttons to add: Toggle Button for Cone/Cube
     //     arm.setDefaultCommand(new ManualArm(operator, arm));
+    //     elevator.setDefaultCommand(new ManualElevator(operator, elevator));
 
     //     operator.a()
     //         .onTrue(
@@ -184,6 +163,34 @@ public class RobotContainer {
     //                 arm.moveHigh()
     //             )
     //         );
+    //     // operator.povUp()
+    //     //     .onTrue(
+    //     //         elevator.changePosition()
+    //     //     );
+    // //     //Buttons to add: Toggle Button for Cone/Cube
+    // //     arm.setDefaultCommand(new ManualArm(operator, arm));
+
+    // //     operator.a()
+    // //         .onTrue(
+    // //             new ParallelCommandGroup(
+    // //                 elevator.moveLow(),
+    // //                 arm.moveLow()
+    // //             )
+    // //         );
+    // //     operator.x()
+    // //         .onTrue(
+    // //             new ParallelCommandGroup(
+    // //                 elevator.moveMid(),
+    // //                 arm.moveMid()
+    // //             )
+    // //         );
+    // //     operator.y()
+    // //         .onTrue(
+    // //             new ParallelCommandGroup(
+    // //                 elevator.moveHigh(),
+    // //                 arm.moveHigh()
+    // //             )
+    // //         );
     }
 
     public void configureTestBindings() {
@@ -191,6 +198,7 @@ public class RobotContainer {
     }
     
     public Command getAutonomousCommand() {
+        return new InstantCommand();
         // // An example command will be run in autonomous
         // // return Autos.exampleAuto(exampleSubsystem);
         
@@ -243,34 +251,34 @@ public class RobotContainer {
 
         // This will load the file "FullAuto.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
         // for every path in the group
-        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
-            "First", 
-            new PathConstraints(0.3, 0.5)
-        );
+        // List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
+        //     "First", 
+        //     new PathConstraints(0.3, 0.5)
+        // );
 
-        // This is just an example event map. It would be better to have a constant, global event map
-        // in your code that will be used by all path following commands.
-        HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        // // This is just an example event map. It would be better to have a constant, global event map
+        // // in your code that will be used by all path following commands.
+        // HashMap<String, Command> eventMap = new HashMap<>();
+        // eventMap.put("marker1", new PrintCommand("Passed marker 1"));
 
-        // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
-        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-            drive::getPose, // Pose2d supplier
-            drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-            Drive.SwerveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
-            new PIDConstants(Drive.AutoConfig.TRANSLATIONAL_KP.value.get(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-            new PIDConstants(Drive.AutoConfig.THETA_KP.value.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-            drive::setModuleStates, // Module states consumer used to output to the drive subsystem
-            eventMap,
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-            drive // The drive subsystem. Used to properly set the requirements of path following commands
-        );
+        // // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
+        // SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+        //     drive::getPose, // Pose2d supplier
+        //     drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+        //     Drive.SwerveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+        //     new PIDConstants(Drive.AutoConfig.TRANSLATIONAL_KP.value.get(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        //     new PIDConstants(Drive.AutoConfig.THETA_KP.value.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+        //     drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+        //     eventMap,
+        //     true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+        //     drive // The drive subsystem. Used to properly set the requirements of path following commands
+        // );
 
-        //TODO check if there are any other better constructors ^^
+        // //TODO check if there are any other better constructors ^^
 
-        Command fullAuto = autoBuilder.fullAuto(pathGroup);
+        // Command fullAuto = autoBuilder.fullAuto(pathGroup);
 
-        return fullAuto;
+        // return fullAuto;
 
     }
 }
