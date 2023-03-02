@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
 
         pneumaticHub = new PneumaticHub(10);
         // intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 9, 10);
-        intakeSolenoid = pneumaticHub.makeDoubleSolenoid(10, 9);
+        intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 10);
     }
 
     @Override
