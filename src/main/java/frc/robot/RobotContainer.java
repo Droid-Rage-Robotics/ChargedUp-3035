@@ -1,12 +1,18 @@
 package frc.robot;
 
 import frc.robot.subsystems.*;
-import frc.robot.commands.ManualElevator;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
-
+import frc.robot.commands.ElevatorCommands.moveHigh;
+import frc.robot.commands.ElevatorCommands.moveHold;
+import frc.robot.commands.ElevatorCommands.moveIntakeHigh;
+import frc.robot.commands.ElevatorCommands.moveIntakeLow;
+import frc.robot.commands.ElevatorCommands.moveLow;
+import frc.robot.commands.ElevatorCommands.moveMid;
+import frc.robot.commands.ElevatorCommands.outtake;
+import frc.robot.commands.Manual.ManualElevator;
+import frc.robot.commands.Manual.ManualPivot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -25,11 +31,12 @@ public class RobotContainer {
     // fixnetowrk tables!!!
     // recalibrate pigeon on start
     // why are swerves not simplifying turns
+    //add Physical and digital limit switch
 
     private final Drive drive = new Drive();
     private final Elevator elevator = new Elevator();
-    // private final Pivot pivot = new Pivot(); 
-    // private Intake intake = new Intake();
+    private final Pivot pivot = new Pivot(); 
+    private Intake intake = new Intake();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -37,177 +44,85 @@ public class RobotContainer {
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     public void configureTeleOpBindings() {
-        // operator.a()
-        //     .onTrue(intake.intake());
-        // operator.b()
-        //     .onTrue(intake.outtake());
-        // operator.y()
-        //     .onTrue(intake.toggle());
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        // new Trigger(exampleSubsystem::exampleCondition)
-            // .onTrue(new ExampleCommand(exampleSubsystem));
+        drive.setDefaultCommand(
+            new SwerveDriveTeleop(
+                drive, 
+                driver::getLeftX, 
+                driver::getLeftY, 
+                driver::getRightX
+                )
+            );
 
-        drive.setDefaultCommand(new SwerveDriveTeleop(
-            drive, 
-            driver::getLeftX, 
-            driver::getLeftY, 
-            driver::getRightX
-        ));
+        driver.rightBumper()
+            .onTrue(drive.setSlowSpeed())
+            .onFalse(drive.setNormalSpeed());
+        driver.leftBumper()
+            .onTrue(drive.setSupserSlowSpeed())
+            .onFalse(drive.setNormalSpeed()
+            );
 
-    //     driver.rightBumper()
-    //         .onTrue(drive.setTurboSpeed())
-    //         .onFalse(drive.setTurboSpeed());
-    //     driver.leftBumper()
-    //         .onTrue(drive.setSlowSpeed())
-    //         .onFalse(drive.setTurboSpeed());
+        driver.rightTrigger()
+            .onTrue(intake.intake()) 
+            .onFalse(intake.stopIntake()
+            );
+        driver.leftTrigger()
+            .onTrue(intake.outtake())
+            .onFalse(intake.stopIntake()
+            );
 
-    //     driver.a()
-    //         .onTrue(drive.resetHeading());
+        driver.a()
+            .onTrue(drive.resetHeading()
+            );
+        driver.x()
+            .onTrue(intake.toggle()
+            ); 
 
-    //     driver.back()
-    //         .onTrue(drive.toggleFieldOriented());
-    //     driver.povUp()
-    //         .onTrue(drive.toggleAntiTipping());
-    //     driver.povDown()
-    //         .onTrue(drive.toggleAutoBalance());
-    //     driver.y()
-    //         .onTrue(
-    //             new SequentialCommandGroup(
-    //                 elevator.moveIntakeLow(),
-    //                 pivot.moveIntakeLow()
-    //                 // claw.intake
-    //             )
-    //         )
-    //         .onFalse(
-    //             new SequentialCommandGroup(
-    //                 pivot.moveHold()
-    //                 // claw.outtake
-    //             )
-    //         );
-    //     driver.x()
-    //         .onTrue(
-    //             new SequentialCommandGroup(
-    //                 elevator.moveIntakeHigh(),
-    //                 pivot.moveIntakeHigh()
-    //                 // claw.intake
-    //             )
-    //         )
-    //         .onFalse(
-    //             new SequentialCommandGroup(
-    //                 elevator.moveMid(),
-    //                 pivot.moveHold()
-    //                 // claw.outtake
-    //             )
-    //         );
-
-    // //Wants a button to get cone off ground
-    // //         .onTrue(claw.toggleClaw()); 
-    // //     driver.rightTrigger()
-    // //         .onTrue(claw.intake()) 
-    // //         .onFalse(claw.stopIntake());
-    // //     driver.rightTrigger()
-    // //         .onTrue(claw.outtake())
-    // //         .onFalse(claw.stopIntake());
-
-
-
-    //     //Buttons to add: Toggle Button for Cone/Cube
-    //     arm.setDefaultCommand(new ManualArm(operator, arm));
-        // elevator.setDefaultCommand(new ManualElevator(operator, elevator));
-
-        // operator.a()
-        //     .onTrue(
-        //         new ParallelCommandGroup(
-        //             // pivot.moveHold()
-        //             elevator.moveLow()
-        //             // pivot.moveLow()
-        //             // elevator.setHorizontalPower(0)
-        //         )
-        //     );
-        // operator.x()
-        //     .onTrue(
-        //         new ParallelCommandGroup(
-        //             // pivot.moveLow()
-        //             elevator.moveMid()
-        //             // pivot.moveMid()
-        //             // elevator.setHorizontalPower(0.5)
-        //         )
-        //     );
-        // operator.y()
-        //     .onTrue(
-        //         new ParallelCommandGroup(
-        //             // pivot.moveMid()
-        //             // elevator.moveHigh()
-        //             // pivot.moveHigh()
-        //         )
-        //     );
-        // operator.b()
-        //     .onTrue(
-        //         new ParallelCommandGroup(
-        //             // pivot.moveHigh()
-        //             elevator.moveHigh()
-        //             // pivot.moveHigh()
-        //             // elevator.setHorizontalPower(-0.5)
-        //         )
-        //     );
-        // operator.povUp()
-        //     // .onTrue(elevator.setPower(0.5)
-        //     .onTrue(pivot.setPower(0.6)
-        //     );
-        //     operator.povDown()
-        //     .onTrue(pivot.setPower(-0.6)
-        //     // .onTrue(elevator.setPower(-0.5)
-        //     );
-        //     operator.povLeft()
-        //     .onTrue(pivot.setPower(0)
-        //     // .onTrue(elevator.setPower(0)
-        //     );
-
-
-
-    //     // operator.povUp()
-    //     //     .onTrue(
-    //     //         elevator.changePosition()
-    //     //     );
-    // //     //Buttons to add: Toggle Button for Cone/Cube
-    // //     arm.setDefaultCommand(new ManualArm(operator, arm));
-
-    // //     operator.a()
-    // //         .onTrue(
-    // //             new ParallelCommandGroup(
-    // //                 elevator.moveLow(),
-    // //                 arm.moveLow()
-    // //             )
-    // //         );
-    // //     operator.x()
-    // //         .onTrue(
-    // //             new ParallelCommandGroup(
-    // //                 elevator.moveMid(),
-    // //                 arm.moveMid()
-    // //             )
-    // //         );
-    // //     operator.y()
-    // //         .onTrue(
-    // //             new ParallelCommandGroup(
-    // //                 elevator.moveHigh(),
-    // //                 arm.moveHigh()
-    // //             )
-    // //         );
-        // operator.a()
-        //     .onTrue(intake.toggle());
-        // operator.b()
-        //     .onTrue(intake.intake())
-        //     .onFalse(intake.stopIntake());
-        // operator.x()
-        //     .onTrue(intake.outtake())
-        //     .onFalse(intake.stopIntake());
-        operator.a()
-            .onTrue(elevator.moveLow());
-        operator.b()
-            .onTrue(elevator.moveMid());
-        operator.x()
-            .onTrue(elevator.moveHigh());
+        driver.back()
+            .onTrue(drive.toggleFieldOriented()
+            );
         
+        driver.povUp()
+            .onTrue(drive.toggleAntiTipping()
+            );
+        driver.povDown()
+            .onTrue(drive.toggleAutoBalance()
+            );
+
+        
+
+        
+
+
+//MAKE BUTTON FOR RESET Encoders for elevator, 
+        pivot.setDefaultCommand(new ManualPivot(operator, pivot));
+        elevator.setDefaultCommand(new ManualElevator(operator, elevator));
+
+        operator.a()
+            .onTrue(
+                    new moveLow(elevator, pivot)
+            );
+        operator.x()
+            .onTrue(
+                    new moveMid(elevator, pivot)
+            );
+        operator.y()
+            .onTrue(
+                new moveHigh(elevator, pivot)  
+            );
+        
+        operator.povUp()
+            .onTrue(new moveIntakeHigh(elevator, pivot)
+            );
+        operator.povDown()
+            .onTrue(new moveIntakeLow(elevator, pivot)
+            );
+        operator.povLeft()
+            .onTrue(new moveHold(elevator, pivot)
+            );
+
+        operator.rightTrigger()
+            .onTrue(new outtake(elevator, pivot, intake)
+            );
     }
 
     public void configureTestBindings() {
