@@ -19,11 +19,11 @@ public class Elevator extends SubsystemBase {
     public static class Constants {
         public static final double VERTICAL_GEAR_RATIO = 1 / 1;
         public static final double VERTICAL_GEAR_DIAMETER_INCHES = 1.88;
-        public static final double VERTICAL_ROT_TO_INCHES = (VERTICAL_GEAR_RATIO * Math.PI * VERTICAL_GEAR_DIAMETER_INCHES);
+        public static final double VERTICAL_ROT_TO_INCHES = 1/ (VERTICAL_GEAR_RATIO * Math.PI * VERTICAL_GEAR_DIAMETER_INCHES);
 
         public static final double HORIZONTAL_GEAR_RATIO = 1 / 1;
         public static final double HORIZONTAL_GEAR_DIAMETER_INCHES = 1.4;
-        public static final double HORIZONTAL_ROT_TO_INCHES = (HORIZONTAL_GEAR_RATIO * Math.PI * HORIZONTAL_GEAR_DIAMETER_INCHES);
+        public static final double HORIZONTAL_ROT_TO_INCHES = 1/ (HORIZONTAL_GEAR_RATIO * Math.PI * HORIZONTAL_GEAR_DIAMETER_INCHES);
     }
 
     private enum Position {
@@ -37,8 +37,8 @@ public class Elevator extends SubsystemBase {
         MIDCONE(0,2),
         MIDCUBE(0,2),
         
-        HIGHCONE(0,5),
-        HIGHCUBE(0,5),
+        HIGHCONE(0,3),
+        HIGHCUBE(0,3),
 
         INTAKEHIGH(0,0)
         

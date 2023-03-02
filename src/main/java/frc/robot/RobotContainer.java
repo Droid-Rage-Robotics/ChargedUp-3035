@@ -27,9 +27,9 @@ public class RobotContainer {
     // why are swerves not simplifying turns
 
     private final Drive drive = new Drive();
-    // private final Elevator elevator = new Elevator();
+    private final Elevator elevator = new Elevator();
     // private final Pivot pivot = new Pivot(); 
-    private Intake intake = new Intake();
+    // private Intake intake = new Intake();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -193,14 +193,21 @@ public class RobotContainer {
     // //                 arm.moveHigh()
     // //             )
     // //         );
+        // operator.a()
+        //     .onTrue(intake.toggle());
+        // operator.b()
+        //     .onTrue(intake.intake())
+        //     .onFalse(intake.stopIntake());
+        // operator.x()
+        //     .onTrue(intake.outtake())
+        //     .onFalse(intake.stopIntake());
         operator.a()
-            .onTrue(intake.toggle());
+            .onTrue(elevator.moveLow());
         operator.b()
-            .onTrue(intake.intake())
-            .onFalse(intake.stopIntake());
+            .onTrue(elevator.moveMid());
         operator.x()
-            .onTrue(intake.outtake())
-            .onFalse(intake.stopIntake());
+            .onTrue(elevator.moveHigh());
+        
     }
 
     public void configureTestBindings() {
