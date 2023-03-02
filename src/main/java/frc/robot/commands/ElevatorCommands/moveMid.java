@@ -6,36 +6,12 @@ package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-public class moveMid extends CommandBase {
-    private final Elevator elevator;
-    private final Pivot pivot;
-
-    public moveMid(Elevator elevator, Pivot pivot) {
-    	this.elevator = elevator;
-        this.pivot = pivot;
-        
-    	addRequirements(elevator, pivot);
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        new SequentialCommandGroup(
+public class MoveMid extends SequentialCommandGroup {
+    public MoveMid(Elevator elevator, Pivot pivot) {
+        addCommands(
             elevator.moveMid(),
             pivot.moveMid()
-        ).execute();
-    }
-
-    @Override
-    public void execute() {}
-
-    @Override
-    public void end(boolean interrupted) {}
-
-    @Override
-    public boolean isFinished() {
-        return false;
+        );
     }
 }

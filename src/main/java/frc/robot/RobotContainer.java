@@ -2,13 +2,13 @@ package frc.robot;
 
 import frc.robot.subsystems.*;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
-import frc.robot.commands.ElevatorCommands.moveHigh;
-import frc.robot.commands.ElevatorCommands.moveHold;
-import frc.robot.commands.ElevatorCommands.moveIntakeHigh;
-import frc.robot.commands.ElevatorCommands.moveIntakeLow;
-import frc.robot.commands.ElevatorCommands.moveLow;
-import frc.robot.commands.ElevatorCommands.moveMid;
-import frc.robot.commands.ElevatorCommands.outtake;
+import frc.robot.commands.ElevatorCommands.MoveHigh;
+import frc.robot.commands.ElevatorCommands.MoveHold;
+import frc.robot.commands.ElevatorCommands.MoveIntakeHigh;
+import frc.robot.commands.ElevatorCommands.MoveIntakeLow;
+import frc.robot.commands.ElevatorCommands.MoveLow;
+import frc.robot.commands.ElevatorCommands.MoveMid;
+import frc.robot.commands.ElevatorCommands.Outtake;
 import frc.robot.commands.Manual.ManualElevator;
 import frc.robot.commands.Manual.ManualPivot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,15 +23,20 @@ public class RobotContainer {
     // find out how to make a field graph with robot pose on it and preferably a visual for path following
     // custom shuffleboard droid rage theme
     // Consider setitng drive motor to break and turn to coast
-    // Bright Color on shuffleboard when block is detected
-    // path weaver vs path planner
-    // Desaturate wheels speeds
+    // ----Bright Color on shuffleboard when block is detected
+    // ----path weaver vs path planner
+    // ----Desaturate wheels speeds
     // reset network tables button
     // auto align 
     // fixnetowrk tables!!!
     // recalibrate pigeon on start
     // why are swerves not simplifying turns
     //add Physical and digital limit switch
+
+
+    // limielite
+    // fix drive directions for atuos/teleop
+    // 
 
     private final Drive drive = new Drive();
     private final Elevator elevator = new Elevator();
@@ -44,6 +49,10 @@ public class RobotContainer {
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     public void configureTeleOpBindings() {
+         /*
+         * Driver Controls
+         */
+
         drive.setDefaultCommand(
             new SwerveDriveTeleop(
                 drive, 
@@ -56,6 +65,7 @@ public class RobotContainer {
         driver.rightBumper()
             .onTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
+
         driver.leftBumper()
             .onTrue(drive.setSupserSlowSpeed())
             .onFalse(drive.setNormalSpeed()
@@ -63,18 +73,20 @@ public class RobotContainer {
 
         driver.rightTrigger()
             .onTrue(intake.intake()) 
-            .onFalse(intake.stopIntake()
+            .onFalse(intake.stop()
             );
+
         driver.leftTrigger()
             .onTrue(intake.outtake())
-            .onFalse(intake.stopIntake()
+            .onFalse(intake.stop()
             );
 
         driver.a()
             .onTrue(drive.resetHeading()
             );
-        driver.x()
-            .onTrue(intake.toggle()
+
+        driver.b()
+            .onTrue(intake.toggleOpen()
             ); 
 
         driver.back()
@@ -84,44 +96,42 @@ public class RobotContainer {
         driver.povUp()
             .onTrue(drive.toggleAntiTipping()
             );
+
         driver.povDown()
             .onTrue(drive.toggleAutoBalance()
             );
 
-        
-
-        
-
-
-//MAKE BUTTON FOR RESET Encoders for elevator, 
+        /*
+         * Operator Controls
+         */
         pivot.setDefaultCommand(new ManualPivot(operator, pivot));
         elevator.setDefaultCommand(new ManualElevator(operator, elevator));
 
         operator.a()
             .onTrue(
-                    new moveLow(elevator, pivot)
+                    new MoveLow(elevator, pivot)
             );
         operator.x()
             .onTrue(
-                    new moveMid(elevator, pivot)
+                    new MoveMid(elevator, pivot)
             );
         operator.y()
             .onTrue(
-                new moveHigh(elevator, pivot)  
+                new MoveHigh(elevator, pivot)  
             );
         
         operator.povUp()
-            .onTrue(new moveIntakeHigh(elevator, pivot)
+            .onTrue(new MoveIntakeHigh(elevator, pivot)
             );
         operator.povDown()
-            .onTrue(new moveIntakeLow(elevator, pivot)
+            .onTrue(new MoveIntakeLow(elevator, pivot)
             );
         operator.povLeft()
-            .onTrue(new moveHold(elevator, pivot)
+            .onTrue(new MoveHold(elevator, pivot)
             );
 
         operator.rightTrigger()
-            .onTrue(new outtake(elevator, pivot, intake)
+            .onTrue(new Outtake(elevator, pivot, intake)
             );
     }
 

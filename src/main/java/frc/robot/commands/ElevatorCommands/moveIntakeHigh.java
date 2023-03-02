@@ -8,11 +8,11 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-public class moveIntakeHigh extends CommandBase {
+public class MoveIntakeHigh extends CommandBase {
     private final Elevator elevator;
     private final Pivot pivot;
 
-    public moveIntakeHigh(Elevator elevator, Pivot pivot) {
+    public MoveIntakeHigh(Elevator elevator, Pivot pivot) {
     	this.elevator = elevator;
         this.pivot = pivot;
         

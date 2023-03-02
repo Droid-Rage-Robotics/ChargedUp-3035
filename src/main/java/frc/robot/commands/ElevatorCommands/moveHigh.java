@@ -6,35 +6,12 @@ package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-public class moveHigh extends CommandBase {
-    private final Elevator elevator;
-    private final Pivot pivot;
-
-    public moveHigh(Elevator elevator, Pivot pivot) {
-    	this.elevator = elevator;
-        this.pivot = pivot;
-        
-    	addRequirements(elevator, pivot);
-    }
-    
-    @Override
-    public void initialize() {
-        new SequentialCommandGroup(
+public class MoveHigh extends SequentialCommandGroup {
+    public MoveHigh(Elevator elevator, Pivot pivot){
+        addCommands(
             elevator.moveHigh(),
             pivot.moveHigh()
-        ).execute();;
-    }
-
-    @Override
-    public void execute() {}
-
-    @Override
-    public void end(boolean interrupted) {}
-
-    @Override
-    public boolean isFinished() {
-        return false;
+        );
     }
 }
