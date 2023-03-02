@@ -72,9 +72,9 @@ public class SwerveDriveTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        xSpeed = x.get();
-        ySpeed = -y.get();
-        turnSpeed = turn.get();
+        xSpeed = -y.get();
+        ySpeed = x.get();
+        turnSpeed = -turn.get();
 
         // Square inputs
         if (drive.isSquaredInputs()) {
