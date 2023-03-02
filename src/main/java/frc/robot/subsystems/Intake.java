@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.TrackedElement.Element;
 import frc.robot.utilities.MutableBoolean;
+import frc.robot.utilities.MutableDouble;
 
 public class Intake extends SubsystemBase {
     
@@ -23,8 +25,8 @@ public class Intake extends SubsystemBase {
     private final DoubleSolenoid intakeSolenoid;
     private final PneumaticHub pneumaticHub;
     private final MutableBoolean isOpen = new MutableBoolean(false, "Is Open", Intake.class.getSimpleName());
-    private final double intakeSpeed = 0.3;
-    private final double outtakeSpeed = -0.3;
+    private final MutableDouble intakeSpeed = new MutableDouble(0.3, "Intake speed (power)", Intake.class.getSimpleName());
+    private final MutableDouble outtakeSpeed = new MutableDouble(-0.3, "Outtake speed (power)", Intake.class.getSimpleName());
 
     public Intake() {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
@@ -56,55 +58,53 @@ public class Intake extends SubsystemBase {
         TrackedElement.set(Element.CUBE);
     }
   
-    public CommandBase toggleOpen() {
+    public CommandBase runToggleOpen() {
         return runOnce(() -> {
             if(isOpen.get()) close();
             else open();
         });
     }
 
-    public CommandBase openClaw() {
-        return runOnce(() -> {
-            open();
-        });
+    public CommandBase runOpen() {
+        return runOnce(() -> open());
     }
 
-    public CommandBase closeClaw() {
-        return runOnce(() -> {
-            close();
-        });
+    public CommandBase runClose() {
+        return runOnce(() -> close());
     }
 
-    public CommandBase intake() {
-        return runOnce(() -> {
-            setPower(intakeSpeed); 
-        });
+    public CommandBase runIntake() {
+        return runSetPower(intakeSpeed.get());
     }
 
-    public CommandBase outtake() {
-        return runOnce(() -> setPower(outtakeSpeed));
+    public CommandBase runOuttake() {
+        return runSetPower(outtakeSpeed.get());
     }
 
-    public CommandBase stop() { 
-        return runOnce(() -> setPower(0));
+    public CommandBase runStop() { 
+        return runSetPower(0);
     }
 
-    private void setPower(double power){
+    private void setPower(double power) {
         clawMotor.set(power);
-    }    
-
-    public CommandBase intakeFor(double wait) {
-        return runOnce(() -> {
-            setPower(intakeSpeed);
-            new WaitCommand(wait);
-            stop();
-        });
     }
-    public CommandBase outtakeFor(double wait) {
-        return runOnce(() -> {
-            setPower(outtakeSpeed);
-            new WaitCommand(wait);
-            stop();
-        });
+
+    private CommandBase runSetPower(double power){
+        return runOnce(() -> setPower(power));
+    }
+
+    public CommandBase runIntakeFor(double wait) {
+        return Commands.sequence(
+            runIntake(),
+            Commands.waitSeconds(wait),
+            runStop()
+        );
+    }
+    public CommandBase runOuttakeFor(double wait) {
+        return Commands.sequence(
+            runIntake(),
+            Commands.waitSeconds(wait),
+            runStop()
+        );
     }
 }

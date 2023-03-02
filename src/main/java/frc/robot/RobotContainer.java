@@ -72,13 +72,13 @@ public class RobotContainer {
             );
 
         driver.rightTrigger()
-            .onTrue(intake.intake()) 
-            .onFalse(intake.stop()
+            .onTrue(intake.runIntake()) 
+            .onFalse(intake.runStop()
             );
 
         driver.leftTrigger()
-            .onTrue(intake.outtake())
-            .onFalse(intake.stop()
+            .onTrue(intake.runOuttake())
+            .onFalse(intake.runStop()
             );
 
         driver.a()
@@ -86,7 +86,7 @@ public class RobotContainer {
             );
 
         driver.b()
-            .onTrue(intake.toggleOpen()
+            .onTrue(intake.runToggleOpen()
             ); 
 
         driver.back()
