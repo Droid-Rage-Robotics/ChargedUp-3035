@@ -81,9 +81,10 @@ public class Drive extends SubsystemBase {
     }
 
     private enum Speed {
-        TURBO(1, 1), //TODO find what feels best 
-        NORMAL(0.5, 0.5),
-        SLOW(0.25, 0.25),
+        TURBO(0.8, 0.8), //TODO find what feels best 
+        NORMAL(0.8, 0.8),
+        SLOW(0.3, 0.3),
+        SUPERSLOW(0.15, 0.15),
         ;
 
         private final MutableDouble translationalSpeed;
@@ -329,6 +330,11 @@ public class Drive extends SubsystemBase {
     public CommandBase setSlowSpeed() {
         return setSpeed(Speed.SLOW);
     }
+
+    public CommandBase setSupserSlowSpeed() {
+        return setSpeed(Speed.SUPERSLOW);
+    }
+
 
     public CommandBase resetEncoders() {
         return runOnce(() -> {
