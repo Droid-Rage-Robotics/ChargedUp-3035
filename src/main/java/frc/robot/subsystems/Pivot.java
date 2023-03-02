@@ -37,6 +37,8 @@ public class Pivot extends SubsystemBase {
 
         INTAKEHIGH(0),
         HOLD(0), // straight up
+        INTAKEAUTOCUBE(0), //Intaking as far down as possible for dube
+        INTAKRAUTOCONE(0), //intake auto position for cone
         ;
 
         private final MutableDouble degrees;
