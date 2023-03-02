@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
         TrackedElement.set(Element.CUBE);
     }
   
-    public CommandBase toggle() {
+    public CommandBase toggleOpen() {
         return runOnce(() -> {
             if(isOpen.get()) close();
             else open();
@@ -85,7 +85,7 @@ public class Intake extends SubsystemBase {
         return runOnce(() -> setPower(outtakeSpeed));
     }
 
-    public CommandBase stopIntake() { 
+    public CommandBase stop() { 
         return runOnce(() -> setPower(0));
     }
 
@@ -97,14 +97,14 @@ public class Intake extends SubsystemBase {
         return runOnce(() -> {
             setPower(intakeSpeed);
             new WaitCommand(wait);
-            stopIntake();
+            stop();
         });
     }
     public CommandBase outtakeFor(double wait) {
         return runOnce(() -> {
             setPower(outtakeSpeed);
             new WaitCommand(wait);
-            stopIntake();
+            stop();
         });
     }
 }

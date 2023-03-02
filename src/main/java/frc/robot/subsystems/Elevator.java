@@ -82,15 +82,15 @@ public class Elevator extends SubsystemBase {
 
         verticalRightElevator.follow(verticalLeftMotor, true);
   
-        verticalEncoder = verticalLeftMotor.getEncoder();  //TODO: Where is it plugged in?
+        verticalEncoder = verticalLeftMotor.getEncoder();
         verticalEncoder.setPositionConversionFactor(Constants.VERTICAL_ROT_TO_INCHES);
         horizontalEncoder = horizontalMotor.getEncoder();
         horizontalEncoder.setPositionConversionFactor(Constants.HORIZONTAL_ROT_TO_INCHES);
 
         verticalController = new PIDController(0.01, 0, 0);
-        verticalController.setTolerance(0.1); // meters//TODO:How much tolerence?
+        verticalController.setTolerance(0.1); // inches //TODO:How much tolerence?
         horizontalController = new PIDController(0.05, 0, 0);
-        horizontalController.setTolerance(0.10); // meters
+        horizontalController.setTolerance(0.10); // inches
 
         new ComplexWidgetBuilder(verticalController, "Vertical PID Controller", Elevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
