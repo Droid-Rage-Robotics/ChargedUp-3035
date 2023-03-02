@@ -22,7 +22,7 @@ public class ManualPivot extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setTargetPosition(arm.getTargetPosition()+(operator.getLeftY()*10));
+        arm.setTargetPosition(arm.getTargetPosition()+(operator.getLeftY()*0.1));
         //TODO: Try to make it where it resets the value of the elevator
     }
 

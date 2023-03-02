@@ -25,8 +25,8 @@ public class ManualElevator extends CommandBase {
     @Override
     public void execute() {//TODO:Should we make it a different joystick? And move arm to 
         elevator.setPosition(
-            elevator.getTargetVerticalHeight()+(-operator.getRightY()*5), 
-            elevator.getTargetHorizontalDistance()//+(operator.getRightX()*10)
+            elevator.getTargetVerticalHeight()+(-operator.getRightY()*0.01), 
+            elevator.getTargetHorizontalDistance()+(operator.getRightX()*0.01)
             );
         //TODO: Try to make it where it resets the value of the elevator
     }
