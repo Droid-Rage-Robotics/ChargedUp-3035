@@ -6,13 +6,12 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 
-public class DropCone extends SequentialCommandGroup {
-    public DropCone(Elevator elevator, Pivot pivot, Intake intake) {
+public class IntakeCube extends SequentialCommandGroup {
+    //TODO: Maybe make a position where the pivot iks downwards so it doesn't roll away
+    public IntakeCube( Pivot pivot, Intake intake) {
         addCommands(
-            elevator.dropVerticalElevator(),
             intake.runOpen(),
-            intake.runOuttakeFor(1),
-            elevator.moveInHorizontalElevator(),
+            intake.runIntakeFor(3),
             Commands.waitSeconds(1),
             pivot.moveHold()
         );

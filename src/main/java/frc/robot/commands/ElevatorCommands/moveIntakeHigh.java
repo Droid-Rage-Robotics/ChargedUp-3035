@@ -8,33 +8,11 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-public class MoveIntakeHigh extends CommandBase {
-    private final Elevator elevator;
-    private final Pivot pivot;
-
+public class MoveIntakeHigh extends SequentialCommandGroup {
     public MoveIntakeHigh(Elevator elevator, Pivot pivot) {
-    	this.elevator = elevator;
-        this.pivot = pivot;
-        
-    	addRequirements(elevator, pivot);
-    }
-
-    @Override
-    public void initialize() {
-        new SequentialCommandGroup(
+        addCommands(
             elevator.moveIntakeHigh(),
             pivot.moveIntakeHigh()
-        ).execute();
-    }
-
-    @Override
-    public void execute() {}
-
-    @Override
-    public void end(boolean interrupted) {}
-
-    @Override
-    public boolean isFinished() {
-        return false;
+        );
     }
 }
