@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.TrackedElement.Element;
 import frc.robot.utilities.MutableBoolean;
 
@@ -62,11 +63,22 @@ public class Intake extends SubsystemBase {
         });
     }
 
+    public CommandBase openClaw() {
+        return runOnce(() -> {
+            open();
+        });
+    }
+
+    public CommandBase closeClaw() {
+        return runOnce(() -> {
+            close();
+        });
+    }
+
     public CommandBase intake() {
         return runOnce(() -> {
             setPower(intakeSpeed); 
         });
-        
     }
 
     public CommandBase outtake() {
@@ -80,4 +92,19 @@ public class Intake extends SubsystemBase {
     private void setPower(double power){
         clawMotor.set(power);
     }    
+
+    public CommandBase intakeFor(double wait) {
+        return runOnce(() -> {
+            setPower(intakeSpeed);
+            new WaitCommand(wait);
+            stopIntake();
+        });
+    }
+    public CommandBase outtakeFor(double wait) {
+        return runOnce(() -> {
+            setPower(outtakeSpeed);
+            new WaitCommand(wait);
+            stopIntake();
+        });
+    }
 }

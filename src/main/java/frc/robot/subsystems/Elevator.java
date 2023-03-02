@@ -40,7 +40,9 @@ public class Elevator extends SubsystemBase {
         HIGHCONE(0,3),
         HIGHCUBE(0,3),
 
-        INTAKEHIGH(0,0)
+        INTAKEHIGH(0,0),
+
+        HOLD(0,0),
         
         ;
 
@@ -155,6 +157,10 @@ public class Elevator extends SubsystemBase {
         });
     }
 
+    public CommandBase moveHold() {
+        return setPosition(Position.HOLD);
+    }
+
     public CommandBase moveIntakeLow() {
         return setPosition(Position.INTAKELOW);
     }
@@ -202,5 +208,13 @@ public class Elevator extends SubsystemBase {
 
     public CommandBase setHorizontalPower(double power){
         return runOnce(() ->horizontalMotor.set(power));
+    }
+
+    public CommandBase dropVerticalElevator(){
+        return runOnce(() ->verticalController.setSetpoint(getTargetVerticalHeight()-2));
+    }
+
+    public CommandBase moveInHorizontalElevator(){
+        return runOnce(() ->verticalController.setSetpoint(getTargetHorizontalDistance()-2));
     }
 }  
