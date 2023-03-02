@@ -3,7 +3,6 @@ package frc.robot;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Drive.PathPlannerFollow;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 import frc.robot.commands.ElevatorCommands.MoveHigh;
 import frc.robot.commands.ElevatorCommands.MoveHold;
@@ -15,13 +14,10 @@ import frc.robot.commands.ElevatorCommands.Outtake;
 import frc.robot.commands.Manual.ManualElevator;
 import frc.robot.commands.Manual.ManualPivot;
 
-import com.pathplanner.lib.PathConstraints;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {

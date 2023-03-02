@@ -19,12 +19,10 @@ public class Outtake extends CommandBase {
         this.pivot = pivot;
         this.intake = intake;
         
-    	addRequirements(elevator, pivot, intake);
-
-        
+    	addRequirements(elevator, pivot, intake);   
     }
 
-    // Called when the command is initially scheduled.
+    //   TODO: Make sure to only use for teleop
     @Override
     public void initialize() {
         if(TrackedElement.Element.CONE==TrackedElement.get()){

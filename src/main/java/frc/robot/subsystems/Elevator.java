@@ -57,7 +57,7 @@ public class Elevator extends SubsystemBase {
     
     private final CANSparkMax verticalLeftMotor, verticalRightElevator, horizontalMotor;
     private final RelativeEncoder verticalEncoder, horizontalEncoder;
-    private final DutyCycleEncoder verticaAbsEncoder;
+    // private final DutyCycleEncoder verticaAbsEncoder;
     private final PIDController verticalController;
     private final PIDController horizontalController;
     private volatile Position position = Position.START;
@@ -101,7 +101,7 @@ public class Elevator extends SubsystemBase {
 
         setPosition(Position.START);
 
-        verticaAbsEncoder = new DutyCycleEncoder(9);
+        // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
         isMovingManually = false;
     }
 
@@ -113,11 +113,13 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         horizontalMotor.set(horizontalController.calculate(horizontalEncoder.getPosition()));
         horizontalSetPowerWriter.set(horizontalController.calculate(horizontalEncoder.getPosition()));
+horizontalEncoderPositionWriter.set(horizontalEncoder.getPosition());
 
-        // verticalLeftMotor.set(verticalController.calculate(verticalEncoder.getPosition()));
-        // verticalSetPowerWriter.set(verticalController.calculate(verticalEncoder.getPosition()));
 
-        horizontalEncoderPositionWriter.set(horizontalEncoder.getPosition());
+        verticalLeftMotor.set(verticalController.calculate(verticalEncoder.getPosition()));
+        verticalSetPowerWriter.set(verticalController.calculate(verticalEncoder.getPosition()));
+
+        
         verticalEncoderPositionWriter.set(verticalEncoder.getPosition());
     }
 
