@@ -10,7 +10,6 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.TrackedElement;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 public class outtake extends CommandBase {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Elevator elevator;
     private final Pivot pivot;
     private final Intake intake;

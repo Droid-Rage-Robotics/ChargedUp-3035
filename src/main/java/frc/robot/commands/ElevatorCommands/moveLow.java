@@ -9,7 +9,6 @@ import frc.robot.subsystems.Pivot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class moveLow extends CommandBase {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Elevator elevator;
     private final Pivot pivot;
 
