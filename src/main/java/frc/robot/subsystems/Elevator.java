@@ -164,23 +164,21 @@ public class Elevator extends SubsystemBase {
 
     public CommandBase moveLow() {
         return setPosition(
-            Position.LOWCONE
-            // switch(TrackedElement.get()) {
-            //     case CONE -> Position.LOWCONE;
-            //     case CUBE -> Position.LOWCUBE;
-            //     case NONE -> Position.LOWCUBE;
-            // }
+            switch(TrackedElement.get()) {
+                case CONE -> Position.LOWCONE;
+                case CUBE -> Position.LOWCUBE;
+                case NONE -> Position.LOWCUBE;
+            }
         );
     }
 
     public CommandBase moveMid() {
         return setPosition(
-            Position.MIDCONE
-            // switch(TrackedElement.get()) {
-            //     case CONE -> Position.MIDCONE;
-            //     case CUBE -> Position.MIDCUBE;
-            //     case NONE -> Position.MIDCUBE;
-            // }
+            switch(TrackedElement.get()) {
+                case CONE -> Position.MIDCONE;
+                case CUBE -> Position.MIDCUBE;
+                case NONE -> Position.MIDCUBE;
+            }
         );
     }
 
@@ -189,12 +187,11 @@ public class Elevator extends SubsystemBase {
             changePosition();
         }
         return setPosition(
-            Position.HIGHCONE
-            // switch(TrackedElement.get()) {
-            //     case CONE -> Position.HIGHCONE;
-            //     case CUBE -> Position.HIGHCUBE;
-            //     case NONE -> Position.HIGHCUBE;
-            // }
+            switch(TrackedElement.get()) {
+                case CONE -> Position.HIGHCONE;
+                case CUBE -> Position.HIGHCUBE;
+                case NONE -> Position.HIGHCUBE;
+            }
         );
     }
 

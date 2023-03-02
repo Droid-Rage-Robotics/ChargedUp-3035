@@ -117,33 +117,31 @@ public class Pivot extends SubsystemBase {
     
     public CommandBase moveLow() {
         return setTargetPosition(
-            Position.LOWCONE
-            // switch(TrackedElement.get()) {
-            //     case CONE -> Position.LOWCONE;
-            //     case CUBE -> Position.LOWCUBE;
-            //     case NONE -> Position.LOWCUBE;
-            // }
+            switch(TrackedElement.get()) {
+                case CONE -> Position.LOWCONE;
+                case CUBE -> Position.LOWCUBE;
+                case NONE -> Position.LOWCUBE;
+            }
         );
     }
 
     public CommandBase moveMid() {
-        return setTargetPosition(Position.MIDCONE
-            // switch(TrackedElement.get()) {
-            //     case CONE -> Position.MIDCONE;
-            //     case CUBE -> Position.MIDCUBE;
-            //     case NONE -> Position.MIDCUBE;
-            // }
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> Position.MIDCONE;
+                case CUBE -> Position.MIDCUBE;
+                case NONE -> Position.MIDCUBE;
+            }
         );
     }
 
     public CommandBase moveHigh() {
         return setTargetPosition(
-            Position.HIGHCONE
-            // switch(TrackedElement.get()) {
-            //     case CONE -> Position.HIGHCONE;
-            //     case CUBE -> Position.HIGHCUBE;
-            //     case NONE -> Position.HIGHCUBE;
-            // }
+            switch(TrackedElement.get()) {
+                case CONE -> Position.HIGHCONE;
+                case CUBE -> Position.HIGHCUBE;
+                case NONE -> Position.HIGHCUBE;
+            }
         );
     }
 
