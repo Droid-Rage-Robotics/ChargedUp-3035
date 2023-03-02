@@ -207,14 +207,14 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase setHorizontalPower(double power){
-        return runOnce(() ->horizontalMotor.set(power));
+        return runOnce(() -> horizontalMotor.set(power));
     }
 
     public CommandBase dropVerticalElevator(){
-        return runOnce(() ->verticalController.setSetpoint(getTargetVerticalHeight()-2));
+        return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-2));
     }
 
     public CommandBase moveInHorizontalElevator(){
-        return runOnce(() ->verticalController.setSetpoint(getTargetHorizontalDistance()-2));
+        return runOnce(() -> verticalController.setSetpoint(getTargetHorizontalDistance()-2));
     }
 }  
