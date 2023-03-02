@@ -1,39 +1,12 @@
 package frc.robot;
 
-import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Pivot;
-// import frc.robot.subsystems.Claw;
-import frc.robot.commands.ManualArm;
+import frc.robot.subsystems.*;
 import frc.robot.commands.ManualElevator;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 
-import java.util.HashMap;
-import java.util.List;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-// import edu.wpi.first.math.controller.PIDController;
-// import edu.wpi.first.math.controller.ProfiledPIDController;
-// import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.math.trajectory.Trajectory;
-// import edu.wpi.first.math.trajectory.TrajectoryConfig;
-// import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-// import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -55,8 +28,8 @@ public class RobotContainer {
 
     private final Drive drive = new Drive();
     // private final Elevator elevator = new Elevator();
-    // private final Pivot arm = new Pivot();
-    // private Intake intake = new Intake();
+    // private final Pivot pivot = new Pivot(); 
+    private Intake intake = new Intake();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -101,13 +74,13 @@ public class RobotContainer {
     //         .onTrue(
     //             new SequentialCommandGroup(
     //                 elevator.moveIntakeLow(),
-    //                 arm.moveIntakeLow()
+    //                 pivot.moveIntakeLow()
     //                 // claw.intake
     //             )
     //         )
     //         .onFalse(
     //             new SequentialCommandGroup(
-    //                 arm.moveHold()
+    //                 pivot.moveHold()
     //                 // claw.outtake
     //             )
     //         );
@@ -115,14 +88,14 @@ public class RobotContainer {
     //         .onTrue(
     //             new SequentialCommandGroup(
     //                 elevator.moveIntakeHigh(),
-    //                 arm.moveIntakeHigh()
+    //                 pivot.moveIntakeHigh()
     //                 // claw.intake
     //             )
     //         )
     //         .onFalse(
     //             new SequentialCommandGroup(
     //                 elevator.moveMid(),
-    //                 arm.moveHold()
+    //                 pivot.moveHold()
     //                 // claw.outtake
     //             )
     //         );
@@ -140,29 +113,58 @@ public class RobotContainer {
 
     //     //Buttons to add: Toggle Button for Cone/Cube
     //     arm.setDefaultCommand(new ManualArm(operator, arm));
-    //     elevator.setDefaultCommand(new ManualElevator(operator, elevator));
+        // elevator.setDefaultCommand(new ManualElevator(operator, elevator));
 
-    //     operator.a()
-    //         .onTrue(
-    //             new ParallelCommandGroup(
-    //                 elevator.moveLow(),
-    //                 arm.moveLow()
-    //             )
-    //         );
-    //     operator.x()
-    //         .onTrue(
-    //             new ParallelCommandGroup(
-    //                 elevator.moveMid(),
-    //                 arm.moveMid()
-    //             )
-    //         );
-    //     operator.y()
-    //         .onTrue(
-    //             new ParallelCommandGroup(
-    //                 elevator.moveHigh(),
-    //                 arm.moveHigh()
-    //             )
-    //         );
+        // operator.a()
+        //     .onTrue(
+        //         new ParallelCommandGroup(
+        //             // pivot.moveHold()
+        //             elevator.moveLow()
+        //             // pivot.moveLow()
+        //             // elevator.setHorizontalPower(0)
+        //         )
+        //     );
+        // operator.x()
+        //     .onTrue(
+        //         new ParallelCommandGroup(
+        //             // pivot.moveLow()
+        //             elevator.moveMid()
+        //             // pivot.moveMid()
+        //             // elevator.setHorizontalPower(0.5)
+        //         )
+        //     );
+        // operator.y()
+        //     .onTrue(
+        //         new ParallelCommandGroup(
+        //             // pivot.moveMid()
+        //             // elevator.moveHigh()
+        //             // pivot.moveHigh()
+        //         )
+        //     );
+        // operator.b()
+        //     .onTrue(
+        //         new ParallelCommandGroup(
+        //             // pivot.moveHigh()
+        //             elevator.moveHigh()
+        //             // pivot.moveHigh()
+        //             // elevator.setHorizontalPower(-0.5)
+        //         )
+        //     );
+        // operator.povUp()
+        //     // .onTrue(elevator.setPower(0.5)
+        //     .onTrue(pivot.setPower(0.6)
+        //     );
+        //     operator.povDown()
+        //     .onTrue(pivot.setPower(-0.6)
+        //     // .onTrue(elevator.setPower(-0.5)
+        //     );
+        //     operator.povLeft()
+        //     .onTrue(pivot.setPower(0)
+        //     // .onTrue(elevator.setPower(0)
+        //     );
+
+
+
     //     // operator.povUp()
     //     //     .onTrue(
     //     //         elevator.changePosition()
@@ -191,6 +193,14 @@ public class RobotContainer {
     // //                 arm.moveHigh()
     // //             )
     // //         );
+        operator.a()
+            .onTrue(intake.toggle());
+        operator.b()
+            .onTrue(intake.intake())
+            .onFalse(intake.stopIntake());
+        operator.x()
+            .onTrue(intake.outtake())
+            .onFalse(intake.stopIntake());
     }
 
     public void configureTestBindings() {

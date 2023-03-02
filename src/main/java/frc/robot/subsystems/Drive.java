@@ -14,10 +14,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.DroidRageConstants;
 import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.MutableInteger;
 import frc.robot.utilities.WriteOnlyDouble;
 import frc.robot.utilities.WriteOnlyString;
 

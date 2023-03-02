@@ -2,8 +2,6 @@ package frc.robot.utilities;
 
 import java.util.Map;
 
-import edu.wpi.first.cscore.VideoSource;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
