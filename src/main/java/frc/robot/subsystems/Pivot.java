@@ -10,14 +10,16 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.ComplexWidgetBuilder;
+import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 
 public class Pivot extends SubsystemBase {
     public static class Constants {
         public static final double GEAR_RATIO = 3 / 1;
         public static final double READINGS_PER_REVOLUTION = 1;
-        public static final double ROTATIONS_TO_DEGREES = (GEAR_RATIO * READINGS_PER_REVOLUTION / 360);
+        public static final double ROTATIONS_TO_DEGREES = (GEAR_RATIO * READINGS_PER_REVOLUTION) / 360;
     }
 
     private enum Position {
@@ -53,6 +55,10 @@ public class Pivot extends SubsystemBase {
 
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
+
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Enabled", Pivot.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .buildMutableBoolean();
     
     public Pivot() {
         pivotMotor = new CANSparkMax(18, MotorType.kBrushless);
@@ -79,7 +85,7 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
         encoderPositionWriter.set(getPosition());
-        pivotMotor.set(controller.calculate(getPosition()));
+        setPower(controller.calculate(getPosition()));
     }
   
     @Override
@@ -149,11 +155,8 @@ public class Pivot extends SubsystemBase {
         return setTargetPosition(Position.HOLD);
     }
 
-    // public CommandBase moveToPosition() {
-    //     return runOnce(() -> pivotMotor.set(controller.calculate(getTargetPosition())));
-    // }
-
-    public CommandBase setPower(double power){
-        return runOnce(() ->pivotMotor.set(power));
+    private void setPower(double power) {
+        if (!isEnabled.get()) return;
+        pivotMotor.set(power);
     }
 }  

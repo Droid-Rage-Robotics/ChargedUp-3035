@@ -7,11 +7,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.ComplexWidgetBuilder;
+import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 import frc.robot.utilities.WriteOnlyString;
 
@@ -19,11 +22,13 @@ public class Elevator extends SubsystemBase {
     public static class Constants {
         public static final double VERTICAL_GEAR_RATIO = 1 / 1;
         public static final double VERTICAL_GEAR_DIAMETER_INCHES = 1.88;
-        public static final double VERTICAL_ROT_TO_INCHES = 1/ (VERTICAL_GEAR_RATIO * Math.PI * VERTICAL_GEAR_DIAMETER_INCHES);
+        public static final double VERTICAL_DISTANCE_PER_PULSE = 2048; // 2048 bc rev through bore
+        public static final double VERTICAL_ROT_TO_INCHES = VERTICAL_DISTANCE_PER_PULSE * VERTICAL_GEAR_RATIO / (VERTICAL_GEAR_DIAMETER_INCHES * Math.PI);
 
         public static final double HORIZONTAL_GEAR_RATIO = 1 / 1;
         public static final double HORIZONTAL_GEAR_DIAMETER_INCHES = 1.4;
-        public static final double HORIZONTAL_ROT_TO_INCHES = 1/ (HORIZONTAL_GEAR_RATIO * Math.PI * HORIZONTAL_GEAR_DIAMETER_INCHES);
+        public static final double HORIZONTAL_DISTANCE_PER_PULSE = 1; // 1 bc built in encoder
+        public static final double HORIZONTAL_ROT_TO_INCHES = HORIZONTAL_DISTANCE_PER_PULSE * HORIZONTAL_GEAR_RATIO / (HORIZONTAL_GEAR_DIAMETER_INCHES * Math.PI);
     }
 
     private enum Position {
@@ -56,7 +61,8 @@ public class Elevator extends SubsystemBase {
     }
     
     private final CANSparkMax verticalLeftMotor, verticalRightElevator, horizontalMotor;
-    private final RelativeEncoder verticalEncoder, horizontalEncoder;
+    private final Encoder verticalEncoder;
+    private final RelativeEncoder horizontalEncoder;
     // private final DutyCycleEncoder verticaAbsEncoder;
     private final PIDController verticalController;
     private final PIDController horizontalController;
@@ -69,6 +75,14 @@ public class Elevator extends SubsystemBase {
     
     // private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
     // private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
+
+    private final MutableBoolean isVerticalEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Vertical Enabled", Elevator.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .buildMutableBoolean();
+
+    private final MutableBoolean isHorizontalEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Horizontal Enabled", Elevator.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .buildMutableBoolean();
     
     public Elevator() {
         verticalLeftMotor = new CANSparkMax(16, MotorType.kBrushless);
@@ -82,8 +96,9 @@ public class Elevator extends SubsystemBase {
 
         verticalRightElevator.follow(verticalLeftMotor, true);
   
-        verticalEncoder = verticalLeftMotor.getEncoder();
-        verticalEncoder.setPositionConversionFactor(Constants.VERTICAL_ROT_TO_INCHES);
+        verticalEncoder = new Encoder(9, 8);
+        verticalEncoder.setDistancePerPulse(Constants.VERTICAL_ROT_TO_INCHES);
+
         horizontalEncoder = horizontalMotor.getEncoder();
         horizontalEncoder.setPositionConversionFactor(Constants.HORIZONTAL_ROT_TO_INCHES);
 
@@ -111,16 +126,16 @@ public class Elevator extends SubsystemBase {
     // private final WriteOnlyDouble horizeEcoderReading = new WriteOnlyDouble(0.0, "horiz encoder reading", "Elevator");
     @Override
     public void periodic() {
-        horizontalMotor.set(horizontalController.calculate(horizontalEncoder.getPosition()));
+        setHorizontalPower(horizontalController.calculate(horizontalEncoder.getPosition()));
         horizontalSetPowerWriter.set(horizontalController.calculate(horizontalEncoder.getPosition()));
-horizontalEncoderPositionWriter.set(horizontalEncoder.getPosition());
+        horizontalEncoderPositionWriter.set(horizontalEncoder.getPosition());
 
 
-        verticalLeftMotor.set(verticalController.calculate(verticalEncoder.getPosition()));
-        verticalSetPowerWriter.set(verticalController.calculate(verticalEncoder.getPosition()));
+        setVerticalPower(verticalController.calculate(verticalEncoder.getDistance()));
+        verticalSetPowerWriter.set(verticalController.calculate(verticalEncoder.getDistance()));
 
         
-        verticalEncoderPositionWriter.set(verticalEncoder.getPosition());
+        verticalEncoderPositionWriter.set(verticalEncoder.getDistance());
     }
 
     @Override
@@ -208,10 +223,15 @@ horizontalEncoderPositionWriter.set(horizontalEncoder.getPosition());
         position.horizontalInches.set(getTargetHorizontalDistance());
     }
 
-    public CommandBase setHorizontalPower(double power){
-        return runOnce(() -> horizontalMotor.set(power));
+    private void setHorizontalPower(double power) {
+        if (!isHorizontalEnabled.get()) return;
+        horizontalMotor.set(power);
     }
 
+    private void setVerticalPower(double power) {
+        if (!isVerticalEnabled.get()) return;
+        verticalLeftMotor.set(power);
+    }
     public CommandBase dropVerticalElevator(){
         return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-2));
     }

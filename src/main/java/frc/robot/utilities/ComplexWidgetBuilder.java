@@ -2,6 +2,7 @@ package frc.robot.utilities;
 
 import java.util.Map;
 
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -13,6 +14,10 @@ public class ComplexWidgetBuilder {
     public ComplexWidgetBuilder(Sendable toAdd, String title, String tab) {
         this.complexWidget = Shuffleboard.getTab(tab)
             .add(title, toAdd);
+    }
+    public ComplexWidgetBuilder(VideoSource videoSource, String title, String tab) {
+        this.complexWidget = Shuffleboard.getTab(tab)
+            .add(title, videoSource);
     }
 
     private ComplexWidgetBuilder(ComplexWidget complexWidget) {

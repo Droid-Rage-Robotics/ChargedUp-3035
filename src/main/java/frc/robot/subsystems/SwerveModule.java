@@ -96,9 +96,9 @@ public class SwerveModule {
         return turnEncoder.getVelocity();
     }
 
-    public double getTurnEncoderRad() {
-        return getTurningPosition();
-    }
+    // public double getTurnEncoderRad() {
+    //     return getTurningPosition();
+    // }
     
     public void resetDriveEncoder(){
         driveMotor.getEncoder().setPosition(0);

@@ -13,9 +13,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 import frc.robot.utilities.WriteOnlyString;
 
@@ -30,7 +32,7 @@ public class Drive extends SubsystemBase {
         }
     }
     public enum TeleOpOptions {
-        IS_FIELD_ORIENTED(true),
+        IS_FIELD_ORIENTED(false),
         IS_SQUARED_INPUTS(true),
         ;
 
@@ -55,12 +57,12 @@ public class Drive extends SubsystemBase {
     }
 
     public enum SwerveConfig {
-        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(1.24),
-        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(2.26),
-        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0.99),
-        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(1.74),
+        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //1.24
+        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //2.26
+        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //0.99
+        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //1.74
 
-        HEADING_OFFSET(-90)
+        HEADING_OFFSET(0)
         ;
         public final MutableDouble value;
         private SwerveConfig(double value) {
@@ -140,7 +142,6 @@ public class Drive extends SubsystemBase {
     private final SwerveModule backRight = new SwerveModule(
         6,
         5,
-        
 
         true, 
         true,
@@ -151,7 +152,6 @@ public class Drive extends SubsystemBase {
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
-    // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final Pigeon2 pigeon2 = new Pigeon2(15);
 
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry (
@@ -171,22 +171,25 @@ public class Drive extends SubsystemBase {
     private final WriteOnlyDouble pitchWriter = new WriteOnlyDouble(0, "Gyro/Pitch (Degrees)", Drive.class.getSimpleName());
     private final WriteOnlyString locationWriter = new WriteOnlyString("", "Robot Location", Drive.class.getSimpleName());
 
-    private final WriteOnlyDouble frontLeftPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontLeftDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontLeftDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final WriteOnlyDouble frontRightPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontRightDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble frontRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Drive Position (Radians)", Drive.class.getSimpleName());
     
-    private final WriteOnlyDouble backLeftPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backLeftAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backLeftDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backLeftDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final WriteOnlyDouble backRightPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backRightAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backRightDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
+    private final WriteOnlyDouble backRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
 
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Vvertical Enabled", Drive.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .buildMutableBoolean();
 
     public Drive() {
         //TODO: Make sure IMU RESETS
@@ -210,21 +213,21 @@ public class Drive extends SubsystemBase {
         locationWriter.set(getPose().getTranslation().toString());
 
 
-        frontLeftAbsolutePositionWriter.set(frontLeft.getTurnEncoderRad());
-        frontLeftDistanceWriter.set(frontLeft.getTurningPosition());
-        frontLeftPositionWriter.set(frontLeft.getDrivePos());
+        // frontLeftTurnAbsolutePositionWriter.set(frontLeft.getTurnEncoderRad());
+        frontLeftTurnPositionWriter.set(frontLeft.getTurningPosition());
+        frontLeftDriveDistanceWriter.set(frontLeft.getDrivePos());
 
-        frontRightAbsolutePositionWriter.set(frontRight.getTurnEncoderRad());
-        frontRightDistanceWriter.set(frontRight.getTurningPosition());
-        frontRightPositionWriter.set(frontRight.getDrivePos());
+        // frontRightTurnAbsolutePositionWriter.set(frontRight.getTurnEncoderRad());
+        frontRightTurnPositionWriter.set(frontRight.getTurningPosition());
+        frontLeftDriveDistanceWriter.set(frontRight.getDrivePos());
 
-        backLeftAbsolutePositionWriter.set(backLeft.getTurnEncoderRad());
-        backLeftDistanceWriter.set(backLeft.getTurningPosition());
-        backLeftPositionWriter.set(backLeft.getDrivePos());
+        // backLeftTurnAbsolutePositionWriter.set(backLeft.getTurnEncoderRad());
+        backLeftTurnPositionWriter.set(backLeft.getTurningPosition());
+        frontLeftDriveDistanceWriter.set(backLeft.getDrivePos());
 
-        backRightAbsolutePositionWriter.set(backRight.getTurnEncoderRad());
-        backRightDistanceWriter.set(backRight.getTurningPosition());
-        backRightPositionWriter.set(backRight.getDrivePos());
+        // backRightTurnAbsolutePositionWriter.set(backRight.getTurnEncoderRad());
+        backRightTurnPositionWriter.set(backRight.getTurningPosition());
+        frontLeftDriveDistanceWriter.set(backRight.getDrivePos());
 
     }
 
@@ -291,6 +294,7 @@ public class Drive extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
+        if (!isEnabled.get()) return;
         SwerveDriveKinematics.desaturateWheelSpeeds(
             states, 
             SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND

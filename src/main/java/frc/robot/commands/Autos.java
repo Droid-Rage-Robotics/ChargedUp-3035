@@ -67,7 +67,5 @@ public final class Autos {
             .build();
     }
 
-    private Autos() {
-        throw new UnsupportedOperationException("This is a utility class!");
-    }
+    private Autos() {}
 }
