@@ -57,10 +57,10 @@ public class Drive extends SubsystemBase {
     }
 
     public enum SwerveConfig {
-        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //1.24
-        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //2.26
-        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //0.99
-        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(0), //1.74
+        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //1.24
+        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.76), //2.26
+        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //0.99
+        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.27), //1.74
 
         HEADING_OFFSET(0)
         ;
@@ -110,45 +110,45 @@ public class Drive extends SubsystemBase {
         2,
         1,
 
-        true, 
-        true,
+        false, 
+        false,
 
         11, 
         SwerveConfig.FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
-        false
+        true
     );
     private final SwerveModule frontRight = new SwerveModule(
         4,
         3,
 
-        true, 
-        true,
+        false, 
+        false,
 
         12, 
         SwerveConfig.FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
-        false
+        true
     );
     private final SwerveModule backLeft = new SwerveModule(
         8,
         7,
 
-        true, 
-        true,
+        false, 
+        false,
 
         14, 
         SwerveConfig.BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
-        false
+        true
     );
     private final SwerveModule backRight = new SwerveModule(
         6,
         5,
 
-        true, 
-        true,
+        false, 
+        false,
 
         13, 
         SwerveConfig.BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
-        false
+        true
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 
@@ -187,7 +187,7 @@ public class Drive extends SubsystemBase {
     private final WriteOnlyDouble backRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
     private final WriteOnlyDouble backRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Vvertical Enabled", Drive.class.getSimpleName())
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Drive Enabled", Drive.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
