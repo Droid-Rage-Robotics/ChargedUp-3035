@@ -26,14 +26,14 @@ public class Pivot extends SubsystemBase {
         START(0),
         INTAKELOW(3),//TODO:Change
 
-        LOWCONE(5),
-        LOWCUBE(0),
+        LOWCONE(15),
+        LOWCUBE(15),
 
-        MIDCONE(10),
-        MIDCUBE(0),
+        MIDCONE(45),
+        MIDCUBE(45),
 
-        HIGHCONE(20),
-        HIGHCUBE(0),
+        HIGHCONE(50),
+        HIGHCUBE(50),
 
         INTAKEHIGH(0),
         HOLD(0), // straight up
@@ -56,7 +56,7 @@ public class Pivot extends SubsystemBase {
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Enabled", Pivot.class.getSimpleName())
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Pivot.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
     
@@ -72,7 +72,7 @@ public class Pivot extends SubsystemBase {
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
 
-        controller = new PIDController(0.1, 0, 0);
+        controller = new PIDController(0.07, 0, 0);
         controller.setTolerance(0.10); // meters
 
         new ComplexWidgetBuilder(controller, "PID Controller", Pivot.class.getSimpleName())
@@ -80,12 +80,14 @@ public class Pivot extends SubsystemBase {
             .withSize(2, 2);
 
         setTargetPosition(Position.START);
+
+        new ComplexWidgetBuilder(resetClawEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
     }
 
     @Override
     public void periodic() {
         encoderPositionWriter.set(getPosition());
-        setPower(controller.calculate(getPosition()));
+        // setPower(controller.calculate(getPosition()));
     }
   
     @Override
@@ -158,5 +160,9 @@ public class Pivot extends SubsystemBase {
     private void setPower(double power) {
         if (!isEnabled.get()) return;
         pivotMotor.set(power);
+    }
+
+    public CommandBase resetClawEncoder() {
+        return runOnce(() -> pivotRelativeEncoder.setPosition(0));
     }
 }  
