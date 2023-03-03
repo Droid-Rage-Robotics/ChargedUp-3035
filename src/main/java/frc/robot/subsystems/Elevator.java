@@ -35,18 +35,18 @@ public class Elevator extends SubsystemBase {
     private enum Position {//17 is MAXXXXXX for vert ; 12 is for horiz
         START(0,0),
 
-        INTAKELOW(0,1),
+        INTAKELOW(0,3),
        
-        LOWCONE(4, 12),
-        LOWCUBE(4,12),
+        LOWCONE(4, 5),
+        LOWCUBE(4,5),
         
-        MIDCONE(11,14),
-        MIDCUBE(11,14),
+        MIDCONE(11,9),
+        MIDCUBE(11,9),
         
-        HIGHCONE(17,14),
-        HIGHCUBE(17,17),
+        HIGHCONE(17,12),
+        HIGHCUBE(17,12),
 
-        INTAKEHIGH(0,0),
+        INTAKEHIGH(12,5),
 
         HOLD(0,0),
         
