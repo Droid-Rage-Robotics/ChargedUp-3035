@@ -8,7 +8,7 @@ public final class DroidRageConstants {
     public static class Gamepad {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final int OPERATOR_CONTROLLER_PORT = 1;
-        public static final double STICK_DEADZONE = 0.05;
+        public static final double STICK_DEADZONE = 0.2;
     }
 
     public static void registerSendable(Sendable sendable, String title, String tab) {
