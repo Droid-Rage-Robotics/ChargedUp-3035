@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 1.8,
-        "y": 2.75
+        "y": 3.864980587104032
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8,
-        "y": 2.75
+        "x": 1.8,
+        "y": 4.308737617475234
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,12 +24,37 @@
     },
     {
       "anchorPoint": {
-        "x": 5.507511157879459,
-        "y": 2.8056896113792225
+        "x": 2.2580645161290325,
+        "y": 4.8
       },
       "prevControl": {
-        "x": 4.019862528343831,
-        "y": 2.8056896113792225
+        "x": 1.9431329148372587,
+        "y": 4.752901048659241
+      },
+      "nextControl": {
+        "x": 4.0985333465862475,
+        "y": 5.075247550688247
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.65065858703146,
+        "y": 4.8
+      },
+      "prevControl": {
+        "x": 6.792635090772629,
+        "y": 4.799999999999997
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -45,12 +70,5 @@
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "preloadDrop"
-      ]
-    }
-  ]
+  "markers": []
 }

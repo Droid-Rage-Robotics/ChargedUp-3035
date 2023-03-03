@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.databind.node.POJONode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -9,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.MutableBoolean;
@@ -25,21 +27,22 @@ public class Pivot extends SubsystemBase {
 
     private enum Position {
         START(0),
-        INTAKELOW(3),//TODO:Change
+        INTAKELOWCUBE(55),//TODO:Change
+        INTAKELOWCONE(58),
 
-        LOWCONE(15),
-        LOWCUBE(15),
+        LOWCONE(42),
+        LOWCUBE(45),
 
-        MIDCONE(45),
+        MIDCONE(LOWCONE.degrees.get()),
         MIDCUBE(45),
 
-        HIGHCONE(50),
-        HIGHCUBE(50),
+        HIGHCONE(LOWCONE.degrees.get()),
+        HIGHCUBE(30),
 
-        INTAKEHIGH(0),
+        INTAKEHIGH(43), //parallel
         HOLD(0), // straight up
-        INTAKEAUTOCUBE(0), //Intaking as far down as possible for dube
-        INTAKRAUTOCONE(0), //intake auto position for cone
+        INTAKEAUTOCUBE(50), //Intaking as far down as possible for dube
+        INTAKRAUTOCONE(50), //intake auto position for cone
         ;
 
         private final MutableDouble degrees;
@@ -61,6 +64,8 @@ public class Pivot extends SubsystemBase {
     private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Pivot.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
+
+    private double offset = 0;
     
     public Pivot() {
         pivotMotor = new CANSparkMax(18, MotorType.kBrushless);
@@ -73,7 +78,7 @@ public class Pivot extends SubsystemBase {
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
 
-        controller = new PIDController(0.07, 0, 0);
+        controller = new PIDController(0.02, 0, 0);
         controller.setTolerance(0.10); // meters
 
         new ComplexWidgetBuilder(controller, "PID Controller", Pivot.class.getSimpleName())
@@ -90,7 +95,7 @@ public class Pivot extends SubsystemBase {
     @Override
     public void periodic() {
         encoderPositionWriter.set(getPosition());
-        // setPower(controller.calculate(getPosition()));
+        setPower(controller.calculate(getPosition()));
     }
   
     @Override
@@ -100,11 +105,11 @@ public class Pivot extends SubsystemBase {
 
 
     public double getPosition() {
-        return pivotRelativeEncoder.getPosition();
+        return pivotRelativeEncoder.getPosition() + offset;
     }
 
     public double getTargetPosition() {
-        return position.degrees.get();
+        return controller.getSetpoint();
     }
 
     private CommandBase setTargetPosition(Position position) {
@@ -113,14 +118,27 @@ public class Pivot extends SubsystemBase {
             controller.setSetpoint(position.degrees.get());
         });
     }
-    public CommandBase setTargetPosition(double position) {
-        return runOnce(() -> {
-            controller.setSetpoint(position);
-        });
+    public CommandBase setCurrentPositionManually(double position) {
+        return Commands.sequence(
+            runOnce(() -> this.position.degrees.set(position)),
+            setTargetPosition(this.position)
+        );
     }
+    // public CommandBase setTargetPosition(double position) {
+    //     return runOnce(() -> {
+    //         this.position.degrees.set(position);
+    //         controller.setSetpoint(position);
+    //     });
+    // }
 
     public CommandBase moveIntakeLow() {
-        return setTargetPosition(Position.INTAKELOW);
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> Position.INTAKELOWCONE;
+                case CUBE -> Position.INTAKELOWCUBE;
+                case NONE -> Position.INTAKELOWCUBE;
+            }
+        );
     }
     public CommandBase moveIntakeHigh() {
         return setTargetPosition(Position.INTAKEHIGH);
@@ -161,11 +179,17 @@ public class Pivot extends SubsystemBase {
     }
 
     private void setPower(double power) {
-        if (!isEnabled.get()) return;
+        // if (!isEnabled.get()) return;
         pivotMotor.set(power);
     }
 
     public CommandBase resetClawEncoder() {
-        return runOnce(() -> pivotRelativeEncoder.setPosition(0));
+        return runOnce(() -> {
+            offset = -getPosition() - offset;
+        });
+    }
+
+    public CommandBase setPowerC(double power) {
+        return runOnce(() ->setPower(power));
     }
 }  

@@ -10,11 +10,12 @@ public class DropCone extends SequentialCommandGroup {
     public DropCone(Elevator elevator, Pivot pivot, Intake intake) {
         addCommands(
             elevator.dropVerticalElevator(),
-            intake.runOpen(),
-            intake.runOuttakeFor(1),
+            Commands.waitSeconds(0.1),
+            intake.runClose(),
+            // intake.runOuttakeFor(1),
             elevator.moveInHorizontalElevator(),
-            Commands.waitSeconds(1),
-            pivot.moveHold()
+            // Commands.waitSeconds(2),
+            new MoveHold(elevator, pivot)
         );
     }
 }

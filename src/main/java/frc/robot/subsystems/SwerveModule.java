@@ -145,4 +145,9 @@ public class SwerveModule {
         driveMotor.setIdleMode(IdleMode.kCoast);
         turnMotor.setIdleMode(IdleMode.kCoast);
     }
+
+    public void breakMode() {
+        driveMotor.setIdleMode(IdleMode.kBrake);
+        turnMotor.setIdleMode(IdleMode.kBrake);
+    }
 }

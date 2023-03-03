@@ -32,7 +32,7 @@ public class ComplexWidgetBuilder {
 
     public ComplexWidgetBuilder withSize(int height, int width) {
         return new ComplexWidgetBuilder(
-            this.complexWidget.withSize(height, width)
+            this.complexWidget.withSize(width, height)
             );
     }
 

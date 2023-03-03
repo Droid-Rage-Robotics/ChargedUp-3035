@@ -11,7 +11,7 @@ public class TrackedElement {
     }
     
     private static volatile Element element = Element.NONE;
-    private static final WriteOnlyString ElementWriter = new WriteOnlyString(element.name(), "Tracked Element", "Intake");
+    private static final WriteOnlyString ElementWriter = new WriteOnlyString(element.name(), "Tracked Element", "Misc");
     
     public static Element get() {
         return element;

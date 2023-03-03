@@ -65,7 +65,7 @@ public class PathPlannerFollow {
             new PIDConstants(Drive.AutoConfig.THETA_KP.value.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
             drive::setModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             drive // The drive subsystem. Used to properly set the requirements of path following commands
         );
         

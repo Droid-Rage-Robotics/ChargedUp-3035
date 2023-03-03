@@ -8,38 +8,16 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.TrackedElement;
+import frc.robot.subsystems.TrackedElement.Element;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-public class Outtake extends CommandBase {
-    private final Elevator elevator;
-    private final Pivot pivot;
-    private final Intake intake;
-
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+public class Outtake extends SequentialCommandGroup {
     public Outtake(Elevator elevator, Pivot pivot, Intake intake) {
-    	this.elevator = elevator;
-        this.pivot = pivot;
-        this.intake = intake;
-        
-    	addRequirements(elevator, pivot, intake);   
-    }
-
-    //   TODO: Make sure to only use for teleop
-    @Override
-    public void initialize() {
-        if(TrackedElement.Element.CONE==TrackedElement.get()){
-            new DropCone(elevator, pivot, intake);
-        } else if(TrackedElement.Element.CUBE ==TrackedElement.get()){
-            new DropCube(elevator, pivot, intake);
-        }
-    }
-
-    @Override
-    public void execute() {}
-
-    @Override
-    public void end(boolean interrupted) {}
-
-    @Override
-    public boolean isFinished() {
-        return false;
+    	addCommands(Commands.either(
+            new DropCone(elevator, pivot, intake), // on true
+            new DropCube(elevator, pivot, intake), //on false
+            () -> TrackedElement.get() ==  Element.CONE)
+            );
     }
 }

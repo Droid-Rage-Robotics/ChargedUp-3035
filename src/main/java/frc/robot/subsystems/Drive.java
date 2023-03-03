@@ -23,16 +23,16 @@ import frc.robot.utilities.WriteOnlyString;
 
 public class Drive extends SubsystemBase {
     public enum TeleOpNumbers {
-        MAX_ACCELERATION_UNITS_PER_SECOND(3),
-        MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND(3),
+        MAX_ACCELERATION_UNITS_PER_SECOND(10),
+        MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND(10),
         ;
         public final MutableDouble value;
         private TeleOpNumbers(double value) {
             this.value = new MutableDouble(value, TeleOpNumbers.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
         }
     }
-    public enum TeleOpOptions {
-        IS_FIELD_ORIENTED(false),
+    public enum TeleOpOptions { 
+        IS_FIELD_ORIENTED(true),
         IS_SQUARED_INPUTS(true),
         ;
 
@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(3),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(Math.PI / 4), // 1 / 8 of a full rotation per second per second),
         TRANSLATIONAL_KP(1.5), // this could probably be about 2.29
-        THETA_KP(3),
+        THETA_KP(0),
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -57,12 +57,12 @@ public class Drive extends SubsystemBase {
     }
 
     public enum SwerveConfig {
-        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //1.24
+        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54-0.26), //1.24
         FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.76), //2.26
         BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //0.99
         BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.27), //1.74
 
-        HEADING_OFFSET(0)
+        HEADING_OFFSET(90)
         ;
         public final MutableDouble value;
         private SwerveConfig(double value) {
@@ -75,18 +75,18 @@ public class Drive extends SubsystemBase {
         public static final double TRACK_WIDTH = Units.inchesToMeters(20.75);
         public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),  // Front Left --
+            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),  // Front Left --
             new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // Back Left -+
-            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2)   // Back Right ++
+            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2)   // Back Right ++
         );
     }
 
     private enum Speed {
-        TURBO(0.8, 0.8), //TODO find what feels best 
-        NORMAL(0.8, 0.8),
-        SLOW(0.3, 0.3),
-        SUPERSLOW(0.15, 0.15),
+        TURBO(1, 1), //TODO find what feels best 
+        NORMAL(0.7, 0.7),
+        SLOW(0.15, 0.15),
+        SUPERSLOW(0.05, 0.05), //unused
         ;
 
         private final MutableDouble translationalSpeed;
@@ -161,7 +161,7 @@ public class Drive extends SubsystemBase {
     );
 
     private volatile Speed speed = Speed.NORMAL;
-    private volatile TippingState tippingState = TippingState.ANTI_TIP;
+    private volatile TippingState tippingState = TippingState.NO_TIP_CORRECTION;
 
     private final WriteOnlyString tippingStateWriter = new WriteOnlyString(tippingState.name(), "Tipping State", Drive.class.getSimpleName());
     private final WriteOnlyString speedStateWriter = new WriteOnlyString(speed.name(), "Speed State", Drive.class.getSimpleName());
@@ -190,6 +190,8 @@ public class Drive extends SubsystemBase {
     private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Drive Enabled", Drive.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
+
+        private boolean isBreakMode = false;
 
     public Drive() {
         //TODO: Make sure IMU RESETS
@@ -354,6 +356,38 @@ public class Drive extends SubsystemBase {
             )
         );
     }
+
+    public CommandBase resetHeading(double target) {
+        return runOnce(() -> SwerveConfig.HEADING_OFFSET.value.set(
+                target + getHeading()
+            )
+        );
+    }
+
+    private void coastMode() {
+        for (SwerveModule swerveModule: swerveModules) {
+            swerveModule.coastMode();
+        }
+    }
+
+    private void breakMode() {
+        for (SwerveModule swerveModule: swerveModules) {
+            swerveModule.breakMode();
+        }
+    }
+
+    public CommandBase toggleBreakMode() {
+        return runOnce(() -> {
+            if (isBreakMode) {
+                coastMode();
+                isBreakMode = false;
+            } else {
+                breakMode();
+                isBreakMode = true;
+            }
+        });
+    }
+
 
     public CommandBase toggleFieldOriented() {
         return runOnce(() -> TeleOpOptions.IS_FIELD_ORIENTED.value.set(

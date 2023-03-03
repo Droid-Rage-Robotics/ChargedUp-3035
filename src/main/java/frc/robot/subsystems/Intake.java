@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.sound.midi.Track;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -27,7 +29,7 @@ public class Intake extends SubsystemBase {
     private final MutableDouble intakeSpeed = new MutableDouble(0.3, "Intake speed (power)", Intake.class.getSimpleName());
     private final MutableDouble outtakeSpeed = new MutableDouble(-0.3, "Outtake speed (power)", Intake.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Enabled", Intake.class.getSimpleName())
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Intake.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
@@ -39,12 +41,14 @@ public class Intake extends SubsystemBase {
         if (isEnabled.get()) {
             pneumaticHub = new PneumaticHub(10);
         } else {
-            pneumaticHub = new PneumaticHub(0); // Since this is the wrong port, it should effectively disable the subsystem
+            pneumaticHub = new PneumaticHub(); // Since this is the wrong port, it should effectively disable the subsystem
         }
         
 
         // intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 9, 10);
         intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 10);
+
+        close();
     }
 
     @Override
@@ -55,37 +59,42 @@ public class Intake extends SubsystemBase {
     @Override
     public void simulationPeriodic() {}
   
-    public void open() {
+    public void close() {
         if (!isEnabled.get()) return;
         intakeSolenoid.set(Value.kForward);//TODO:change
-        isOpen.set(true);
+        isOpen.set(false);
         TrackedElement.set(Element.CONE); 
     }
 
-    public void close() {
+    public void open() {
         if (!isEnabled.get()) return;
         intakeSolenoid.set(Value.kReverse);//TODO:change
-        isOpen.set(false);
+        isOpen.set(true);
         TrackedElement.set(Element.CUBE);
     }
   
     public CommandBase runToggleOpen() {
         return runOnce(() -> {
-            if(isOpen.get()) close();
-            else open();
+            if(isOpen.get()) open();
+            else close();
         });
     }
 
     public CommandBase runOpen() {
-        return runOnce(() -> open());
-    }
-
-    public CommandBase runClose() {
         return runOnce(() -> close());
     }
 
+    public CommandBase runClose() {
+        return runOnce(() -> open());
+    }
+
     public CommandBase runIntake() {
-        return runSetPower(intakeSpeed.get());
+        return runSetPower(switch(TrackedElement.get()) {
+            case CONE->intakeSpeed.get();
+            case CUBE->intakeSpeed.get();
+            case NONE->intakeSpeed.get();
+            
+        });
     }
 
     public CommandBase runOuttake() {
@@ -94,6 +103,15 @@ public class Intake extends SubsystemBase {
 
     public CommandBase runStop() { 
         return runSetPower(0);
+    }
+
+    public CommandBase runHoldIntake() { 
+        return runSetPower(switch(TrackedElement.get()) {
+            case CONE -> 0.05;
+            case CUBE -> 0.025;
+            case NONE -> 0.025;
+            
+        });
     }
 
     private void setClawPower(double power) {
@@ -114,7 +132,7 @@ public class Intake extends SubsystemBase {
     }
     public CommandBase runOuttakeFor(double wait) {
         return Commands.sequence(
-            runIntake(),
+            runOuttake(),
             Commands.waitSeconds(wait),
             runStop()
         );

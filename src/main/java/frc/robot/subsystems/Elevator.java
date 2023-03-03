@@ -32,21 +32,21 @@ public class Elevator extends SubsystemBase {
         public static final double HORIZONTAL_ROT_TO_INCHES = (HORIZONTAL_DISTANCE_PER_PULSE * HORIZONTAL_GEAR_RATIO) / (HORIZONTAL_GEAR_DIAMETER_INCHES * Math.PI);
     }
 
-    private enum Position {//17 is MAXXXXXX for vert ; 12 is for horiz
+    private enum Position {//17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0),
 
-        INTAKELOW(0,3),
+        INTAKELOW(0,0),
        
-        LOWCONE(4, 5),
-        LOWCUBE(4,5),
+        LOWCONE(0, 0),
+        LOWCUBE(0,0),
         
-        MIDCONE(11,9),
-        MIDCUBE(11,9),
+        MIDCONE(16,10.9),
+        MIDCUBE(11,11),
         
-        HIGHCONE(17,12),
-        HIGHCUBE(17,12),
+        HIGHCONE(16,11),
+        HIGHCUBE(16,11),
 
-        INTAKEHIGH(12,5),
+        INTAKEHIGH(15.5,0),
 
         HOLD(0,0),
         
@@ -56,8 +56,12 @@ public class Elevator extends SubsystemBase {
         private MutableDouble horizontalInches;
 
         private Position(double verticalInches, double horizontalInches) {
-            this.verticalInches = new MutableDouble(verticalInches, Position.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName());
-            this.horizontalInches = new MutableDouble(horizontalInches, Position.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName());
+            this.verticalInches = new SimpleWidgetBuilder<Double>(verticalInches, Position.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
+                .withSize(1, 3)
+                .buildMutableDouble();
+            this.horizontalInches = new SimpleWidgetBuilder<Double>(horizontalInches, Position.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
+                .withSize(1, 3)
+                .buildMutableDouble();
         }
     }
     
@@ -121,26 +125,19 @@ public class Elevator extends SubsystemBase {
         // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
         isMovingManually = false;
 
-        new ComplexWidgetBuilder(resetVerticalEncoder(), "Reset Vertical Encoder", Elevator.class.getSimpleName());
-        new ComplexWidgetBuilder(resetHorizontalEncoder(), "Reset Horizontal Encoder", Elevator.class.getSimpleName());
+        new ComplexWidgetBuilder(resetEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
     }
 
     private final WriteOnlyDouble horizontalSetPowerWriter = new WriteOnlyDouble(0.0, "horizontal set power", "Elevator");
     private final WriteOnlyDouble verticalSetPowerWriter = new WriteOnlyDouble(0.0, "vertical set power", "Elevator");
     
+    private double verticalEncoderOffset = 0;
+    private double horizontalEncoderOffset = 0;
     // private final WriteOnlyDouble horizeEcoderReading = new WriteOnlyDouble(0.0, "horiz encoder reading", "Elevator");
     @Override
     public void periodic() {
-        setHorizontalPower(horizontalController.calculate(horizontalEncoder.getPosition()));
-        horizontalSetPowerWriter.set(horizontalController.calculate(horizontalEncoder.getPosition()));
-        horizontalEncoderPositionWriter.set(horizontalEncoder.getPosition());
-
-
-        setVerticalPower(verticalController.calculate(verticalEncoder.getPosition()));
-        verticalSetPowerWriter.set(verticalController.calculate(verticalEncoder.getPosition()));
-
-        
-        verticalEncoderPositionWriter.set(verticalEncoder.getPosition());
+        setHorizontalPower(horizontalController.calculate(getHorizontalEncoderPosition()));
+        setVerticalPower(verticalController.calculate(getVerticalEncoderPosition()));
     }
 
     @Override
@@ -170,8 +167,17 @@ public class Elevator extends SubsystemBase {
             positionWriter.set(getTargetPosition().name());
         });
     }
+    // public CommandBase runSetVerticalPosition(double verticalPosition) {
+    //     return runOnce(() -> position.verticalInches.set(verticalPosition));
+    // }
+    // public CommandBase runSetHorizontalPosition(double horizontalPosition) {
+    //     return runOnce(() -> position.horizontalInches.set(horizontalPosition));
+    // }
     public CommandBase setPosition(double vertPosition, double horizPosition) {
         return runOnce(() -> {
+            position.verticalInches.set(vertPosition);
+            position.horizontalInches.set(horizPosition);
+
             verticalController.setSetpoint(vertPosition);
             horizontalController.setSetpoint(horizPosition);
 
@@ -229,27 +235,40 @@ public class Elevator extends SubsystemBase {
     }
 
     private void setHorizontalPower(double power) {
+        horizontalSetPowerWriter.set(power);
         if (!isHorizontalEnabled.get()) return;
         horizontalMotor.set(power);
     }
 
     private void setVerticalPower(double power) {
+        verticalSetPowerWriter.set(power);
         if (!isVerticalEnabled.get()) return;
         verticalLeftMotor.set(power);
     }
     public CommandBase dropVerticalElevator(){
-        return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-2));
+        return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-6));
     }
 
     public CommandBase moveInHorizontalElevator(){
         return runOnce(() -> verticalController.setSetpoint(getTargetHorizontalDistance()-2));
     }
 
-    public CommandBase resetVerticalEncoder() {
-        return runOnce(() -> verticalEncoder.setPosition(0));
+    public CommandBase resetEncoders() {
+        return runOnce(() -> {
+            verticalEncoderOffset = -getVerticalEncoderPosition() - verticalEncoderOffset;
+            horizontalEncoderOffset = -getHorizontalEncoderPosition() - horizontalEncoderOffset;
+            new SimpleWidgetBuilder<Boolean>(true, "Elevator Encoders were reset", Elevator.class.getSimpleName());
+        });
     }
 
-    public CommandBase resetHorizontalEncoder() {
-        return runOnce(() -> horizontalEncoder.setPosition(0));
+    public double getVerticalEncoderPosition() {
+        double verticalEncoderPosition = verticalEncoder.getPosition() + verticalEncoderOffset;
+        verticalEncoderPositionWriter.set(verticalEncoderPosition);
+        return verticalEncoderPosition;
+    }
+    public double getHorizontalEncoderPosition() {
+        double encoderPosition = horizontalEncoder.getPosition();
+        horizontalEncoderPositionWriter.set(encoderPosition);
+        return encoderPosition;
     }
 }  
