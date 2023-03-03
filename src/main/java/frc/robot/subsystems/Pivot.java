@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -52,6 +53,7 @@ public class Pivot extends SubsystemBase {
     private volatile Position position = Position.START;
     // private final AbsoluteEncoder pivotAbsoluteEncoder;
     private final RelativeEncoder pivotRelativeEncoder;
+    
 
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
@@ -62,7 +64,6 @@ public class Pivot extends SubsystemBase {
     
     public Pivot() {
         pivotMotor = new CANSparkMax(18, MotorType.kBrushless);
-
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotRelativeEncoder = pivotMotor.getEncoder();
@@ -82,6 +83,8 @@ public class Pivot extends SubsystemBase {
         setTargetPosition(Position.START);
 
         new ComplexWidgetBuilder(resetClawEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
+        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 15);
+        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);//TODO:Test
     }
 
     @Override
