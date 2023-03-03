@@ -40,7 +40,7 @@ public final class Autos {
     }
 
     public static CommandBase mid(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
-        return PathPlannerFollow.create(drive, "Top")
+        return PathPlannerFollow.create(drive, "Middle")
             .setMaxVelocity(0.3)
             .setAcceleration(0.5)
             .addMarker("preloadDrop", new SequentialCommandGroup(
@@ -52,7 +52,7 @@ public final class Autos {
     }
 
     public static CommandBase bottom(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
-        return PathPlannerFollow.create(drive, "Top")
+        return PathPlannerFollow.create(drive, "Bottom")
             .setMaxVelocity(0.3)
             .setAcceleration(0.5)
             .addMarker("preloadDrop", new SequentialCommandGroup(
