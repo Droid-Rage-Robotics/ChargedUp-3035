@@ -37,16 +37,16 @@ public class RobotContainer {
     // why are swerves not simplifying turns
     //add Physical and digital limit switch
     // make shuffleboard stuff able to use a class instead of a string
-    
+
 
 
     // limielite
     // fix drive directions for atuos/teleop
     // 
 
-    private final Drive drive = new Drive();
-    // private final Elevator elevator = new Elevator();
-    // private final Pivot pivot = new Pivot(); 
+    // private final Drive drive = new Drive();
+    private final Elevator elevator = new Elevator();
+    private final Pivot pivot = new Pivot(); 
     // private final Intake intake = new Intake();
 
     private final CommandXboxController driver =
@@ -59,7 +59,7 @@ public class RobotContainer {
     public RobotContainer() {
         
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
-        // autoChooser.addOption("Middle", Autos.mid(drive, elevator, pivot, intake));
+        // autoChooser.addOption("Middle", Autos.mid(drive));//, elevator, pivot, intake));
         // autoChooser.addOption("Bottom", Autos.bottom(drive, elevator, pivot, intake));
 
         new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Main")
@@ -74,14 +74,14 @@ public class RobotContainer {
          * Driver Controls
          */
 
-        drive.setDefaultCommand(
-            new SwerveDriveTeleop(
-                drive, 
-                driver::getLeftX, 
-                driver::getLeftY, 
-                driver::getRightX
-                )
-            );
+        // drive.setDefaultCommand(
+        //     new SwerveDriveTeleop(
+        //         drive, 
+        //         driver::getLeftX, 
+        //         driver::getLeftY, 
+        //         driver::getRightX
+        //         )
+        //     );
 
     //     driver.rightBumper()
     //         .onTrue(drive.setSlowSpeed())
@@ -128,18 +128,18 @@ public class RobotContainer {
     //     pivot.setDefaultCommand(new ManualPivot(operator, pivot));
     //     elevator.setDefaultCommand(new ManualElevator(operator, elevator));
 
-    //     operator.a()
-    //         .onTrue(
-    //                 new MoveLow(elevator, pivot)
-    //         );
-    //     operator.x()
-    //         .onTrue(
-    //                 new MoveMid(elevator, pivot)
-    //         );
-    //     operator.y()
-    //         .onTrue(
-    //             new MoveHigh(elevator, pivot)  
-    //         );
+        operator.a()
+            .onTrue(
+                    new MoveLow(elevator, pivot)
+            );
+        operator.x()
+            .onTrue(
+                    new MoveMid(elevator, pivot)
+            );
+        operator.y()
+            .onTrue(
+                new MoveHigh(elevator, pivot)  
+            );
         
     //     operator.povUp()
     //         .onTrue(new MoveIntakeHigh(elevator, pivot)
