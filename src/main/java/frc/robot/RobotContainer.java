@@ -12,17 +12,14 @@ import frc.robot.commands.ElevatorCommands.MoveIntakeLow;
 import frc.robot.commands.ElevatorCommands.MoveLow;
 import frc.robot.commands.ElevatorCommands.MoveMid;
 import frc.robot.commands.ElevatorCommands.Outtake;
-import frc.robot.commands.Manual.ManualElevator;
 import frc.robot.commands.Manual.ManualPivot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     //TODO: Ideas
@@ -66,6 +63,7 @@ public class RobotContainer {
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
         autoChooser.setDefaultOption("Middle", Autos.mid(drive, elevator, pivot, intake));
         autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
+        autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
         new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);

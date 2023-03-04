@@ -82,6 +82,20 @@ public final class Autos {
                 .build()
         );
     }
+    public static CommandBase charge(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
+        return Commands.sequence(
+            Commands.sequence(
+                new AutoMoveMid(elevator,pivot),
+                new WaitCommand(3),
+                new DropCone(elevator, pivot, intake),
+                new WaitCommand(3)
+                ),
+            PathPlannerFollow.create(drive, "Charge")
+                .setMaxVelocity(0.65)
+                .setAcceleration(0.85)
+                .build()
+        );
+    }
 
     private Autos() {}
 }
