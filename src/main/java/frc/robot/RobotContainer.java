@@ -64,6 +64,7 @@ public class RobotContainer {
         autoChooser.setDefaultOption("Middle", Autos.mid(drive, elevator, pivot, intake));
         autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
+        autoChooser.addOption("Intake ----", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
         new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);

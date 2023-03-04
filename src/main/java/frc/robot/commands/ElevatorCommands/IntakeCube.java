@@ -10,7 +10,7 @@ public class IntakeCube extends SequentialCommandGroup {
     public IntakeCube( Pivot pivot, Intake intake) {
         addCommands(
             intake.runClose(),
-            intake.runIntakeFor(3),
+            intake.runIntakeFor(7),
             Commands.waitSeconds(1),
             pivot.moveHold()
         );
