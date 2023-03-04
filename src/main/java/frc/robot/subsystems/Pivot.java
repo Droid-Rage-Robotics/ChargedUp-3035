@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -27,10 +29,10 @@ public class Pivot extends SubsystemBase {
 
     private enum Position {
         START(0),
-        INTAKELOWCUBE(55),//TODO:Change
-        INTAKELOWCONE(58),
+        INTAKELOWCUBE(53),//TODO:Change
+        INTAKELOWCONE(56),
 
-        LOWCONE(42),
+        LOWCONE(41),
         LOWCUBE(45),
 
         MIDCONE(LOWCONE.degrees.get()),
@@ -78,7 +80,7 @@ public class Pivot extends SubsystemBase {
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
 
-        controller = new PIDController(0.02, 0, 0);
+        controller = new PIDController(0.023, 0, 0);
         controller.setTolerance(0.10); // meters
 
         new ComplexWidgetBuilder(controller, "PID Controller", Pivot.class.getSimpleName())
@@ -118,11 +120,14 @@ public class Pivot extends SubsystemBase {
             controller.setSetpoint(position.degrees.get());
         });
     }
-    public CommandBase setCurrentPositionManually(double position) {
-        return Commands.sequence(
-            runOnce(() -> this.position.degrees.set(position)),
-            setTargetPosition(this.position)
-        );
+
+    private void setTargetPosition(double position) {
+
+            controller.setSetpoint(position);
+    }
+    public void setCurrentPositionManually(double position) {
+
+            setTargetPosition(getTargetPosition() + position);
     }
     // public CommandBase setTargetPosition(double position) {
     //     return runOnce(() -> {

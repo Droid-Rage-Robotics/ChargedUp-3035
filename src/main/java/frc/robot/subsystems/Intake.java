@@ -25,13 +25,15 @@ public class Intake extends SubsystemBase {
     private final CANSparkMax clawMotor;
     private final DoubleSolenoid intakeSolenoid;
     private final PneumaticHub pneumaticHub;
-    private final MutableBoolean isOpen = new MutableBoolean(false, "Is Open", Intake.class.getSimpleName());
+    // private final MutableBoolean isOpen = new MutableBoolean(false, "Is Open", Intake.class.getSimpleName());
     private final MutableDouble intakeSpeed = new MutableDouble(0.3, "Intake speed (power)", Intake.class.getSimpleName());
     private final MutableDouble outtakeSpeed = new MutableDouble(-0.3, "Outtake speed (power)", Intake.class.getSimpleName());
 
     private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Intake.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
+
+        private boolean isOpen = false;
 
     public Intake() {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
@@ -62,30 +64,30 @@ public class Intake extends SubsystemBase {
     public void close() {
         if (!isEnabled.get()) return;
         intakeSolenoid.set(Value.kForward);//TODO:change
-        isOpen.set(false);
+        isOpen = false;
         TrackedElement.set(Element.CONE); 
     }
 
     public void open() {
         if (!isEnabled.get()) return;
         intakeSolenoid.set(Value.kReverse);//TODO:change
-        isOpen.set(true);
+        isOpen = true;
         TrackedElement.set(Element.CUBE);
     }
   
     public CommandBase runToggleOpen() {
         return runOnce(() -> {
-            if(isOpen.get()) open();
-            else close();
+            if(!isOpen) open();//CUbe
+            else close();//Cone
         });
     }
 
-    public CommandBase runOpen() {
-        return runOnce(() -> close());
+    public CommandBase runClose() {
+        return runOnce(() -> close());//Cone
     }
 
-    public CommandBase runClose() {
-        return runOnce(() -> open());
+    public CommandBase runOpen() {
+        return runOnce(() -> open());//Cube
     }
 
     public CommandBase runIntake() {

@@ -32,7 +32,7 @@ public class Elevator extends SubsystemBase {
         public static final double HORIZONTAL_ROT_TO_INCHES = (HORIZONTAL_DISTANCE_PER_PULSE * HORIZONTAL_GEAR_RATIO) / (HORIZONTAL_GEAR_DIAMETER_INCHES * Math.PI);
     }
 
-    private enum Position {//17 is MAXXXXXX for vert ; 11 is for horiz
+    private enum Position {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0),
 
         INTAKELOW(0,0),
@@ -40,13 +40,15 @@ public class Elevator extends SubsystemBase {
         LOWCONE(0, 0),
         LOWCUBE(0,0),
         
-        MIDCONE(16,10.9),
-        MIDCUBE(11,11),
-        
-        HIGHCONE(16,11),
-        HIGHCUBE(16,11),
+        MIDCONE(13.99,11),
+        MIDCUBE(11,10.4),
 
-        INTAKEHIGH(15.5,0),
+        AUTOMIDCONE(16, 11.4),
+
+        HIGHCONE(13.99,11),//Make this Mid Teleop
+        HIGHCUBE(15.7,11),
+
+        INTAKEHIGH(14.9,0),
 
         HOLD(0,0),
         
@@ -216,6 +218,10 @@ public class Elevator extends SubsystemBase {
         );
     }
 
+    public CommandBase moveAutoMid() {
+        return setPosition(Position.AUTOMIDCONE);
+    }
+
     public CommandBase moveHigh() {
         if(isMovingManually){//TODO:Test
             changePosition();
@@ -246,7 +252,7 @@ public class Elevator extends SubsystemBase {
         verticalLeftMotor.set(power);
     }
     public CommandBase dropVerticalElevator(){
-        return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-6));
+        return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-7));
     }
 
     public CommandBase moveInHorizontalElevator(){
@@ -270,5 +276,18 @@ public class Elevator extends SubsystemBase {
         double encoderPosition = horizontalEncoder.getPosition();
         horizontalEncoderPositionWriter.set(encoderPosition);
         return encoderPosition;
+    }
+
+    public double getVerticalTargetPosition() {
+        return verticalController.getSetpoint();
+    }
+
+    public double getHorizonotalTargetPosition() {
+        return horizontalController.getSetpoint();
+    }
+
+    public void setTargetPositionsManually(double x, double y) {
+        verticalController.setSetpoint(getVerticalTargetPosition() + (y*0.1));
+        horizontalController.setSetpoint(getHorizontalEncoderPosition() + (x*0.1));
     }
 }  
