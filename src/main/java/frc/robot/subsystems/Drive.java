@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(3),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(Math.PI / 4), // 1 / 8 of a full rotation per second per second),
         TRANSLATIONAL_KP(1.5), // this could probably be about 2.29
-        THETA_KP(0),
+        THETA_KP(0.005),
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -84,7 +84,7 @@ public class Drive extends SubsystemBase {
 
     private enum Speed {
         TURBO(1, 1), //TODO find what feels best 
-        NORMAL(0.7, 0.7),
+        NORMAL(1, 1),
         SLOW(0.15, 0.15),
         SUPERSLOW(0.05, 0.05), //unused
         ;
