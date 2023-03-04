@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     //TODO: Ideas
@@ -63,9 +64,9 @@ public class RobotContainer {
     public RobotContainer() {
         
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
-        autoChooser.addOption("Middle", Autos.mid(drive, elevator, pivot, intake));
-        autoChooser.setDefaultOption("sTRAFE", Autos.strafe(drive, elevator, pivot, intake));
-
+        autoChooser.setDefaultOption("Middle", Autos.mid(drive, elevator, pivot, intake));
+        autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
+        // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
         new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
@@ -135,6 +136,12 @@ public class RobotContainer {
         //     pivot.setCurrentPositionManually(pivot.getTargetPosition()+operator.getLeftY()*1)
         // ));
         // elevator.setDefaultCommand(new ManualElevator(operator, elevator));
+
+        // new Trigger(() -> Math.abs(-operator.getLeftY()) > 0.1)
+            // .whileTrue(pivot.setCurrentPositionManually(() -> pivot.getTargetPosition() + (-operator.getLeftY())));
+
+        pivot.setDefaultCommand(new ManualPivot(operator::getLeftY, pivot));
+        // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
         operator.a()
             .onTrue(
