@@ -1,0 +1,32 @@
+package frc.robot.commands.Drive;
+
+import javax.swing.GroupLayout.SequentialGroup;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Drive;
+
+public class LockWheels extends SequentialCommandGroup {
+    private LockWheels(Drive drive) {
+        addCommands(
+            Commands.run(() -> drive.setModuleStates(new SwerveModuleState[] {
+                new SwerveModuleState(0.01, new Rotation2d(Math.PI / 4)),
+                new SwerveModuleState(0.01, new Rotation2d(-Math.PI / 4)),
+                new SwerveModuleState(0.01, new Rotation2d(-Math.PI / 4)),
+                new SwerveModuleState(0.01, new Rotation2d(Math.PI / 4))
+            }), drive),
+            Commands.waitSeconds(0.5),
+            Commands.run(() -> drive.setModuleStates(new SwerveModuleState[] {
+                new SwerveModuleState(0.0, new Rotation2d(Math.PI / 4)),
+                new SwerveModuleState(0.0, new Rotation2d(-Math.PI / 4)),
+                new SwerveModuleState(0.0, new Rotation2d(-Math.PI / 4)),
+                new SwerveModuleState(0.0, new Rotation2d(Math.PI / 4))
+            }), drive)
+        );
+    }
+    public static LockWheels create(Drive drive) {
+        return new LockWheels(drive);
+    }
+}
