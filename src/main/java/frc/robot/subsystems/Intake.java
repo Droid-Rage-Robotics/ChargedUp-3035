@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.sound.midi.Track;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;

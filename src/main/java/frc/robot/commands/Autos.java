@@ -1,13 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.commands.Drive.PathPlannerFollow;
-import frc.robot.commands.ElevatorCommands.AutoMoveMid;
-import frc.robot.commands.ElevatorCommands.DropCone;
-import frc.robot.commands.ElevatorCommands.IntakeCone;
-import frc.robot.commands.ElevatorCommands.IntakeCube;
-import frc.robot.commands.ElevatorCommands.MoveHigh;
-import frc.robot.commands.ElevatorCommands.MoveIntakeLow;
-import frc.robot.commands.ElevatorCommands.MoveMid;
+import frc.robot.commands.ElevatorCommands.*;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
