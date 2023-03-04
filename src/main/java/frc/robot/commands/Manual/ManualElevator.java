@@ -1,40 +1,37 @@
 package frc.robot.commands.Manual;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.DroidRageConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
 
 public class ManualElevator extends CommandBase {
     public static class Constants {    }
 
     private final Elevator elevator;
-    private final CommandXboxController operator;
+    // private final CommandXboxController operator;
+    private final Supplier<Double> xElevator;
+    private final Supplier<Double> yElevator;
     
-    public ManualElevator(CommandXboxController operator, Elevator elevator) {
+    public ManualElevator(Supplier<Double> xElevator, Supplier<Double> yElevator, Elevator elevator) {
         this.elevator = elevator;
-        this.operator = operator;
+        this.xElevator = xElevator;
+        this.yElevator = yElevator;
 
         addRequirements(elevator);
     }
 
     @Override
-    public void initialize() {
-        elevator.isMovingManually = true;
-     }
+    public void initialize() { }
 
     @Override
-    public void execute() {//TODO:Should we make it a different joystick? And move arm to 
-        double y = -operator.getRightY();
-        double x = operator.getRightX();
-        if (Math.abs(operator.getLeftY()) > DroidRageConstants.Gamepad.STICK_DEADZONE) y = 0;
-        if (Math.abs(operator.getLeftX()) > DroidRageConstants.Gamepad.STICK_DEADZONE) x = 0;
-        
-        elevator.setPosition(
-            elevator.getTargetVerticalHeight()+(y*0.5), 
-            elevator.getTargetHorizontalDistance()+(x*0.5)
-            ).initialize();
-        //TODO: Try to make it where it resets the value of the elevator
+    public void execute() {
+        double x = xElevator.get();
+        double y = -yElevator.get();
+        elevator.setTargetPositionsManually(x, y);
     }
 
     @Override
@@ -42,7 +39,6 @@ public class ManualElevator extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        elevator.isMovingManually = false;
         return false;
     }
 }
