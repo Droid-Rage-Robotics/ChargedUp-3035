@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class DropCube extends SequentialCommandGroup {
     public DropCube(Elevator elevator, Pivot pivot, Intake intake) {
         addCommands(
-        intake.runOuttakeFor(1),
+            intake.runOuttakeFor(1),
             elevator.moveInHorizontalElevator(),
             Commands.waitSeconds(1),
             pivot.moveHold()

@@ -9,7 +9,7 @@ public class IntakeCube extends SequentialCommandGroup {
     //TODO: Maybe make a position where the pivot iks downwards so it doesn't roll away
     public IntakeCube( Pivot pivot, Intake intake) {
         addCommands(
-            intake.runOpen(),
+            intake.runClose(),
             intake.runIntakeFor(3),
             Commands.waitSeconds(1),
             pivot.moveHold()
