@@ -1,11 +1,14 @@
 package frc.robot.commands;
 
+import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.PathPlannerFollow;
 import frc.robot.commands.ElevatorCommands.*;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -91,9 +94,12 @@ public final class Autos {
                 new WaitCommand(3)
                 ),
             PathPlannerFollow.create(drive, "Charge")
-                .setMaxVelocity(0.8)
-                .setAcceleration(0.95)
-                .build()
+                .setMaxVelocity(0.9)
+                .setAcceleration(19)
+                .addMarker("wait", Commands.waitSeconds(1))
+                .build(),
+            Commands.waitSeconds(0.5),
+            LockWheels.create(drive)
         );
     }
     public static CommandBase intake(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
