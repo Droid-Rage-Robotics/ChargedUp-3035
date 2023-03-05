@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 import frc.robot.commands.ElevatorCommands.DropCone;
 import frc.robot.commands.ElevatorCommands.MoveHigh;
@@ -12,6 +13,7 @@ import frc.robot.commands.ElevatorCommands.MoveIntakeLow;
 import frc.robot.commands.ElevatorCommands.MoveLow;
 import frc.robot.commands.ElevatorCommands.MoveMid;
 import frc.robot.commands.ElevatorCommands.Outtake;
+import frc.robot.commands.Manual.ManualElevator;
 import frc.robot.commands.Manual.ManualPivot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -120,6 +122,9 @@ public class RobotContainer {
         
         driver.y()
             .onTrue(drive.toggleBreakMode());
+
+        driver.x()
+            .onTrue(LockWheels.create(drive));
         // driver.povUp()
         //     .onTrue(drive.toggleAntiTipping()
         //     );
@@ -172,6 +177,8 @@ public class RobotContainer {
 
         operator.start()
             .onTrue(elevator.resetEncoders());
+        operator.back()
+            .onTrue(pivot.resetClawEncoder());
 
         
             // pivot.setPowerC(-operator.getLeftY())
@@ -186,8 +193,8 @@ public class RobotContainer {
         operator.leftTrigger()
         .onTrue(new SequentialCommandGroup(
             new MoveMid(elevator,pivot),
-        new WaitCommand(3),
-        new DropCone(elevator, pivot, intake)));
+            new WaitCommand(3),
+            new DropCone(elevator, pivot, intake)));
     }
 
     public void configureTestBindings() {
