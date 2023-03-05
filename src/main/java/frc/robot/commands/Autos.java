@@ -7,8 +7,6 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -111,8 +109,8 @@ public final class Autos {
                 new WaitCommand(3)
                 ),
             PathPlannerFollow.create(drive, "Intake")
-                .setMaxVelocity(0.65)
-                .setAcceleration(0.85)
+                .setMaxVelocity(1)
+                .setAcceleration(3)
                 .addMarker("intake", new SequentialCommandGroup(
                     new MoveIntakeLow(elevator, pivot),
                     new IntakeCube(pivot, intake)
