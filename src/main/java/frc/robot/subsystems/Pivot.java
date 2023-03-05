@@ -28,8 +28,8 @@ public class Pivot extends SubsystemBase {
         INTAKELOWCUBE(53),//TODO:Change
         INTAKELOWCONE(56),
 
-        LOWCONE(41),
-        LOWCUBE(45),
+        LOWCONE(40.8),
+        LOWCUBE(43.7),
 
         MIDCONE(LOWCONE.degrees.get()),
         MIDCUBE(45),
@@ -39,7 +39,9 @@ public class Pivot extends SubsystemBase {
 
         INTAKEHIGH(43), //parallel
         HOLD(0), // straight up
-        INTAKEAUTOCUBE(50), //Intaking as far down as possible for dube
+
+        //AUTO
+        INTAKEAUTOCUBE(49.7), //Intaking as far down as possible for dube
         INTAKRAUTOCONE(50), //intake auto position for cone
         ;
 
@@ -104,6 +106,10 @@ public class Pivot extends SubsystemBase {
 
     public double getPosition() {
         return pivotRelativeEncoder.getPosition() + offset;
+    }
+
+    public double getRawPosition() {
+        return pivotRelativeEncoder.getPosition();
     }
 
     public double getTargetPosition() {
@@ -186,7 +192,7 @@ public class Pivot extends SubsystemBase {
 
     public CommandBase resetClawEncoder() {
         return runOnce(() -> {
-            offset = -getPosition() - offset;
+            offset = -getRawPosition();
         });
     }
 
