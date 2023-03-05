@@ -113,6 +113,7 @@ public class SwerveModule {
     }
 
     public void setState(SwerveModuleState state) {
+        // new SwerveModuleState(0.0, new Rotation2d(Math.PI))
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
             return;
