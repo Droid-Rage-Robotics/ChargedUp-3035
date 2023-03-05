@@ -37,13 +37,13 @@ public class Elevator extends SubsystemBase {
         LOWCONE(0, 0),
         LOWCUBE(0,0),
         
-        MIDCONE(13.99,11),
-        MIDCUBE(11,10.4),
+        MIDCONE(13.8,11),
+        MIDCUBE(13.5,10.4),
 
-        AUTOMIDCONE(16, 11.4),
+        AUTOMIDCONE(15.5, 11.5),
 
-        HIGHCONE(13.99,11),//Make this Mid Teleop
-        HIGHCUBE(15.7,11),
+        HIGHCONE(14.4,11),//Make this Mid Teleop
+        HIGHCUBE(16.5,11),
 
         INTAKEHIGH(14.9,0),
 
@@ -107,7 +107,7 @@ public class Elevator extends SubsystemBase {
         horizontalEncoder = horizontalMotor.getEncoder();
         horizontalEncoder.setPositionConversionFactor(Constants.HORIZONTAL_ROT_TO_INCHES);
 
-        verticalController = new PIDController(0.1, 0, 0);
+        verticalController = new PIDController(0.15, 0, 0);
         verticalController.setTolerance(0.1); // inches //TODO:How much tolerence?
         horizontalController = new PIDController(0.1, 0, 0);
         horizontalController.setTolerance(0.10); // inches
@@ -285,6 +285,6 @@ public class Elevator extends SubsystemBase {
 
     public void setTargetPositionsManually(double x, double y) {
         verticalController.setSetpoint(getVerticalTargetPosition() + (y*0.1));
-        horizontalController.setSetpoint(getHorizontalEncoderPosition() + (x*0.1));
+        // horizontalController.setSetpoint(getHorizontalEncoderPosition() + (x*0.1));
     }
 }  
