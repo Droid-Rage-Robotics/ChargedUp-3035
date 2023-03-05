@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(3),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(Math.PI / 4), // 1 / 8 of a full rotation per second per second),
         TRANSLATIONAL_KP(1.5), // this could probably be about 2.29
-        THETA_KP(0.005),
+        THETA_KP(0.001),
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
