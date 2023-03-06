@@ -23,6 +23,10 @@ public class Vision extends SubsystemBase {
     private double area = ta.getDouble(0.0);
     private double v = tv.getDouble(0.0);
 
+    // public static enum LightMode {
+	// 	eOn, eOff, eBlink
+	// }
+
     public Vision() {
         super();
     }

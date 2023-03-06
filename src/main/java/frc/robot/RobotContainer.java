@@ -64,11 +64,15 @@ public class RobotContainer {
     public RobotContainer() {
         
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
-        autoChooser.setDefaultOption("Middle", Autos.mid(drive, elevator, pivot, intake));
-        autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
+        autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
+        autoChooser.addOption("Straight Test", Autos.straightTest(drive));
+        autoChooser.addOption("Turn Test", Autos.turnTest(drive));
+        autoChooser.addOption("Preload+Drop", Autos.preloadPlusDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
-        autoChooser.addOption("Intake ----", Autos.intake(drive, elevator, pivot, intake));
+
+        // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
+        // autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
         new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
