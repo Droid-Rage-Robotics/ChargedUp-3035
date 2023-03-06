@@ -29,7 +29,7 @@ public class Elevator extends SubsystemBase {
         public static final double HORIZONTAL_ROT_TO_INCHES = (HORIZONTAL_DISTANCE_PER_PULSE * HORIZONTAL_GEAR_RATIO) / (HORIZONTAL_GEAR_DIAMETER_INCHES * Math.PI);
     }
 
-    private enum Position {//16-17 is MAXXXXXX for vert ; 11 is for horiz
+    public enum ElevatorPosition {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0),
 
         INTAKELOW(0,0),
@@ -54,13 +54,17 @@ public class Elevator extends SubsystemBase {
         private MutableDouble verticalInches;
         private MutableDouble horizontalInches;
 
-        private Position(double verticalInches, double horizontalInches) {
-            this.verticalInches = new SimpleWidgetBuilder<Double>(verticalInches, Position.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
+        private ElevatorPosition(double verticalInches, double horizontalInches) {
+            this.verticalInches = new SimpleWidgetBuilder<Double>(verticalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
                 .withSize(1, 3)
                 .buildMutableDouble();
-            this.horizontalInches = new SimpleWidgetBuilder<Double>(horizontalInches, Position.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
+            this.horizontalInches = new SimpleWidgetBuilder<Double>(horizontalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
                 .withSize(1, 3)
                 .buildMutableDouble();
+        }
+
+        public static ElevatorPosition get(){
+            return position;
         }
     }
     
@@ -71,7 +75,7 @@ public class Elevator extends SubsystemBase {
     // private final DutyCycleEncoder verticaAbsEncoder;
     private final PIDController verticalController;
     private final PIDController horizontalController;
-    private volatile Position position = Position.START;
+    private volatile static ElevatorPosition position = ElevatorPosition.START;
     public boolean isMovingManually;
     private final WriteOnlyString positionWriter = new WriteOnlyString(position.name(), "Elevator Position", Elevator.class.getSimpleName());
     
@@ -119,7 +123,7 @@ public class Elevator extends SubsystemBase {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        setPosition(Position.START);
+        setPosition(ElevatorPosition.START);
 
         // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
         isMovingManually = false;
@@ -144,7 +148,7 @@ public class Elevator extends SubsystemBase {
         periodic();
     }
 
-    public Position getTargetPosition() {
+    public ElevatorPosition getTargetPosition() {
         return position;
     }
 
@@ -156,7 +160,7 @@ public class Elevator extends SubsystemBase {
         return position.horizontalInches.get();
     }
 
-    public CommandBase setPosition(Position position) {
+    private CommandBase setPosition(ElevatorPosition position) {
         return runOnce(() -> {
             this.position = position;
 
@@ -185,22 +189,22 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveHold() {
-        return setPosition(Position.HOLD);
+        return setPosition(ElevatorPosition.HOLD);
     }
 
     public CommandBase moveIntakeLow() {
-        return setPosition(Position.INTAKELOW);
+        return setPosition(ElevatorPosition.INTAKELOW);
     }
     public CommandBase moveIntakeHigh() {
-        return setPosition(Position.INTAKEHIGH);
+        return setPosition(ElevatorPosition.INTAKEHIGH);
     }
 
     public CommandBase moveLow() {
         return setPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.LOWCONE;
-                case CUBE -> Position.LOWCUBE;
-                case NONE -> Position.LOWCUBE;
+                case CONE -> ElevatorPosition.LOWCONE;
+                case CUBE -> ElevatorPosition.LOWCUBE;
+                case NONE -> ElevatorPosition.LOWCUBE;
             }
         );
     }
@@ -208,15 +212,15 @@ public class Elevator extends SubsystemBase {
     public CommandBase moveMid() {
         return setPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.MIDCONE;
-                case CUBE -> Position.MIDCUBE;
-                case NONE -> Position.MIDCUBE;
+                case CONE -> ElevatorPosition.MIDCONE;
+                case CUBE -> ElevatorPosition.MIDCUBE;
+                case NONE -> ElevatorPosition.MIDCUBE;
             }
         );
     }
 
     public CommandBase moveAutoMid() {
-        return setPosition(Position.AUTOMIDCONE);
+        return setPosition(ElevatorPosition.AUTOMIDCONE);
     }
 
     public CommandBase moveHigh() {
@@ -225,9 +229,9 @@ public class Elevator extends SubsystemBase {
         }
         return setPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.HIGHCONE;
-                case CUBE -> Position.HIGHCUBE;
-                case NONE -> Position.HIGHCUBE;
+                case CONE -> ElevatorPosition.HIGHCONE;
+                case CUBE -> ElevatorPosition.HIGHCUBE;
+                case NONE -> ElevatorPosition.HIGHCUBE;
             }
         );
     }
@@ -287,4 +291,8 @@ public class Elevator extends SubsystemBase {
         verticalController.setSetpoint(getVerticalTargetPosition() + (y*0.1));
         // horizontalController.setSetpoint(getHorizontalEncoderPosition() + (x*0.1));
     }
+
+    // public static Position get(){
+    //     return position;
+    // }
 }  

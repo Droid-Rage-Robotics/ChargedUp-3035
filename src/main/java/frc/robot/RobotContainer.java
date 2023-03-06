@@ -12,6 +12,7 @@ import frc.robot.commands.ElevatorCommands.MoveIntakeHigh;
 import frc.robot.commands.ElevatorCommands.MoveIntakeLow;
 import frc.robot.commands.ElevatorCommands.MoveLow;
 import frc.robot.commands.ElevatorCommands.MoveMid;
+import frc.robot.commands.ElevatorCommands.MoveToPosition;
 import frc.robot.commands.ElevatorCommands.Outtake;
 import frc.robot.commands.Manual.ManualElevator;
 import frc.robot.commands.Manual.ManualPivot;
@@ -93,10 +94,10 @@ public class RobotContainer {
             .onTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
 
-        driver.leftBumper()
-            .onTrue(drive.setTurboSpeed())
-            .onFalse(drive.setNormalSpeed()
-            );
+        // driver.leftBumper()
+        //     .onTrue(drive.setTurboSpeed())
+        //     .onFalse(drive.setNormalSpeed()
+        //     );
 
         driver.rightTrigger()
             .onTrue(intake.runIntake()) 
@@ -113,7 +114,11 @@ public class RobotContainer {
             );
 
         driver.b()
-            .onTrue(intake.runToggleOpen()
+            .onTrue(
+                new SequentialCommandGroup(
+                    intake.runToggleOpen(),
+                    new MoveToPosition(elevator, pivot)
+                )
             ); 
 
         driver.back()

@@ -23,7 +23,7 @@ public class Pivot extends SubsystemBase {
         public static final double ROTATIONS_TO_DEGREES = (GEAR_RATIO * READINGS_PER_REVOLUTION) / 360;
     }
 
-    private enum Position {
+    public enum PivotPosition {
         START(0),
         INTAKELOWCUBE(53),//TODO:Change
         INTAKELOWCONE(56),
@@ -37,7 +37,8 @@ public class Pivot extends SubsystemBase {
         HIGHCONE(LOWCONE.degrees.get()),
         HIGHCUBE(30),
 
-        INTAKEHIGH(43), //parallel
+        INTAKEHIGHCUBE(43), //parallel
+        INTAKEHIGHCONE(43),
         HOLD(0), // straight up
 
         //AUTO
@@ -47,13 +48,13 @@ public class Pivot extends SubsystemBase {
 
         private final MutableDouble degrees;
 
-        private Position(double degrees) {
-            this.degrees = new MutableDouble(degrees, Position.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
+        private PivotPosition(double degrees) {
+            this.degrees = new MutableDouble(degrees, PivotPosition.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
         }
     }
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
-    private volatile Position position = Position.START;
+    private volatile PivotPosition position = PivotPosition.START;
     // private final AbsoluteEncoder pivotAbsoluteEncoder;
     private final RelativeEncoder pivotRelativeEncoder;
     
@@ -85,7 +86,7 @@ public class Pivot extends SubsystemBase {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        setTargetPosition(Position.START);
+        setTargetPosition(PivotPosition.START);
 
         new ComplexWidgetBuilder(resetClawEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
         pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 15);
@@ -116,7 +117,7 @@ public class Pivot extends SubsystemBase {
         return controller.getSetpoint();
     }
 
-    private CommandBase setTargetPosition(Position position) {
+    private CommandBase setTargetPosition(PivotPosition position) {
         return runOnce(() -> {
             this.position = position;
             controller.setSetpoint(position.degrees.get());
@@ -141,22 +142,28 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveIntakeLow() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.INTAKELOWCONE;
-                case CUBE -> Position.INTAKELOWCUBE;
-                case NONE -> Position.INTAKELOWCUBE;
+                case CONE -> PivotPosition.INTAKELOWCONE;
+                case CUBE -> PivotPosition.INTAKELOWCUBE;
+                case NONE -> PivotPosition.INTAKELOWCUBE;
             }
         );
     }
     public CommandBase moveIntakeHigh() {
-        return setTargetPosition(Position.INTAKEHIGH);
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> PivotPosition.INTAKEHIGHCONE;
+                case CUBE -> PivotPosition.INTAKEHIGHCUBE;
+                case NONE -> PivotPosition.INTAKEHIGHCUBE;
+            }
+        );
     }
     
     public CommandBase moveLow() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.LOWCONE;
-                case CUBE -> Position.LOWCUBE;
-                case NONE -> Position.LOWCUBE;
+                case CONE -> PivotPosition.LOWCONE;
+                case CUBE -> PivotPosition.LOWCUBE;
+                case NONE -> PivotPosition.LOWCUBE;
             }
         );
     }
@@ -164,9 +171,9 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveMid() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.MIDCONE;
-                case CUBE -> Position.MIDCUBE;
-                case NONE -> Position.MIDCUBE;
+                case CONE -> PivotPosition.MIDCONE;
+                case CUBE -> PivotPosition.MIDCUBE;
+                case NONE -> PivotPosition.MIDCUBE;
             }
         );
     }
@@ -174,15 +181,15 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveHigh() {
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> Position.HIGHCONE;
-                case CUBE -> Position.HIGHCUBE;
-                case NONE -> Position.HIGHCUBE;
+                case CONE -> PivotPosition.HIGHCONE;
+                case CUBE -> PivotPosition.HIGHCUBE;
+                case NONE -> PivotPosition.HIGHCUBE;
             }
         );
     }
 
     public CommandBase moveHold() {
-        return setTargetPosition(Position.HOLD);
+        return setTargetPosition(PivotPosition.HOLD);
     }
 
     private void setPower(double power) {
