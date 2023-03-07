@@ -32,7 +32,8 @@ public class Elevator extends SubsystemBase {
     public enum ElevatorPosition {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0),
 
-        INTAKELOW(0,0),
+        INTAKELOWCONE(0,0),
+        INTAKELOWCUBE(0,0),
        
         LOWCONE(0, 0),
         LOWCUBE(0,0),
@@ -45,7 +46,8 @@ public class Elevator extends SubsystemBase {
         HIGHCONE(14.4,11),//Make this Mid Teleop
         HIGHCUBE(16.5,11),
 
-        INTAKEHIGH(14.9,0),
+        INTAKEHIGHCONE(14.9,0),
+        INTAKEHIGHCUBE(14.9,0),
 
         HOLD(0,0),
         
@@ -193,10 +195,22 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveIntakeLow() {
-        return setPosition(ElevatorPosition.INTAKELOW);
+        return setPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> ElevatorPosition.INTAKELOWCONE;
+                case CUBE -> ElevatorPosition.INTAKELOWCUBE;
+                case NONE -> ElevatorPosition.INTAKELOWCUBE;
+            }
+        );
     }
     public CommandBase moveIntakeHigh() {
-        return setPosition(ElevatorPosition.INTAKEHIGH);
+        return setPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> ElevatorPosition.INTAKEHIGHCONE;
+                case CUBE -> ElevatorPosition.INTAKEHIGHCUBE;
+                case NONE -> ElevatorPosition.INTAKEHIGHCUBE;
+            }
+        );
     }
 
     public CommandBase moveLow() {

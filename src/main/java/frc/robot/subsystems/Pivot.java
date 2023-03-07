@@ -42,7 +42,7 @@ public class Pivot extends SubsystemBase {
 
         //AUTO
         INTAKEAUTOCUBE(49.7), //Intaking as far down as possible for dube
-        INTAKRAUTOCONE(50), //intake auto position for cone
+        INTAKEAUTOCONE(50), //intake auto position for cone
 
         FORRWARDSOFTLIMIT(60)
         ;
