@@ -59,7 +59,7 @@ public class RobotContainer {
         autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
-        autoChooser.addOption("Preload+Drop", Autos.preloadPlusDrop(drive, elevator, pivot, intake));
+        autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
 
         // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));

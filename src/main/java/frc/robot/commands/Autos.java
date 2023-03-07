@@ -119,7 +119,7 @@ public final class Autos {
     }*/
 
 
-    public static CommandBase preloadPlusDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
+    public static CommandBase oneToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
             new DropCone(elevator, pivot, intake),
             PathPlannerFollow.create(drive, "ToCube1")
@@ -142,7 +142,35 @@ public final class Autos {
                 new DropCube(elevator, pivot, intake),
             PathPlannerFollow.create(drive, "ToCube1")
                 .setMaxVelocity(1)
-                .setAcceleration(136)
+                .setAcceleration(13.6)
+                .build()
+        );
+    }
+
+    public static CommandBase threeToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
+        return new SequentialCommandGroup(
+            new DropCone(elevator, pivot, intake),
+            PathPlannerFollow.create(drive, "ToCube3")
+                .setMaxVelocity(1)
+                .setAcceleration(13)
+                .addMarker("intake", 
+                    new SequentialCommandGroup(
+                        // new MoveIntakeLow(elevator, pivot),
+                        // new IntakeCube(pivot, intake, 4) //TODO:Test Wait Time
+                    ))
+                .build(),
+            PathPlannerFollow.create(drive, "ToDrop3")
+                .setMaxVelocity(1)
+                .setAcceleration(13)
+                .addMarker("pickUp", 
+                    new SequentialCommandGroup(
+                        // new MoveHigh(elevator, pivot)
+                    ))
+                .build(),
+                new DropCube(elevator, pivot, intake),
+            PathPlannerFollow.create(drive, "ToCube3")
+                .setMaxVelocity(1)
+                .setAcceleration(13.6)
                 .build()
         );
     }
