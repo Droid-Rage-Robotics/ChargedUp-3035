@@ -3,6 +3,7 @@ package frc.robot.commands.Manual;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.DroidRageConstants;
 import frc.robot.subsystems.Elevator;
 
 public class ManualElevator extends CommandBase {
@@ -28,6 +29,8 @@ public class ManualElevator extends CommandBase {
     public void execute() {
         double x = xElevator.get();
         double y = -yElevator.get();
+        if (Math.abs(y) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE) y = 0;
+        if (Math.abs(y) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE) x = 0;
         elevator.setTargetPositionsManually(x, y);
     }
 

@@ -26,7 +26,7 @@ public class ManualPivot extends CommandBase {
     @Override
     public void execute() {
         double y = pivotMove.get(); // reveresed intentnioally
-        if (Math.abs(y) < DroidRageConstants.Gamepad.STICK_DEADZONE) y = 0;
+        if (Math.abs(y) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE) y = 0;
         pivot.setCurrentPositionManually(y*0.35);
     }
 

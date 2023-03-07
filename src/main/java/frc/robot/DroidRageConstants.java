@@ -8,18 +8,19 @@ public final class DroidRageConstants {
     public static class Gamepad {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final int OPERATOR_CONTROLLER_PORT = 1;
-        public static final double STICK_DEADZONE = 0.1;//TODO::FIX
+        public static final double DRIVER_STICK_DEADZONE = 0.05;//TODO::FIX
+        public static final double OPERATOR_STICK_DEADZONE = 0.2;//TODO::FIX
     }
 
-    public static void registerSendable(Sendable sendable, String title, String tab) {
-        Shuffleboard.getTab(tab)
-            .add(title, sendable);
-    }
+    // public static void registerSendable(Sendable sendable, String title, String tab) {
+    //     Shuffleboard.getTab(tab)
+    //         .add(title, sendable);
+    // }
 
-    public static void registerVideo(VideoSource video, String title, String tab) {
-        Shuffleboard.getTab(tab)
-            .add(title, video);
-    }
+    // public static void registerVideo(VideoSource video, String title, String tab) {
+    //     Shuffleboard.getTab(tab)
+    //         .add(title, video);
+    // }
 
     // public static SuppliedValueWidget<Double> makeShuffleboardDouble(DoubleSupplier valueSupplier, String title, String tab) {
     //     return Shuffleboard.getTab(tab)

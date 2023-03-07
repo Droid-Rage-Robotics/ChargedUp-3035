@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.utilities.ComplexWidgetBuilder;
@@ -41,12 +42,15 @@ public class SwerveDriveTeleop extends CommandBase {
         .withSize(0, 2);
 
     private volatile double xSpeed, ySpeed, turnSpeed;
+
+    private Trigger lockTrigger;
     public SwerveDriveTeleop(Drive drive,
-            Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn) {
+            Supplier<Double> x, Supplier<Double> y, Supplier<Double> turn, Trigger lockTrigger) {
         this.drive = drive;
         this.x = x;
         this.y = y;
         this.turn = turn;
+        this.lockTrigger = lockTrigger;
 
         this.xLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ACCELERATION_UNITS_PER_SECOND.value.get());
         this.yLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ACCELERATION_UNITS_PER_SECOND.value.get());
@@ -120,27 +124,40 @@ public class SwerveDriveTeleop extends CommandBase {
         }
 
         // Apply deadband
-        if (Math.abs(xSpeed) < DroidRageConstants.Gamepad.STICK_DEADZONE) xSpeed = 0;
-        if (Math.abs(ySpeed) < DroidRageConstants.Gamepad.STICK_DEADZONE) ySpeed = 0;
-        if (Math.abs(turnSpeed) < DroidRageConstants.Gamepad.STICK_DEADZONE) turnSpeed = 0;
+        if (Math.abs(xSpeed) < DroidRageConstants.Gamepad.DRIVER_STICK_DEADZONE) xSpeed = 0;
+        if (Math.abs(ySpeed) < DroidRageConstants.Gamepad.DRIVER_STICK_DEADZONE) ySpeed = 0;
+        if (Math.abs(turnSpeed) < DroidRageConstants.Gamepad.DRIVER_STICK_DEADZONE) turnSpeed = 0;
 
         // Smooth driving and apply speed
         xSpeed = 
-            xLimiter.calculate(xSpeed) * 
+            // xLimiter.calculate(xSpeed) * 
+            xSpeed *
             SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND * 
             drive.getTranslationalSpeed();
         ySpeed = 
-            yLimiter.calculate(ySpeed) *
+            // yLimiter.calculate(ySpeed) *
+            ySpeed *
             SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND *
             drive.getTranslationalSpeed();
         turnSpeed = 
-            turnLimiter.calculate(turnSpeed) * 
+            // turnLimiter.calculate(turnSpeed) * 
+            turnSpeed *
             Drive.SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND * 
             drive.getAngularSpeed();
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
 
         SwerveModuleState[] states = Drive.SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+
+        // if (lockTrigger.getAsBoolean()) {
+        //     drive.setModuleStates(new SwerveModuleState[] {
+        //         new SwerveModuleState(0.01, new Rotation2d(Math.PI / 4)),
+        //         new SwerveModuleState(0.01, new Rotation2d(-Math.PI / 4)),
+        //         new SwerveModuleState(0.01, new Rotation2d(-Math.PI / 4)),
+        //         new SwerveModuleState(0.01, new Rotation2d(Math.PI / 4))
+        //     });
+        // }
+        //TODO: Test
         drive.setModuleStates(states);
     }
 
