@@ -4,49 +4,27 @@
 
 package frc.robot.commands.ElevatorCommands;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Elevator.ElevatorPosition;
 import frc.robot.subsystems.Pivot;
 public class MoveToPosition extends SequentialCommandGroup {
-    public MoveToPosition(Elevator elevator, Pivot pivot) {
-        ElevatorPosition position = Elevator.ElevatorPosition.get();
-        switch(position) {
-            case START:
-            case INTAKELOW:
-            case AUTOMIDCONE:
-                return;
-            case LOWCONE:
-            case LOWCUBE:
-                addCommands(
-                    elevator.moveLow(),
-                    pivot.moveLow()
-                );
-            case MIDCONE:
-            case MIDCUBE:
-                addCommands(
-                        elevator.moveMid(),
-                        pivot.moveMid()
-                    );
-
-            case HIGHCONE:
-            case HIGHCUBE:
-                addCommands(
-                        elevator.moveHigh(),
-                        pivot.moveHigh()
-                    );
-
-            case INTAKEHIGH:
-                addCommands(
-                        elevator.moveIntakeHigh(),
-                        pivot.moveIntakeHigh()
-                    );
-
-            case HOLD:
-                addCommands(
-                        elevator.moveHold(),
-                        pivot.moveHold()
-                    );
-        }
+    public MoveToPosition(Elevator elevator, Pivot pivot, Intake intake) {
+        addCommands(
+            intake.toggleCommand(),
+            switch(elevator.getTargetPosition()) {
+                case AUTOMIDCONE->Commands.none();
+                case HIGHCONE, HIGHCUBE->Commands.sequence(elevator.moveLow(), pivot.moveLow());
+                case HOLD->Commands.none();
+                case INTAKEHIGH->Commands.none(); //TODO: we need two positons for this probably
+                case INTAKELOW->Commands.none();
+                case LOWCONE, LOWCUBE->Commands.sequence(elevator.moveLow(), pivot.moveLow());
+                case MIDCONE, MIDCUBE->Commands.sequence(elevator.moveMid(), pivot.moveMid());
+                case START->Commands.none();
+                
+            }
+        );
     }
 }
