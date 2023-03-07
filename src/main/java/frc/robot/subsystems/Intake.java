@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
-        private boolean isOpen = false;
+    private boolean isOpen = false;
 
     public Intake() {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
@@ -73,10 +73,10 @@ public class Intake extends SubsystemBase {
         TrackedElement.set(Element.CUBE);
     }
   
-    public CommandBase runToggleOpen() {
+    public CommandBase toggleCommand() {
         return runOnce(() -> {
-            if(!isOpen) open();//CUbe
-            else close();//Cone
+            if(isOpen) close();
+            else open();
         });
     }
 
