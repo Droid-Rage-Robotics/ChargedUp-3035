@@ -183,9 +183,9 @@ public class RobotContainer {
             /// make INTAKE ALLWYS RUNNING
 
         operator.start()
-            .onTrue(elevator.resetEncoderCommand());
-        operator.back()
-            .onTrue(pivot.resetClawEncoder());
+            .onTrue(elevator.resetElevatorEncoders());
+        // operator.back()
+        //     .onTrue(pivot.resetPivotEncoder()); //Pivot is Absolute
 
         
             // pivot.setPowerC(-operator.getLeftY())

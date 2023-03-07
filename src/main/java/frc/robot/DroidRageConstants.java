@@ -1,9 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.cscore.VideoSource;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-
 public final class DroidRageConstants {
     public static class Gamepad {
         public static final int DRIVER_CONTROLLER_PORT = 0;

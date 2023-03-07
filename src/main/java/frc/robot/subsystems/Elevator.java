@@ -128,7 +128,7 @@ public class Elevator extends SubsystemBase {
         // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
         isMovingManually = false;
 
-        new ComplexWidgetBuilder(resetEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
+        new ComplexWidgetBuilder(resetElevatorEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
     }
 
     private final WriteOnlyDouble horizontalSetPowerWriter = new WriteOnlyDouble(0.0, "horizontal set power", "Elevator");
@@ -260,7 +260,7 @@ public class Elevator extends SubsystemBase {
         return runOnce(() -> verticalController.setSetpoint(getTargetHorizontalDistance()-2));
     }
 
-    public CommandBase resetEncoders() {
+    public CommandBase resetElevatorEncoders() {
         return runOnce(() -> {
             verticalEncoderOffset = -getVerticalEncoderPosition() - verticalEncoderOffset;
             horizontalEncoderOffset = -getHorizontalEncoderPosition() - horizontalEncoderOffset;
