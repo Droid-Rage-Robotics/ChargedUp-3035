@@ -14,7 +14,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
 import frc.robot.utilities.SimpleWidgetBuilder;
@@ -48,7 +50,7 @@ public class Drive extends SubsystemBase {
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(3),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(Math.PI / 4), // 1 / 8 of a full rotation per second per second),
         TRANSLATIONAL_KP(1.5), // this could probably be about 2.29
-        THETA_KP(0.001),
+        THETA_KP(0.01),
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -191,7 +193,9 @@ public class Drive extends SubsystemBase {
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
-        private boolean isBreakMode = false;
+    private boolean isBreakMode = false;
+
+    private final Field2d field2d = new Field2d();
 
     public Drive() {
         //TODO: Make sure IMU RESETS
@@ -200,14 +204,19 @@ public class Drive extends SubsystemBase {
         }
 
         pigeon2.configMountPose(AxisDirection.NegativeX, AxisDirection.PositiveZ);
+
+        new ComplexWidgetBuilder(field2d, "FIeld", Drive.class.getSimpleName());
     }
 
+    
     @Override
     public void periodic() {
         odometer.update(
             getRotation2d(),
             getModulePositions()
         );
+
+        field2d.setRobotPose(getPose());
 
         headingWriter.set(getHeading());
         rollWriter.set(getRoll());
