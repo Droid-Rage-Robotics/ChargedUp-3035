@@ -96,7 +96,7 @@ public final class Autos {
                 .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
             Commands.waitSeconds(0.5),
-            LockWheels.create(drive)
+            new LockWheels(drive)
         );
     }
     /*public static CommandBase intake(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
@@ -151,16 +151,16 @@ public final class Autos {
     public static CommandBase straightTest(Drive drive) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "StraightTest")
-                .setMaxVelocity(1)
-                .setAcceleration(13)
+                .setMaxVelocity(0.5)
+                .setAcceleration(0.4)
                 .build()
         );
     }
     public static CommandBase turnTest(Drive drive) {
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "TurnTest")
-                .setMaxVelocity(1)
-                .setAcceleration(13)
+                .setMaxVelocity(0.5)
+                .setAcceleration(0.41)
                 .build()
         );
     }
