@@ -5,21 +5,14 @@ import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
-import frc.robot.commands.ElevatorCommands.DropCone;
-import frc.robot.commands.ElevatorCommands.MoveHigh;
-import frc.robot.commands.ElevatorCommands.MoveHold;
-import frc.robot.commands.ElevatorCommands.MoveIntakeHigh;
-import frc.robot.commands.ElevatorCommands.MoveIntakeLow;
-import frc.robot.commands.ElevatorCommands.MoveLow;
-import frc.robot.commands.ElevatorCommands.MoveMid;
-import frc.robot.commands.ElevatorCommands.MoveToPosition;
-import frc.robot.commands.ElevatorCommands.Outtake;
+import frc.robot.commands.ElevatorCommands.*;
 import frc.robot.commands.Manual.ManualElevator;
 import frc.robot.commands.Manual.ManualPivot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -46,7 +39,6 @@ public class RobotContainer {
 
 
     // limielite
-    // fix drive directions for atuos/teleop
     // 
 
     private final Drive drive = new Drive();
@@ -90,7 +82,8 @@ public class RobotContainer {
                 drive, 
                 driver::getLeftX, 
                 driver::getLeftY, 
-                driver::getRightX
+                driver::getRightX,
+                driver.x()
                 )
             );
 
@@ -119,10 +112,11 @@ public class RobotContainer {
 
         driver.b()
             .onTrue(
-                new SequentialCommandGroup(
-                    intake.runToggleOpen(),
-                    new MoveToPosition(elevator, pivot)
-                )
+                new MoveToPosition(elevator, pivot, intake)
+                // Commands.sequence(
+                //     // intake.runToggleOpen(),
+                    
+                // )
             ); 
 
         driver.back()
@@ -133,7 +127,7 @@ public class RobotContainer {
             .onTrue(drive.toggleBreakMode());
 
         driver.x()
-            .onTrue(LockWheels.create(drive));
+            .onTrue(new LockWheels(drive));
         // driver.povUp()
         //     .onTrue(drive.toggleAntiTipping()
         //     );
@@ -154,7 +148,7 @@ public class RobotContainer {
             // .whileTrue(pivot.setCurrentPositionManually(() -> pivot.getTargetPosition() + (-operator.getLeftY())));
 
         pivot.setDefaultCommand(new ManualPivot(operator::getLeftY, pivot));
-        // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
+        elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
         operator.a()
             .onTrue(
@@ -170,22 +164,26 @@ public class RobotContainer {
             );
         
         operator.povUp()
-            .onTrue(new MoveIntakeHigh(elevator, pivot)
+            .onTrue(
+                new MoveIntakeHigh(elevator, pivot)
             );
         operator.povLeft()
-            .onTrue(new MoveIntakeLow(elevator, pivot)
+            .onTrue(
+                new MoveIntakeLow(elevator, pivot)
             );
         operator.povDown()
-            .onTrue(new MoveHold(elevator, pivot)
+            .onTrue(
+                new MoveHold(elevator, pivot)
             );
 
         operator.rightTrigger()
-            .onTrue(new Outtake(elevator, pivot, intake)
+            .onTrue(
+                new Outtake(elevator, pivot, intake)
             );
             /// make INTAKE ALLWYS RUNNING
 
         operator.start()
-            .onTrue(elevator.resetEncoders());
+            .onTrue(elevator.resetEncoderCommand());
         operator.back()
             .onTrue(pivot.resetClawEncoder());
 
@@ -200,14 +198,28 @@ public class RobotContainer {
         //     .onFalse(pivot.setPowerC(0));
 
         operator.leftTrigger()
-        .onTrue(new SequentialCommandGroup(
-            new MoveMid(elevator,pivot),
-            new WaitCommand(3),
-            new DropCone(elevator, pivot, intake)));
+            .onTrue(
+                new SequentialCommandGroup(
+                    new MoveMid(elevator,pivot),
+                    new WaitCommand(3),
+                    new DropCone(elevator, pivot, intake)
+                )
+            );
     }
 
     public void configureTestBindings() {
-        
+        operator.a()
+            .onTrue(
+                    new MoveLow(elevator, pivot)
+            );
+        operator.x()
+            .onTrue(
+                    new MoveMid(elevator, pivot)
+            );
+        operator.y()
+            .onTrue(
+                new MoveHigh(elevator, pivot)  
+            );
     }
     
     public Command getAutonomousCommand() {
