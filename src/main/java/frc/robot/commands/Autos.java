@@ -147,10 +147,10 @@ public final class Autos {
         );
     }
 
-    public static CommandBase threeToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
+    public static CommandBase testShoot(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
-            new DropCone(elevator, pivot, intake),
-            PathPlannerFollow.create(drive, "ToCube3")
+            new DropCone(elevator, pivot, intake),//Shoot Cube High
+            PathPlannerFollow.create(drive, "TestShoot")
                 .setMaxVelocity(1)
                 .setAcceleration(13)
                 .addMarker("intake", 
@@ -158,22 +158,15 @@ public final class Autos {
                         // new MoveIntakeLow(elevator, pivot),
                         // new IntakeCube(pivot, intake, 4) //TODO:Test Wait Time
                     ))
-                .build(),
-            PathPlannerFollow.create(drive, "ToDrop3")
-                .setMaxVelocity(1)
-                .setAcceleration(13)
-                .addMarker("pickUp", 
-                    new SequentialCommandGroup(
-                        // new MoveHigh(elevator, pivot)
+                    .addMarker("pickUp", 
+                        new SequentialCommandGroup(
+                        // new MoveHigh(elevator, pivot)//SHoot Cube Mid or something
                     ))
-                .build(),
-                new DropCube(elevator, pivot, intake),
-            PathPlannerFollow.create(drive, "ToCube3")
-                .setMaxVelocity(1)
-                .setAcceleration(13.6)
                 .build()
         );
     }
+
+
 
     //Auto Tests
     public static CommandBase straightTest(Drive drive) {//Top Red/Bottom Blue
