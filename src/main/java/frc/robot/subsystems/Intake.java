@@ -21,20 +21,22 @@ import frc.robot.utilities.WriteOnlyDouble;
 
 public class Intake extends SubsystemBase {
     public enum IntakeSpeeds {
-        FARCUBELOW(0),
-        FARCUBEMID(0),
-        FARCUBEHIGH(0),
-        CONE(0),
-        CONTINUOUS(1),
-        INTAKE(0.3),
-        OUTTAKE(-0.3),
-        HOLDCONE(0.05),
-        HOLDCUBE(0.025),
-        STOP(0),
+        // MAX_RPM(5676),
+        FARCUBELOW(50),
+        FARCUBEMID(60),
+        FARCUBEHIGH(80),
+        CONE(30),
+        CONTINUOUS(25),
+        INTAKE(3),
+        OUTTAKE(-3),
+        HOLDCONE(9),
+        HOLDCUBE(5),
+        STOP(0), 
 
         ;
 
-        private MutableDouble velocity;
+        private final MutableDouble velocity;
+        private final static double MAX_RPM = 5676;
 
         private IntakeSpeeds(double velocity) {
             this.velocity = new SimpleWidgetBuilder<Double>(velocity, IntakeSpeeds.class.getSimpleName()+"/"+name()+"/Velocity", Intake.class.getSimpleName())
@@ -56,7 +58,7 @@ public class Intake extends SubsystemBase {
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .buildMutableBoolean();
     private final WriteOnlyDouble targetVelocityWriter = new WriteOnlyDouble
-        (0.0, "Target Intake Velocity", "Intake");
+        (123, "Target Intake Velocity", "Intake");
 
     private boolean isOpen = false;
 
@@ -64,24 +66,25 @@ public class Intake extends SubsystemBase {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
         clawMotor.setIdleMode(IdleMode.kBrake);
         clawMotor.setInverted(false);
-        intakeController = new PIDController(0.01,0,0);
+        intakeController = new PIDController(0.0000001,0,0);
         targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = clawMotor.getEncoder();
+        intakeController.setTolerance(5);
 
 
         if (isEnabled.get()) {
             pneumaticHub = new PneumaticHub(10);
         } else {
-            pneumaticHub = new PneumaticHub(); // Since this is the wrong port, it should effectively disable the subsystem
+            pneumaticHub = new PneumaticHub(59); // Since this is the wrong port, it should effectively disable the subsystem; Put it at 59, so doesn't mess with the rest of CAN
         }
-        intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 10);
+        intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
 
         close();
     }
 
     @Override
     public void periodic() {
-        setIntakePower(intakeController.calculate(getIntakeVelocity()));
+        setIntakePower(intakeController.calculate(calculate()));
     }
   
     @Override
@@ -117,14 +120,15 @@ public class Intake extends SubsystemBase {
     }
 
     public CommandBase runIntake() {
-        return switch(TrackedElement.get()) {
-            case CONE->setTargetVelocity(IntakeSpeeds.INTAKE);
-            case CUBE->setTargetVelocity(IntakeSpeeds.INTAKE);
-            case NONE->setTargetVelocity(IntakeSpeeds.INTAKE);
-            // case CONE->intakeSpeed.get();
-            // case CUBE->intakeSpeed.get();
-            // case NONE->intakeSpeed.get();
-        };
+        return runOnce(() -> clawMotor.set(0.3));
+        // return switch(TrackedElement.get()) {
+        //     case CONE->//setTargetVelocity(IntakeSpeeds.INTAKE);
+        //     case CUBE->//setTargetVelocity(IntakeSpeeds.INTAKE);
+        //     case NONE->setTargetVelocity(IntakeSpeeds.INTAKE);
+        //     // case CONE->intakeSpeed.get();
+        //     // case CUBE->intakeSpeed.get();
+        //     // case NONE->intakeSpeed.get();
+        // };
     }
 
     public CommandBase runOuttake() {
@@ -179,6 +183,7 @@ public class Intake extends SubsystemBase {
     private CommandBase setTargetVelocity(IntakeSpeeds velocity) {
         return runOnce(() -> {
             this.targetVelocity = velocity;
+            intakeController.setSetpoint(velocity.velocity.get());
         });
     }
 
@@ -193,4 +198,18 @@ public class Intake extends SubsystemBase {
         clawMotor.set(power);
     }
     
+    public CommandBase shootHighCube(){ 
+        return setTargetVelocity(IntakeSpeeds.FARCUBEHIGH);
+    }
+    public CommandBase shootMidCube(){ 
+        return setTargetVelocity(IntakeSpeeds.FARCUBEMID);
+    }
+    public CommandBase shootLowCube(){ 
+        return setTargetVelocity(IntakeSpeeds.FARCUBELOW);
+    }
+
+    public double calculate(){
+        return intakeController.getSetpoint()/IntakeSpeeds.MAX_RPM+intakeController.getPositionError();
+    }
 }
+
