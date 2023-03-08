@@ -41,9 +41,9 @@ public class RobotContainer {
     // limielite
     // 
 
-    private final Drive drive = new Drive();
-    private final Elevator elevator = new Elevator();
-    private final Pivot pivot = new Pivot(); 
+    // private final Drive drive = new Drive();
+    // private final Elevator elevator = new Elevator();
+    // private final Pivot pivot = new Pivot(); 
     private final Intake intake = new Intake();
 
     private final CommandXboxController driver =
@@ -56,11 +56,11 @@ public class RobotContainer {
     public RobotContainer() {
         
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
-        autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
-        autoChooser.addOption("Straight Test", Autos.straightTest(drive));
-        autoChooser.addOption("Turn Test", Autos.turnTest(drive));
-        autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
-        autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
+        // autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
+        // autoChooser.addOption("Straight Test", Autos.straightTest(drive));
+        // autoChooser.addOption("Turn Test", Autos.turnTest(drive));
+        // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
+        // autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
 
         // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
@@ -77,150 +77,139 @@ public class RobotContainer {
          * Driver Controls
          */
 
-        drive.setDefaultCommand(
-            new SwerveDriveTeleop(
-                drive, 
-                driver::getLeftX, 
-                driver::getLeftY, 
-                driver::getRightX,
-                driver.x()
-                )
-            );
-
-        driver.rightBumper()
-            .onTrue(drive.setSlowSpeed())
-            .onFalse(drive.setNormalSpeed());
-
-        // driver.leftBumper()
-        //     .onTrue(drive.setTurboSpeed())
-        //     .onFalse(drive.setNormalSpeed()
+        // drive.setDefaultCommand(
+        //     new SwerveDriveTeleop(
+        //         drive, 
+        //         driver::getLeftX, 
+        //         driver::getLeftY, 
+        //         driver::getRightX,
+        //         driver.x()
+        //         )
         //     );
+
+        // driver.rightBumper()
+        //     .onTrue(drive.setSlowSpeed())
+        //     .onFalse(drive.setNormalSpeed());
+
 
         driver.rightTrigger()
             .onTrue(intake.runIntake()) 
-            .onFalse(intake.runHoldIntake()
+            .onFalse(intake.runStop()//hold intake - just stop for testing
             );
 
         driver.leftTrigger()
             .onTrue(intake.runOuttake())
-            .onFalse(intake.runStop()
-            );
+            .onFalse(intake.runStop());
 
-        driver.a()
-            .onTrue(drive.resetHeading()
-            );
+        driver.x().onTrue(intake.runStop());
+        driver.y().onTrue(intake.runHoldIntake());
+
+        driver.povUp().onTrue(intake.shootHighCube());
+        driver.povRight().onTrue(intake.shootMidCube());
+        driver.povDown().onTrue(intake.shootLowCube());
+        // driver.a()
+        //     .onTrue(drive.resetHeading()
+        //     );
 
         driver.b()
             .onTrue(
-                new MoveToPosition(elevator, pivot, intake)
+                // new MoveToPosition(elevator, pivot, intake)
                 // Commands.sequence(
-                //     // intake.runToggleOpen(),
+                    intake.toggleCommand()
                     
                 // )
             ); 
 
-        driver.back()
-            .onTrue(drive.toggleFieldOriented()
-            );
+        // driver.back()
+        //     .onTrue(drive.toggleFieldOriented()
+        //     );
         
-        driver.y()
-            .onTrue(drive.toggleBreakMode());
+        // driver.y()
+        //     .onTrue(drive.toggleBreakMode());
 
-        driver.x()
-            .onTrue(new LockWheels(drive));
-        // driver.povUp()
-        //     .onTrue(drive.toggleAntiTipping()
-        //     );
+        // driver.x()
+        //     .onTrue(new LockWheels(drive));
 
-        // driver.povDown()
-        //     .onTrue(drive.toggleAutoBalance()
-        //     );
+        /*driver.povUp()
+            .onTrue(drive.toggleAntiTipping()
+            );
+
+        driver.povDown()
+            .onTrue(drive.toggleAutoBalance()
+            );*/
 
         /*
          * Operator Controls
          */
-        // pivot.setDefaultCommand(Commands.repeatingSequence(
-        //     pivot.setCurrentPositionManually(pivot.getTargetPosition()+operator.getLeftY()*1)
-        // ));
-        // elevator.setDefaultCommand(new ManualElevator(operator, elevator));
+        /*pivot.setDefaultCommand(Commands.repeatingSequence(
+            pivot.setCurrentPositionManually(pivot.getTargetPosition()+operator.getLeftY()*1)
+        ));
+        elevator.setDefaultCommand(new ManualElevator(operator, elevator));
 
-        // new Trigger(() -> Math.abs(-operator.getLeftY()) > 0.1)
-            // .whileTrue(pivot.setCurrentPositionManually(() -> pivot.getTargetPosition() + (-operator.getLeftY())));
+        new Trigger(() -> Math.abs(-operator.getLeftY()) > 0.1)
+            .whileTrue(pivot.setCurrentPositionManually(() -> pivot.getTargetPosition() + (-operator.getLeftY())));*/
 
-        pivot.setDefaultCommand(new ManualPivot(operator::getLeftY, pivot));
-        elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
+        // pivot.setDefaultCommand(new ManualPivot(operator::getLeftY, pivot));
+        // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
-        operator.a()
-            .onTrue(
-                    new MoveLow(elevator, pivot)
-            );
-        operator.x()
-            .onTrue(
-                    new MoveMid(elevator, pivot)
-            );
-        operator.y()
-            .onTrue(
-                new MoveHigh(elevator, pivot)  
-            );
+        // operator.a()
+        //     .onTrue(
+        //             new MoveLow(elevator, pivot)
+        //     );
+        // operator.x()
+        //     .onTrue(
+        //             new MoveMid(elevator, pivot)
+        //     );
+        // operator.y()
+        //     .onTrue(
+        //         new MoveHigh(elevator, pivot)  
+        //     );
         
-        operator.povUp()
-            .onTrue(
-                new MoveIntakeHigh(elevator, pivot)
-            );
-        operator.povLeft()
-            .onTrue(
-                new MoveIntakeLow(elevator, pivot)
-            );
-        operator.povDown()
-            .onTrue(
-                new MoveHold(elevator, pivot)
-            );
+        // operator.povUp()
+        //     .onTrue(
+        //         new MoveIntakeHigh(elevator, pivot)
+        //     );
+        // operator.povLeft()
+        //     .onTrue(
+        //         new MoveIntakeLow(elevator, pivot)
+        //     );
+        // operator.povDown()
+        //     .onTrue(
+        //         new MoveHold(elevator, pivot)
+        //     );
 
-        operator.rightTrigger()
-            .onTrue(
-                new Outtake(elevator, pivot, intake)
-            );
+        // operator.rightTrigger()
+        //     .onTrue(
+        //         new Outtake(elevator, pivot, intake)
+        //     );
             /// make INTAKE ALLWYS RUNNING
 
-        operator.start()
-            .onTrue(elevator.resetElevatorEncoders());
-        // operator.back()
-        //     .onTrue(pivot.resetPivotEncoder()); //Pivot is Absolute
+        // operator.start()
+        //     .onTrue(elevator.resetElevatorEncoders());
+        /*operator.back()
+            .onTrue(pivot.resetPivotEncoder()); //Pivot is Absolute
 
         
-            // pivot.setPowerC(-operator.getLeftY())
-        // operator.rightBumper()
-        //     .onTrue(pivot.setPowerC(0.4))
-        //     .onFalse(pivot.setPowerC(0));
+            pivot.setPowerC(-operator.getLeftY())
+        operator.rightBumper()
+            .onTrue(pivot.setPowerC(0.4))
+            .onFalse(pivot.setPowerC(0));
         
-        // operator.leftBumper()
-        //     .onTrue(pivot.setPowerC(-0.4))
-        //     .onFalse(pivot.setPowerC(0));
+        operator.leftBumper()
+            .onTrue(pivot.setPowerC(-0.4))
+            .onFalse(pivot.setPowerC(0));*/
 
-        operator.leftTrigger()
-            .onTrue(
-                new SequentialCommandGroup(
-                    new MoveMid(elevator,pivot),
-                    new WaitCommand(3),
-                    new DropCone(elevator, pivot, intake)
-                )
-            );
+        // operator.leftTrigger()
+        //     .onTrue(
+        //         new SequentialCommandGroup(
+        //             new MoveMid(elevator,pivot),
+        //             new WaitCommand(3),
+        //             new DropCone(elevator, pivot, intake)
+        //         )
+        //     );
     }
 
-    public void configureTestBindings() {
-        operator.a()
-            .onTrue(
-                    new MoveLow(elevator, pivot)
-            );
-        operator.x()
-            .onTrue(
-                    new MoveMid(elevator, pivot)
-            );
-        operator.y()
-            .onTrue(
-                new MoveHigh(elevator, pivot)  
-            );
-    }
+    public void configureTestBindings(){}
     
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
