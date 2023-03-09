@@ -22,7 +22,7 @@ import frc.robot.utilities.WriteOnlyDouble;
 public class Intake extends SubsystemBase {
     public enum IntakeSpeeds {
         // MAX_RPM(5676),
-        FARCUBELOW(50),
+        FARCUBELOW(51),
         FARCUBEMID(60),
         FARCUBEHIGH(80),
         CONE(30),
@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
         private final MutableDouble velocityRPM;
 
         private IntakeSpeeds(double velocityRPM) {
-            this.velocityRPM = new SimpleWidgetBuilder<Double>(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+"/Velocity", Intake.class.getSimpleName())
+            this.velocityRPM = new SimpleWidgetBuilder<Double>(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
                 .withSize(1, 3)
                 .buildMutableDouble();
         }
@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .buildMutableBoolean();
     private final WriteOnlyDouble targetVelocityWriter = new WriteOnlyDouble
-        (123, "Target Intake Velocity", "Intake");
+        (0, "Target Intake Velocity", "Intake");
 
     private boolean isOpen = false;
 
