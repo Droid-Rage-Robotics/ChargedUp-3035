@@ -44,7 +44,7 @@ public class RobotContainer {
     // private final Drive drive = new Drive();
     // private final Elevator elevator = new Elevator();
     // private final Pivot pivot = new Pivot(); 
-    private final Intake intake = new Intake();
+    private final Intake2 intake = new Intake2();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);

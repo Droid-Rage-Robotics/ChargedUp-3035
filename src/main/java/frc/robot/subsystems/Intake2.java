@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -19,13 +20,13 @@ import frc.robot.utilities.MutableDouble;
 import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 
-public class Intake extends SubsystemBase {
+public class Intake2 extends SubsystemBase {
     public enum IntakeSpeeds {
         // MAX_RPM(5676),
         FARCUBELOW(50),
         FARCUBEMID(60),
         FARCUBEHIGH(80),
-        CONE(30),
+        CONE(50),
         CONTINUOUS(25),
         INTAKE(3),
         OUTTAKE(-3),
@@ -43,14 +44,17 @@ public class Intake extends SubsystemBase {
                 .withSize(1, 3)
                 .buildMutableDouble();
         }
+        
     }
 
 
     private final CANSparkMax clawMotor;
-    private final PIDController intakeController;
+    // private final PIDController intakeController;
+    private final SparkMaxPIDController intakeController;
     private final RelativeEncoder intakeEncoder;
     private final DoubleSolenoid intakeSolenoid;
     private final PneumaticHub pneumaticHub;
+    private double setPoint;
     
     private IntakeSpeeds targetVelocity;
     private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>
@@ -58,19 +62,28 @@ public class Intake extends SubsystemBase {
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .buildMutableBoolean();
     private final WriteOnlyDouble targetVelocityWriter = new WriteOnlyDouble
-        (123, "Target Intake Velocity", "Intake");
+        (setPoint, "Target Intake Velocity", "Intake");
 
     private boolean isOpen = false;
 
-    public Intake() {
+    public Intake2() {
         clawMotor = new CANSparkMax(19, MotorType.kBrushless);
         clawMotor.setIdleMode(IdleMode.kBrake);
         clawMotor.setInverted(false);
-        intakeController = new PIDController(0.0000001,0,0);
+        intakeController = clawMotor.getPIDController();
         targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = clawMotor.getEncoder();
-        intakeController.setTolerance(5);
+        // intakeController.setTolerance(5);
 
+        double kP = 0.00006,kI = 0,kD = 0,kIz = 0,kFF = 0.000015,kMaxOutput = 1,kMinOutput = -1, maxRPM = 5676;
+
+        intakeController.setP(kP);
+        intakeController.setI(kI);
+        intakeController.setD(kD);
+        intakeController.setIZone(kIz);
+        intakeController.setFF(kFF);
+        intakeController.setOutputRange(kMinOutput, kMaxOutput);
+        setPoint = 0;
 
         if (isEnabled.get()) {
             pneumaticHub = new PneumaticHub(10);
@@ -84,8 +97,9 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setIntakePower(intakeController.calculate(calculate()));
-        // targetVelocityWriter.set(IntakeSpeeds.velocity.velocity.get());
+        // setIntakePower(intakeController.calculate(calculate()));
+        intakeController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+        targetVelocityWriter.set(setPoint);
     }
   
     @Override
@@ -182,7 +196,8 @@ public class Intake extends SubsystemBase {
 
     private CommandBase setTargetVelocity(IntakeSpeeds velocity) {
         return runOnce(() -> {
-            intakeController.setSetpoint(velocity.velocity.get());
+            setPoint = velocity.velocity.get();
+            // intakeController.setSetpoint(velocity.velocity.get());
             this.targetVelocity = velocity;
             
         });
@@ -210,7 +225,8 @@ public class Intake extends SubsystemBase {
     }
 
     public double calculate(){
-        return intakeController.getSetpoint()/IntakeSpeeds.MAX_RPM+intakeController.getPositionError();
+        return 0;
+        // return intakeController./IntakeSpeeds.MAX_RPM+intakeController.getPositionError();
     }
 }
 
