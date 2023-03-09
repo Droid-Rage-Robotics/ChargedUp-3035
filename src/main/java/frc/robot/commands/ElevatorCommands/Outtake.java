@@ -16,7 +16,7 @@ public class Outtake extends SequentialCommandGroup {
     	addCommands(Commands.either(
             new DropCone(elevator, pivot, intake), // on true
             new DropCube(elevator, pivot, intake), //on false
-            () -> TrackedElement.get() ==  Element.CONE)
-            );
+            TrackedElement::isCone
+        ));
     }
 }

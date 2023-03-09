@@ -16,6 +16,9 @@ public class TrackedElement {
     public static Element get() {
         return element;
     }
+    public static boolean isCone() {
+        return element == Element.CONE;
+    }
 
     public static void set(Element element) {
         ElementWriter.set(element.name());
