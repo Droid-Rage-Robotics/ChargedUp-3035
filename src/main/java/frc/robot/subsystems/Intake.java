@@ -70,7 +70,7 @@ public class Intake extends SubsystemBase {
         intakeMotor.setIdleMode(IdleMode.kBrake);
         intakeMotor.setInverted(false);
 
-        intakeController = new PIDController(0.0000001,0,0);
+        intakeController = new PIDController(0.000173611,0,0);
         // targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = intakeMotor.getEncoder();
         intakeController.setTolerance(IntakeSpeeds.POSITION_TOLERANCE.get());
