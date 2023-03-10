@@ -64,7 +64,7 @@ public class Pivot extends SubsystemBase {
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Pivot.class.getSimpleName())
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Enabled", Pivot.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 

@@ -22,15 +22,16 @@ import frc.robot.utilities.WriteOnlyDouble;
 public class Intake extends SubsystemBase {
     public enum IntakeSpeeds {
         // MAX_RPM(5676),
-        FARCUBELOW(51),
-        FARCUBEMID(60),
-        FARCUBEHIGH(80),
-        CONE(30),
-        CONTINUOUS(25),
-        INTAKE(3),
-        OUTTAKE(-3),
-        HOLDCONE(9),
-        HOLDCUBE(5),
+        FARCUBELOW(4000),
+        FARCUBEMID(5000),
+        FARCUBEHIGH(5400),
+
+        CONE(1000),
+        CONTINUOUS(600),
+        INTAKE(3000),
+        OUTTAKE(-3000),
+        HOLDCONE(500),
+        HOLDCUBE(500),
         STOP(0), 
         POSITION_TOLERANCE(5),
 
@@ -53,7 +54,7 @@ public class Intake extends SubsystemBase {
     private final PIDController intakeController;
     private final RelativeEncoder intakeEncoder;
     private final DoubleSolenoid intakeSolenoid;
-    private final PneumaticHub pneumaticHub;
+    private PneumaticHub pneumaticHub;
     
     // private IntakeSpeeds targetVelocity;
     private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>
@@ -68,19 +69,18 @@ public class Intake extends SubsystemBase {
     public Intake() {
         intakeMotor = new CANSparkMax(19, MotorType.kBrushless);
         intakeMotor.setIdleMode(IdleMode.kBrake);
-        intakeMotor.setInverted(false);
+        intakeMotor.setInverted(true);
 
-        intakeController = new PIDController(0.000173611,0,0);
+        intakeController = new PIDController(
+            0.000173611,
+            0,
+            0);
         // targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = intakeMotor.getEncoder();
         intakeController.setTolerance(IntakeSpeeds.POSITION_TOLERANCE.get());
 
 
-        if (isEnabled.get()) {
-            pneumaticHub = new PneumaticHub(10);
-        } else {
-            pneumaticHub = new PneumaticHub(59); // Since this is the wrong port, it should effectively disable the subsystem 
-        }
+        pneumaticHub = new PneumaticHub(10);
         intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
 
         close();
@@ -89,6 +89,9 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         setIntakePower(intakeController.calculate(getIntakeVelocity()));
+        if (!isEnabled.get()) {
+            pneumaticHub.disableCompressor();
+        }  
     }
   
     @Override
@@ -181,6 +184,7 @@ public class Intake extends SubsystemBase {
     }
       
     private void setIntakePower(double power) {
+        if (!isEnabled.get()) return;
         intakeMotor.set(power);
     }
     
