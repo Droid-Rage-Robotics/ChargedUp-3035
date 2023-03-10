@@ -47,10 +47,10 @@ public class Drive extends SubsystemBase {
     public enum AutoConfig {
         MAX_SPEED_METERS_PER_SECOND(SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4),
         MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10),
-        MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(3),
-        MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(Math.PI / 4), // 1 / 8 of a full rotation per second per second),
-        TRANSLATIONAL_KP(1.5), // this could probably be about 2.29
-        THETA_KP(0.01),
+        MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(1),
+        MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(1), // 1 / 8 of a full rotation per second per second),
+        TRANSLATIONAL_KP(1.9),
+        THETA_KP(0.2),
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -61,8 +61,8 @@ public class Drive extends SubsystemBase {
     public enum SwerveConfig {
         FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54-0.26), //1.24
         FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.76), //2.26
-        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //0.99
-        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.27), //1.74
+        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //0.99^
+        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-0.225495), //1.74
 
         HEADING_OFFSET(90)
         ;
@@ -142,10 +142,10 @@ public class Drive extends SubsystemBase {
         true
     );
     private final SwerveModule backRight = new SwerveModule(
-        6,
         5,
+        6,
 
-        false, 
+        true, 
         false,
 
         13, 
@@ -205,7 +205,7 @@ public class Drive extends SubsystemBase {
 
         pigeon2.configMountPose(AxisDirection.NegativeX, AxisDirection.PositiveZ);
 
-        new ComplexWidgetBuilder(field2d, "FIeld", Drive.class.getSimpleName());
+        new ComplexWidgetBuilder(field2d, "Field", Drive.class.getSimpleName());
     }
 
     
@@ -230,15 +230,15 @@ public class Drive extends SubsystemBase {
 
         // frontRightTurnAbsolutePositionWriter.set(frontRight.getTurnEncoderRad());
         frontRightTurnPositionWriter.set(frontRight.getTurningPosition());
-        frontLeftDriveDistanceWriter.set(frontRight.getDrivePos());
+        frontRightDriveDistanceWriter.set(frontRight.getDrivePos());
 
         // backLeftTurnAbsolutePositionWriter.set(backLeft.getTurnEncoderRad());
         backLeftTurnPositionWriter.set(backLeft.getTurningPosition());
-        frontLeftDriveDistanceWriter.set(backLeft.getDrivePos());
+        backLeftDriveDistanceWriter.set(backLeft.getDrivePos());
 
         // backRightTurnAbsolutePositionWriter.set(backRight.getTurnEncoderRad());
         backRightTurnPositionWriter.set(backRight.getTurningPosition());
-        frontLeftDriveDistanceWriter.set(backRight.getDrivePos());
+        backRightDriveDistanceWriter.set(backRight.getDrivePos());
 
     }
 
@@ -273,7 +273,7 @@ public class Drive extends SubsystemBase {
     }
 
     public Rotation2d getRotation2d() {
-        return Rotation2d.fromDegrees(getHeading());
+        return Rotation2d.fromDegrees(getHeading());//TODO:Make
     }
 
     public Pose2d getPose() {

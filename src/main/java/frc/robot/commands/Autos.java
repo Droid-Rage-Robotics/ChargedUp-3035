@@ -124,7 +124,7 @@ public final class Autos {
             new DropCone(elevator, pivot, intake),
             PathPlannerFollow.create(drive, "ToCube1")
                 .setMaxVelocity(1)
-                .setAcceleration(13)
+                .setAcceleration(1)
                 .addMarker("intake", 
                     new SequentialCommandGroup(
                         // new MoveIntakeLow(elevator, pivot),
@@ -133,7 +133,7 @@ public final class Autos {
                 .build(),
             PathPlannerFollow.create(drive, "ToDrop1")
                 .setMaxVelocity(1)
-                .setAcceleration(13)
+                .setAcceleration(1)
                 .addMarker("pickUp", 
                     new SequentialCommandGroup(
                         // new MoveHigh(elevator, pivot)
@@ -142,7 +142,7 @@ public final class Autos {
                 new DropCube(elevator, pivot, intake),
             PathPlannerFollow.create(drive, "ToCube1")
                 .setMaxVelocity(1)
-                .setAcceleration(13.6)
+                .setAcceleration(1)
                 .build()
         );
     }
@@ -152,7 +152,7 @@ public final class Autos {
             new DropCone(elevator, pivot, intake),//Shoot Cube High
             PathPlannerFollow.create(drive, "TestShoot")
                 .setMaxVelocity(1)
-                .setAcceleration(13)
+                .setAcceleration(1)
                 .addMarker("intake", 
                     new SequentialCommandGroup(
                         // new MoveIntakeLow(elevator, pivot),
@@ -172,16 +172,16 @@ public final class Autos {
     public static CommandBase straightTest(Drive drive) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "StraightTest")
-                .setMaxVelocity(0.5)
-                .setAcceleration(0.4)
+                .setMaxVelocity(1)
+                .setAcceleration(1)
                 .build()
         );
     }
     public static CommandBase turnTest(Drive drive) {
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "TurnTest")
-                .setMaxVelocity(0.5)
-                .setAcceleration(0.41)
+                .setMaxVelocity(1)
+                .setAcceleration(1)
                 .build()
         );
     }
