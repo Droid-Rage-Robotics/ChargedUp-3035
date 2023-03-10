@@ -21,8 +21,8 @@ public class SwerveDriveTeleop extends CommandBase {
     private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
     private static final PIDController antiTipX = new PIDController(-0.1, 0, 0);
     private static final PIDController antiTipY = new PIDController(-0.1, 0, 0);
-    private static final PIDController autoBalanceX = new PIDController(0.1, 0, 0);
-    private static final PIDController autoBalanceY = new PIDController(0.1, 0, 0);
+    private static final PIDController autoBalanceX = new PIDController(0.006, 0, 0.0005);
+    // private static final PIDController autoBalanceY = new PIDController(0.006, 0, 0.0005);
 
     private static final ComplexWidgetBuilder antiTipXWidget = new ComplexWidgetBuilder(
         antiTipX, "Anti Tip X PID Controller", Drive.class.getSimpleName()
@@ -58,8 +58,8 @@ public class SwerveDriveTeleop extends CommandBase {
 
         antiTipX.setTolerance(3);
         antiTipY.setTolerance(3);
-        autoBalanceX.setTolerance(1);
-        autoBalanceY.setTolerance(1);
+        autoBalanceX.setTolerance(2);
+        // autoBalanceY.setTolerance(1);
 
 
         addRequirements(drive);
@@ -116,8 +116,8 @@ public class SwerveDriveTeleop extends CommandBase {
             case AUTO_BALANCE_ANTI_TIP:
                 if (Math.abs(xTilt) > autoBalanceX.getPositionTolerance())
                     xSpeed = autoBalanceX.calculate(xSpeed, xTilt);
-                if (Math.abs(yTilt) > autoBalanceY.getPositionTolerance())
-                    ySpeed = autoBalanceX.calculate(ySpeed, yTilt);
+                // if (Math.abs(yTilt) > autoBalanceY.getPositionTolerance())
+                //     ySpeed = autoBalanceY.calculate(ySpeed, yTilt);
                 break;
             case NO_TIP_CORRECTION:
                 break;            
@@ -166,7 +166,7 @@ public class SwerveDriveTeleop extends CommandBase {
         antiTipX.close();
         antiTipY.close();
         autoBalanceX.close();
-        autoBalanceY.close();
+        // autoBalanceY.close();
         drive.stop();
     }
 
