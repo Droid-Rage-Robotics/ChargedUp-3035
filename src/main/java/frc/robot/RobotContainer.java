@@ -76,7 +76,6 @@ public class RobotContainer {
 
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
-<<<<<<< HEAD
 
         // autoChooser.addOption("Turn2", new SequentialCommandGroup(
         //     new InstantCommand(() -> drive.resetOdometry(trajectory.getInitialPose())),
@@ -88,8 +87,6 @@ public class RobotContainer {
         //         }
         //     )));
         
-=======
->>>>>>> 348af24895718c97ebc27e6b2c161b1d7c24db60
         // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge2", Autos.charge2(drive, elevator, pivot, intake));
