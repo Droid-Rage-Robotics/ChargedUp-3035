@@ -11,13 +11,22 @@ import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 public class ComplexWidgetBuilder {
     private final ComplexWidget complexWidget;
 
-    public ComplexWidgetBuilder(Sendable toAdd, String title, String tab) {
+    private ComplexWidgetBuilder(Sendable toAdd, String title, String tab) {
         this.complexWidget = Shuffleboard.getTab(tab)
             .add(title, toAdd);
     }
-    public ComplexWidgetBuilder(VideoSource videoSource, String title, String tab) {
+
+    public static ComplexWidgetBuilder create(Sendable toAdd, String title, String tab) {
+        return new ComplexWidgetBuilder(toAdd, title, tab);
+    }
+
+    private ComplexWidgetBuilder(VideoSource videoSource, String title, String tab) {
         this.complexWidget = Shuffleboard.getTab(tab)
             .add(title, videoSource);
+    }
+
+    public static ComplexWidgetBuilder create(VideoSource videoSource, String title, String tab) {
+        return new ComplexWidgetBuilder(videoSource, title, tab);
     }
 
     private ComplexWidgetBuilder(ComplexWidget complexWidget) {

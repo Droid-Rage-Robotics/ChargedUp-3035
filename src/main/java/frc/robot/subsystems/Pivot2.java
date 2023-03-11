@@ -96,7 +96,7 @@ public class Pivot2 extends SubsystemBase {
     private final WriteOnlyDouble absEncoderPositionWriter = new WriteOnlyDouble(0, "Absolute Encoder Position (Degrees)", Pivot2.class.getSimpleName());
     private final WriteOnlyDouble motorEncoderPositionWriter = new WriteOnlyDouble(0, "Motor Encoder Position (Degrees)", Pivot2.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Enabled", Pivot2.class.getSimpleName())
+    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create(false, "Is Enabled", Pivot2.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
@@ -121,11 +121,11 @@ public class Pivot2 extends SubsystemBase {
         pivotController.setTolerance(1); // degress
         pivotController.setSetpoint(PivotPosition.START.degrees.get());
 
-        new ComplexWidgetBuilder(motorController, "Motor PID Controller", Pivot2.class.getSimpleName())
+        ComplexWidgetBuilder.create(motorController, "Motor PID Controller", Pivot2.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-            new ComplexWidgetBuilder(pivotController, "Pivot PID Controller", Pivot2.class.getSimpleName())
+        ComplexWidgetBuilder.create(pivotController, "Pivot PID Controller", Pivot2.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 

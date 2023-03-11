@@ -1,5 +1,6 @@
 package frc.robot.utilities;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -10,10 +11,14 @@ public class SimpleWidgetBuilder<T> {
     private final SimpleWidget simpleWidget;
     private final T toAdd;
 
-    public SimpleWidgetBuilder(T value, String title, String tab) {
+    private SimpleWidgetBuilder(T value, String title, String tab) {
         this.toAdd = value;
         this.simpleWidget = Shuffleboard.getTab(tab)
             .add(title, value);
+    }
+
+    public static <T> SimpleWidgetBuilder<?> create(T value, String title, String tab) {
+        return new SimpleWidgetBuilder<T>(value, title, tab);
     }
 
     private SimpleWidgetBuilder(SimpleWidget simpleWidget, T toAdd) {

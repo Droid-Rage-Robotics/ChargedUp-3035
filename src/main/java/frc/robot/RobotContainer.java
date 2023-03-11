@@ -93,7 +93,7 @@ public class RobotContainer {
         // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
-        new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Misce")
+        ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misce")
             .withSize(1, 3);
 
         // new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
@@ -108,7 +108,7 @@ public class RobotContainer {
         //         ((SimpleWidget)component).close();
         //     }
         // }
-        new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
+        ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
             .withSize(5, 5);
     }
 

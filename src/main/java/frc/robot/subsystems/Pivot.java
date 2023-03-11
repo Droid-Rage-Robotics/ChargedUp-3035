@@ -65,7 +65,7 @@ public class Pivot extends SubsystemBase {
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Pivot.class.getSimpleName())
+    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create(true, "Is Enabled", Pivot.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
@@ -85,13 +85,13 @@ public class Pivot extends SubsystemBase {
         controller = new PIDController(0.023, 0, 0);
         controller.setTolerance(0.10); // meters
 
-        new ComplexWidgetBuilder(controller, "PID Controller", Pivot.class.getSimpleName())
+        ComplexWidgetBuilder.create(controller, "PID Controller", Pivot.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
         setTargetPosition(PivotPosition.START);
 
-        new ComplexWidgetBuilder(resetClawEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
+        ComplexWidgetBuilder.create(resetClawEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
         pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 15);
         pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);//TODO:Test
     }

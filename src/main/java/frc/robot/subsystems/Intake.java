@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
         private final MutableDouble velocityRPM;
 
         private IntakeSpeeds(double velocityRPM) {
-            this.velocityRPM = new SimpleWidgetBuilder<Double>(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
+            this.velocityRPM = SimpleWidgetBuilder.create(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
                 .withSize(1, 3)
                 .buildMutableDouble();
         }
@@ -57,7 +57,7 @@ public class Intake extends SubsystemBase {
     private PneumaticHub pneumaticHub;
     
     // private IntakeSpeeds targetVelocity;
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>
+    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create
         (true, "Is Enabled", Intake.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .buildMutableBoolean();

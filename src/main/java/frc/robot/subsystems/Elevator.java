@@ -60,10 +60,10 @@ public class Elevator extends SubsystemBase {
         private MutableDouble horizontalInches;
 
         private ElevatorPosition(double verticalInches, double horizontalInches) {
-            this.verticalInches = new SimpleWidgetBuilder<Double>(verticalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
+            this.verticalInches = SimpleWidgetBuilder.create(verticalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
                 .withSize(1, 3)
                 .buildMutableDouble();
-            this.horizontalInches = new SimpleWidgetBuilder<Double>(horizontalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
+            this.horizontalInches = SimpleWidgetBuilder.create(horizontalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
                 .withSize(1, 3)
                 .buildMutableDouble();
         }
@@ -90,11 +90,11 @@ public class Elevator extends SubsystemBase {
     // private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
     // private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
 
-    private final MutableBoolean isVerticalEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Vertical Enabled", Elevator.class.getSimpleName())
+    private final MutableBoolean isVerticalEnabled = SimpleWidgetBuilder.create(true, "Is Vertical Enabled", Elevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
-    private final MutableBoolean isHorizontalEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Horizontal Enabled", Elevator.class.getSimpleName())
+    private final MutableBoolean isHorizontalEnabled = SimpleWidgetBuilder.create(true, "Is Horizontal Enabled", Elevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
     
@@ -121,10 +121,10 @@ public class Elevator extends SubsystemBase {
         horizontalController = new PIDController(0.1, 0, 0);
         horizontalController.setTolerance(0.10); // inches
 
-        new ComplexWidgetBuilder(verticalController, "Vertical PID Controller", Elevator.class.getSimpleName())
+        ComplexWidgetBuilder.create(verticalController, "Vertical PID Controller", Elevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
-        new ComplexWidgetBuilder(horizontalController, "Horizontal PID Controller", Elevator.class.getSimpleName())
+        ComplexWidgetBuilder.create(horizontalController, "Horizontal PID Controller", Elevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
@@ -133,7 +133,7 @@ public class Elevator extends SubsystemBase {
         // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
         isMovingManually = false;
 
-        new ComplexWidgetBuilder(resetElevatorEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
+        ComplexWidgetBuilder.create(resetElevatorEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
     }
 
     private final WriteOnlyDouble horizontalSetPowerWriter = new WriteOnlyDouble(0.0, "horizontal set power", "Elevator");
@@ -291,7 +291,7 @@ public class Elevator extends SubsystemBase {
         return runOnce(() -> {
             verticalEncoderOffset = -getVerticalEncoderPosition() - verticalEncoderOffset;
             horizontalEncoderOffset = -getHorizontalEncoderPosition() - horizontalEncoderOffset;
-            new SimpleWidgetBuilder<Boolean>(true, "Elevator Encoders were reset", Elevator.class.getSimpleName());
+            SimpleWidgetBuilder.create(true, "Elevator Encoders were reset", Elevator.class.getSimpleName());
         });
     }
 

@@ -24,19 +24,19 @@ public class SwerveDriveTeleop extends CommandBase {
     private static final PIDController autoBalanceX = new PIDController(0.006, 0, 0.0005);
     // private static final PIDController autoBalanceY = new PIDController(0.006, 0, 0.0005);
 
-    private static final ComplexWidgetBuilder antiTipXWidget = new ComplexWidgetBuilder(
+    private static final ComplexWidgetBuilder antiTipXWidget = ComplexWidgetBuilder.create(
         antiTipX, "Anti Tip X PID Controller", Drive.class.getSimpleName()
     ).withWidget(BuiltInWidgets.kPIDController);
 
-    private static final ComplexWidgetBuilder antiTipYWidget = new ComplexWidgetBuilder(
+    private static final ComplexWidgetBuilder antiTipYWidget = ComplexWidgetBuilder.create(
         antiTipX, "Anti Tip Y PID Controller", Drive.class.getSimpleName()
     ).withWidget(BuiltInWidgets.kPIDController);
 
-    private static final ComplexWidgetBuilder autoBalanceXWidget = new ComplexWidgetBuilder(
+    private static final ComplexWidgetBuilder autoBalanceXWidget = ComplexWidgetBuilder.create(
         antiTipX, "Auto Balance X PID Controller", Drive.class.getSimpleName()
     ).withWidget(BuiltInWidgets.kPIDController);
 
-    private static final ComplexWidgetBuilder autoBalanceYWidget = new ComplexWidgetBuilder(
+    private static final ComplexWidgetBuilder autoBalanceYWidget = ComplexWidgetBuilder.create(
         antiTipX, "Auto Balance Y PID Controller", Drive.class.getSimpleName()
     ).withWidget(BuiltInWidgets.kPIDController)
         .withSize(0, 2);

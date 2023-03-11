@@ -190,7 +190,7 @@ public class Drive extends SubsystemBase {
     private final WriteOnlyDouble backRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
     private final WriteOnlyDouble backRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Drive Enabled", Drive.class.getSimpleName())//TODO: Move   
+    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create(true, "Is Drive Enabled", Drive.class.getSimpleName())//TODO: Move   
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
@@ -206,7 +206,7 @@ public class Drive extends SubsystemBase {
 
         pigeon2.configMountPose(AxisDirection.NegativeX, AxisDirection.PositiveZ);
 
-        new ComplexWidgetBuilder(field2d, "Field", Drive.class.getSimpleName());
+        ComplexWidgetBuilder.create(field2d, "Field", Drive.class.getSimpleName());
     }
 
     
