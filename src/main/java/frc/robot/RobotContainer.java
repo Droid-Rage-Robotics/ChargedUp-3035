@@ -8,6 +8,7 @@ import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
 import frc.robot.commands.ElevatorCommands.*;
 import frc.robot.commands.Manual.ManualPivot;
+import frc.robot.commands.Manual.ToggleIntake;
 
 import java.util.Collection;
 import java.util.List;
@@ -75,6 +76,7 @@ public class RobotContainer {
         
 
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
+        autoChooser.addOption("One CUbe + drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
 
         // autoChooser.addOption("Turn2", new SequentialCommandGroup(
@@ -89,7 +91,7 @@ public class RobotContainer {
         
         // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
-        autoChooser.addOption("Charge2", Autos.charge2(drive, elevator, pivot, intake));
+        // autoChooser.addOption("Charge2", Autos.charge2(drive, elevator, pivot, intake)); - no use 
         // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
@@ -134,7 +136,7 @@ public class RobotContainer {
 
         driver.rightTrigger()
             .onTrue(intake.runIntake()) 
-            .onFalse(intake.runHoldIntake()
+            .onFalse(intake.runStop()
             );
 
         driver.leftTrigger()
@@ -142,14 +144,14 @@ public class RobotContainer {
             .onFalse(intake.runStop());
 
         driver.a()
-            .onTrue(drive.resetHeading()
-            );
+            .onTrue(drive.resetOffsetCommand());
 
         driver.b()
             .onTrue(
                 // new MoveToPosition(elevator, pivot, intake)
                 // Commands.sequence(
-                    intake.toggleCommand()
+                    // intake.toggleCommand()
+                    new ToggleIntake(elevator, pivot, intake)
                     
                 // )
             ); 
@@ -183,12 +185,12 @@ public class RobotContainer {
             .onTrue(
                 new MoveHigh(elevator, pivot)  
             );
-         operator.b()
-            .onTrue(
-                new SequentialCommandGroup(
-                elevator.moveIntake2High(),
-                pivot.moveIntake2High())
-            );
+        //  operator.b()
+        //     .onTrue(
+        //         new SequentialCommandGroup(
+        //         elevator.moveIntake2High(),
+        //         pivot.moveIntake2High())
+        //     );
         
         operator.povUp()
             .onTrue(
@@ -196,19 +198,22 @@ public class RobotContainer {
             );
         operator.povRight()
             .onTrue(
-                new MoveIntake2High(elevator, pivot)//Make grab cone from the drop
+                new SequentialCommandGroup(
+                elevator.moveIntake2High(),
+                pivot.moveIntake2High())
+                // new MoveIntake2High(elevator, pivot)//Make grab cone from the drop
             );
         operator.povLeft()
             .onTrue(
                 new MoveIntakeLow(elevator, pivot)//Cube and Cone
             );
-         operator.povRight()
-            .onTrue(new SequentialCommandGroup(
-                elevator.setPosition(Elevator.ElevatorPosition.LOWCUBE),
-                pivot.setTargetPosition(PivotPosition.LOWCUBE)
-            )//Cube
-                
-            );
+        //  operator.povRight()
+        //     .onTrue(new SequentialCommandGroup(
+        //         elevator.setPosition(Elevator.ElevatorPosition.LOWCUBE),
+        //         pivot.setTargetPosition(PivotPosition.LOWCUBE)
+        //     )//Cube
+            // );
+            
         operator.povDown()
             .onTrue(
                 new MoveHold(elevator, pivot)
@@ -225,10 +230,10 @@ public class RobotContainer {
       
       
       
-        /*operator.back()
-            .onTrue(pivot.resetPivotEncoder()); //Pivot is Absolute
+        operator.back()
+            .onTrue(pivot.resetPivotEncoder()); //Pivot is Absolute(not)
 
-        
+        /* 
             pivot.setPowerC(-operator.getLeftY())
         operator.rightBumper()
             .onTrue(pivot.setPowerC(0.4))
