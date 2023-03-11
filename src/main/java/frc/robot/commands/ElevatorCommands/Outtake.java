@@ -7,6 +7,7 @@ package frc.robot.commands.ElevatorCommands;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Pivot2;
 import frc.robot.subsystems.TrackedElement;
 import frc.robot.subsystems.TrackedElement.Element;
 import edu.wpi.first.wpilibj2.command.Commands;

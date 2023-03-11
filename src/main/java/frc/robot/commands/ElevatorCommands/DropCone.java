@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Pivot2;
 
 public class DropCone extends SequentialCommandGroup {
     public DropCone(Elevator elevator, Pivot pivot, Intake intake) {

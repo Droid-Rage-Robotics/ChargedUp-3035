@@ -7,6 +7,7 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Pivot2;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,16 +47,16 @@ public final class Autos {
                 new WaitCommand(1)
                 ),
             PathPlannerFollow.create(drive, "Drop+Park")
-                .setMaxVelocity(0.9)
-                .setAcceleration(0.96)
+                .setMaxVelocity(1)
+                .setAcceleration(1)
                 .build()
         );
     }
 
     public static CommandBase bottom(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
         return PathPlannerFollow.create(drive, "Bottom")
-            .setMaxVelocity(0.)
-            .setAcceleration(0.4)
+            .setMaxVelocity(1.)
+            .setAcceleration(1)
             .addMarker("preloadDrop", new SequentialCommandGroup(
                 new AutoMoveMid(elevator,pivot),
                 new WaitCommand(1),
@@ -77,8 +78,8 @@ public final class Autos {
                 new WaitCommand(3)
                 ),
             PathPlannerFollow.create(drive, "StrafeBlue")
-                .setMaxVelocity(0.7)
-                .setAcceleration(0.9)
+                .setMaxVelocity(1)
+                .setAcceleration(1)
                 .build()
         );
     }*/
@@ -91,10 +92,11 @@ public final class Autos {
                 new WaitCommand(3)
                 ),
             PathPlannerFollow.create(drive, "Charge")
-                .setMaxVelocity(0.9)
-                .setAcceleration(19)
+                .setMaxVelocity(1)
+                .setAcceleration(1)
                 .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
+            //Command for autobalance
             Commands.waitSeconds(0.5),
             new LockWheels(drive)
         );

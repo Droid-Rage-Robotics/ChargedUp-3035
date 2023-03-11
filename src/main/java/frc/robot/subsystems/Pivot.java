@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -42,9 +43,7 @@ public class Pivot extends SubsystemBase {
 
         //AUTO
         INTAKEAUTOCUBE(49.7), //Intaking as far down as possible for dube
-        INTAKEAUTOCONE(50), //intake auto position for cone
-
-        FORRWARDSOFTLIMIT(60)
+        INTAKRAUTOCONE(50), //intake auto position for cone
         ;
 
         private final MutableDouble degrees;
@@ -55,16 +54,15 @@ public class Pivot extends SubsystemBase {
     }
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
-    private final SparkMaxAbsoluteEncoder pivotAbsoluteEncoder;
     private volatile PivotPosition position = PivotPosition.START;
     // private final AbsoluteEncoder pivotAbsoluteEncoder;
-    // private final RelativeEncoder pivotRelativeEncoder;
+    private final RelativeEncoder pivotRelativeEncoder;
     
 
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
     private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Enabled", Pivot.class.getSimpleName())
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Enabled", Pivot.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
@@ -74,10 +72,10 @@ public class Pivot extends SubsystemBase {
         pivotMotor = new CANSparkMax(18, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
-        // pivotRelativeEncoder = pivotMotor.getEncoder();
-        pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
-        pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROTATIONS_TO_DEGREES);
-        pivotAbsoluteEncoder.setInverted(false);//TODO:Direction?
+        pivotRelativeEncoder = pivotMotor.getEncoder();
+        // pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
+        // pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROTATIONS_TO_DEGREES);
+        // armAbsoluteEncoder.setInverted(false);
         // armMotor.getForwardLimitSwitch(null);//What does this do
   
 
@@ -90,9 +88,9 @@ public class Pivot extends SubsystemBase {
 
         setTargetPosition(PivotPosition.START);
 
-        new ComplexWidgetBuilder(resetPivotEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
-        // pivotMotor.setSoftLimit(SoftLimitDirection.kForward, PivotPosition.FORRWARDSOFTLIMIT);
-        // pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, PivotPosition.START);//TODO:Test
+        new ComplexWidgetBuilder(resetClawEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
+        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 15);
+        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);//TODO:Test
     }
 
     @Override
@@ -108,13 +106,11 @@ public class Pivot extends SubsystemBase {
 
 
     public double getPosition() {
-        // return pivotRelativeEncoder.getPosition() + offset;
-        return pivotAbsoluteEncoder.getPosition();
+        return pivotRelativeEncoder.getPosition() + offset;
     }
 
     public double getRawPosition() {
-        // return pivotRelativeEncoder.getPosition();
-        return pivotAbsoluteEncoder.getPosition();
+        return pivotRelativeEncoder.getPosition();
     }
 
     public double getTargetPosition() {
@@ -201,7 +197,7 @@ public class Pivot extends SubsystemBase {
         pivotMotor.set(power);
     }
 
-    public CommandBase resetPivotEncoder() {
+    public CommandBase resetClawEncoder() {
         return runOnce(() -> {
             offset = -getRawPosition();
         });
