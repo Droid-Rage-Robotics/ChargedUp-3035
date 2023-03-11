@@ -45,7 +45,7 @@ public final class Autos {
                 new AutoMoveMid(elevator,pivot),
                 new WaitCommand(3),
                 new DropCone(elevator, pivot, intake),
-                new WaitCommand(1)
+                new WaitCommand(0.1)
                 ),
             PathPlannerFollow.create(drive, "Drop+Park")
                 .setMaxVelocity(1)
@@ -88,40 +88,42 @@ public final class Autos {
         return Commands.sequence(
             Commands.sequence(
                 new AutoMoveMid(elevator,pivot),
-                new WaitCommand(3),
+                new WaitCommand(1),
                 new DropCone(elevator, pivot, intake),
-                new WaitCommand(3)
+                new WaitCommand(0.1)
                 ),
             PathPlannerFollow.create(drive, "Charge")
                 .setMaxVelocity(1)
                 .setAcceleration(1)
-                .addMarker("wait", Commands.waitSeconds(1))
+                // .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
             //Command for autobalance
             new AutoBalance(drive),
-            Commands.waitSeconds(0.5),
-            new LockWheels(drive)
+            // Commands.waitSeconds(0.5)^,
+            // new LockWheels(drive),
+            
+            drive.setOffsetCommand(180)
         );
     }
-    public static CommandBase charge2(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
-        return Commands.sequence(
-            Commands.sequence(
-                new AutoMoveMid(elevator,pivot),
-                new WaitCommand(3),
-                new DropCone(elevator, pivot, intake),
-                new WaitCommand(3)
-                ),
-            PathPlannerFollow.create(drive, "Charge2")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
-                .addMarker("wait", Commands.waitSeconds(1))
-                .build(),
-            //Command for autobalance
-            new AutoBalance(drive),
-            Commands.waitSeconds(0.5),
-            new LockWheels(drive)
-        );
-    }
+    // public static CommandBase charge2(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
+    //     return Commands.sequence(
+    //         Commands.sequence(
+    //             new AutoMoveMid(elevator,pivot),
+    //             new WaitCommand(3),
+    //             new DropCone(elevator, pivot, intake),
+    //             new WaitCommand(0.1)
+    //             ),
+    //         PathPlannerFollow.create(drive, "Charge2")
+    //             .setMaxVelocity(1)
+    //             .setAcceleration(0.9)
+    //             .addMarker("wait", Commands.waitSeconds(1))
+    //             .build(),
+    //         //Command for autobalance
+    //         new AutoBalance(drive),
+    //         Commands.waitSeconds(0.5),
+    //         new LockWheels(drive)
+    //     );
+    // }
     /*public static CommandBase intake(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
         return Commands.sequence(
             Commands.sequence(
@@ -142,9 +144,13 @@ public final class Autos {
     }*/
 
 
-    public static CommandBase oneToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
+    public static CommandBase 
+    oneToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
+            new AutoMoveMid(elevator,pivot),
+            new WaitCommand(0.3),
             new DropCone(elevator, pivot, intake),
+            new WaitCommand(0.1),
             PathPlannerFollow.create(drive, "ToCube1")
                 .setMaxVelocity(1)
                 .setAcceleration(1)
@@ -153,20 +159,20 @@ public final class Autos {
                         // new MoveIntakeLow(elevator, pivot),
                         // new IntakeCube(pivot, intake, 4) //TODO:Test Wait Time
                     ))
-                .build(),
-            PathPlannerFollow.create(drive, "ToDrop1")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
-                .addMarker("pickUp", 
-                    new SequentialCommandGroup(
-                        // new MoveHigh(elevator, pivot)
-                    ))
-                .build(),
-                new DropCube(elevator, pivot, intake),
-            PathPlannerFollow.create(drive, "ToCube1")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
                 .build()
+            // PathPlannerFollow.create(drive, "ToDrop1")
+            //     .setMaxVelocity(1)
+            //     .setAcceleration(1)
+            //     .addMarker("pickUp", 
+            //         new SequentialCommandGroup(
+            //             // new MoveHigh(elevator, pivot)
+            //         ))
+            //     .build(),
+            //     new DropCube(elevator, pivot, intake),
+            // PathPlannerFollow.create(drive, "ToCube1")
+            //     .setMaxVelocity(1)
+            //     .setAcceleration(1)
+            //     .build()
         );
     }
 
