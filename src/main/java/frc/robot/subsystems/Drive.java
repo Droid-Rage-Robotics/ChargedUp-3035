@@ -62,10 +62,10 @@ public class Drive extends SubsystemBase {
     public enum SwerveConfig {
         FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54-0.26), //1.24
         FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.76), //2.26
-        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54), //0.99^
+        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(2.600092-5.120417), //0.99^//TODO:CHeck
         BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-0.225495), //1.74
 
-        HEADING_OFFSET(90)
+        DEFAULT_HEADING_OFFSET(0)
         ;
         public final MutableDouble value;
         private SwerveConfig(double value) {
@@ -205,6 +205,7 @@ public class Drive extends SubsystemBase {
         }
 
         pigeon2.configMountPose(AxisDirection.NegativeX, AxisDirection.PositiveZ);
+        resetOffset();
 
         ComplexWidgetBuilder.create(field2d, "Field", Drive.class.getSimpleName());
     }
@@ -262,7 +263,7 @@ public class Drive extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(-pigeon2.getYaw(), 360) - getHeadingOffset();
+        return Math.IEEEremainder(-pigeon2.getYaw(), 360);
     }
 
     public double getPitch() {
@@ -297,9 +298,9 @@ public class Drive extends SubsystemBase {
         return speed.angularSpeed.get();
     }
 
-    public double getHeadingOffset() {
-        return SwerveConfig.HEADING_OFFSET.value.get();
-    }
+    // public double getHeadingOffset() {
+    //     return SwerveConfig.HEADING_OFFSET.value.get();
+    // }
 
     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
@@ -364,22 +365,38 @@ public class Drive extends SubsystemBase {
         return runOnce(() -> {
             for (SwerveModule swerveModule: swerveModules) {
                 swerveModule.resetDriveEncoder();
+                // pigeon2.setYaw(getAngularSpeed())
             }
         });
     }
 
-    public CommandBase resetHeading() {
-        return runOnce(() -> SwerveConfig.HEADING_OFFSET.value.set(
-                getHeadingOffset() + getHeading()
-            )
-        );
+    // public CommandBase resetHeading() {
+    //     return runOnce(() -> SwerveConfig.HEADING_OFFSET.value.set(
+    //             getHeadingOffset() + getHeading()
+    //         )
+    //     );
+    // }
+
+    // public CommandBase resetHeading(double target) {
+    //     return runOnce(() -> SwerveConfig.HEADING_OFFSET.value.set(
+    //             target + getHeading()
+    //         )
+    //     );
+    // }
+    private void setOffset(double degrees) {
+        pigeon2.setYaw(degrees);
     }
 
-    public CommandBase resetHeading(double target) {
-        return runOnce(() -> SwerveConfig.HEADING_OFFSET.value.set(
-                target + getHeading()
-            )
-        );
+    public CommandBase setOffsetCommand(double degrees) {
+        return runOnce(() -> setOffset(degrees));
+    }
+
+    private void resetOffset() {
+        setOffset(SwerveConfig.DEFAULT_HEADING_OFFSET.value.get());
+    }
+
+    public CommandBase resetOffsetCommand() {
+        return runOnce(this::resetOffset);
     }
 
     private void coastMode() {
