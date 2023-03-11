@@ -20,38 +20,41 @@ import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 
 public class Intake extends SubsystemBase {
-    public enum IntakeSpeeds {
-        // MAX_RPM(5676),
-        FARCUBELOW(4000),
-        FARCUBEMID(5000),
-        FARCUBEHIGH(5400),
+    // public enum IntakeSpeeds {
+    //     // MAX_RPM(5676),
+    //     // FARCUBELOW(4000),
+    //     // FARCUBEMID(5000),
+    //     // FARCUBEHIGH(5400),
 
-        CONE(1000),
-        CONTINUOUS(600),
-        INTAKE(-3000),
-        OUTTAKE(3000),
-        HOLDCONE(500),
-        HOLDCUBE(500),
-        STOP(0), 
-        POSITION_TOLERANCE(5),
+    //     // CONE(1000),
+    //     CONTINUOUS(0.1),
+    //     // INTAKE(3000),
+    //     OUTTAKE(0.3),
+    //     HOLDCONE(-0.3),
+    //     HOLDCUBE(-0.3),
+    //     // STOP(0), 
+    //     // POSITION_TOLERANCE(5),
 
-        ;
+    //     ;
 
-        private final MutableDouble velocityRPM;
+    //     private final MutableDouble velocityRPM;
 
-        private IntakeSpeeds(double velocityRPM) {
-            this.velocityRPM = SimpleWidgetBuilder.create(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
-                .withSize(1, 3)
-                .buildMutableDouble();
-        }
-        public double get() {
-            return velocityRPM.get();
-        }
-    }
+    //     private IntakeSpeeds(double velocityRPM) {
+    //         this.velocityRPM = SimpleWidgetBuilder.create(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
+    //             .withSize(1, 3)
+    //             .buildMutableDouble();
+    //     }
+    //     public double get() {
+    //         return velocityRPM.get();
+    //     }
+    // }
 
+    private double OUTTAKE = -0.28,
+    INTAKE = 1,
+    HOLD = 0.1, STOP =0;
 
     private final CANSparkMax intakeMotor;
-    private final PIDController intakeController;
+    // private final PIDController intakeController;
     private final RelativeEncoder intakeEncoder;
     private final DoubleSolenoid intakeSolenoid;
     private PneumaticHub pneumaticHub;
@@ -69,15 +72,15 @@ public class Intake extends SubsystemBase {
     public Intake() {
         intakeMotor = new CANSparkMax(19, MotorType.kBrushless);
         intakeMotor.setIdleMode(IdleMode.kBrake);
-        intakeMotor.setInverted(true);
+        intakeMotor.setInverted(false);
 
-        intakeController = new PIDController(
-            0.000173611,
-            0,
-            0);
+        // intakeController = new PIDController(
+        //     0.000173611,
+        //     0,
+        //     0);
         // targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = intakeMotor.getEncoder();
-        intakeController.setTolerance(IntakeSpeeds.POSITION_TOLERANCE.get());
+        // intakeController.setTolerance(IntakeSpeeds.POSITION_TOLERANCE.get());
 
 
         pneumaticHub = new PneumaticHub(10);
@@ -88,10 +91,10 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setIntakePower(intakeController.calculate(getIntakeVelocity()));
-        if (!isEnabled.get()) {
-            pneumaticHub.disableCompressor();
-        }  
+        // setIntakePower(intakeController.calculate(getIntakeVelocity()));
+        // if (!isEnabled.get()) {
+        //     pneumaticHub.disableCompressor();
+        // }  
     }
   
     @Override
@@ -128,29 +131,29 @@ public class Intake extends SubsystemBase {
 
     public CommandBase runIntake() {
         return switch(TrackedElement.get()) {
-            case CONE->setTargetVelocity(IntakeSpeeds.INTAKE);
-            case CUBE->setTargetVelocity(IntakeSpeeds.INTAKE);
-            case NONE->setTargetVelocity(IntakeSpeeds.INTAKE);
+            case CONE->setIntakePower(INTAKE);
+            case CUBE->setTargetVelocity(INTAKE);
+            case NONE->setTargetVelocity(INTAKE);
         };
     }
 
     public CommandBase runOuttake() {
         return switch(TrackedElement.get()) {
-            case CONE->setTargetVelocity(IntakeSpeeds.OUTTAKE);
-            case CUBE->setTargetVelocity(IntakeSpeeds.OUTTAKE);
-            case NONE->setTargetVelocity(IntakeSpeeds.OUTTAKE);
+            case CONE->setTargetVelocity(OUTTAKE);
+            case CUBE->setTargetVelocity(OUTTAKE);
+            case NONE->setTargetVelocity(OUTTAKE);
         };
     }
 
     public CommandBase runStop() { 
-        return setTargetVelocity(IntakeSpeeds.STOP);
+        return setTargetVelocity(STOP);
     }
 
     public CommandBase runHoldIntake() { 
         return switch(TrackedElement.get()) {
-            case CONE -> setTargetVelocity(IntakeSpeeds.HOLDCONE);
-            case CUBE -> setTargetVelocity(IntakeSpeeds.HOLDCUBE);
-            case NONE -> setTargetVelocity(IntakeSpeeds.HOLDCUBE);
+            case CONE -> setIntakePower(HOLD);
+            case CUBE -> setIntakePower(HOLD);
+            case NONE -> setIntakePower(HOLD);
             
         };
     }
@@ -170,10 +173,11 @@ public class Intake extends SubsystemBase {
         );
     }
 
-    private CommandBase setTargetVelocity(IntakeSpeeds velocity) {
+    private CommandBase setTargetVelocity(double power) {
         return runOnce(() -> {
-            intakeController.setSetpoint(velocity.get());
-            targetVelocityWriter.set(velocity.get());
+            intakeMotor.set(power);
+            // intakeController.setSetpoint(velocity.get());
+            // targetVelocityWriter.set(velocity.get());
             // this.targetVelocity = velocity;
             
         });
@@ -183,19 +187,26 @@ public class Intake extends SubsystemBase {
         return intakeEncoder.getVelocity();
     }
       
-    private void setIntakePower(double power) {
-        if (!isEnabled.get()) return;
-        intakeMotor.set(power);
+    private CommandBase setIntakePower(double power) {
+        // if (!isEnabled.get()) return;
+        // return runOnce() ->{
+        //     intakeMotor.set(power);
+        // }
+
+        return runOnce(() -> {
+            intakeMotor.set(power);
+        });
+        
     }
     
-    public CommandBase shootHighCube(){ 
-        return setTargetVelocity(IntakeSpeeds.FARCUBEHIGH);
-    }
-    public CommandBase shootMidCube(){ 
-        return setTargetVelocity(IntakeSpeeds.FARCUBEMID);
-    }
-    public CommandBase shootLowCube(){ 
-        return setTargetVelocity(IntakeSpeeds.FARCUBELOW);
-    }
+    // public CommandBase shootHighCube(){ 
+    //     return setTargetVelocity(IntakeSpeeds.FARCUBEHIGH);
+    // }
+    // public CommandBase shootMidCube(){ 
+    //     return setTargetVelocity(IntakeSpeeds.FARCUBEMID);
+    // }
+    // public CommandBase shootLowCube(){ 
+    //     return setTargetVelocity(IntakeSpeeds.FARCUBELOW);
+    // }
 }
 

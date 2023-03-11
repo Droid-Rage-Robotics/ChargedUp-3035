@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -41,16 +43,16 @@ public class Elevator extends SubsystemBase {
         MIDCONE(13.2,11),
         MIDCUBE(13.4,10.4),
 
-        AUTOMIDCONE(15.5, 11.5),
+        AUTOMIDCONE(15.2, 11.5),
 
         HIGHCONE(14.4,11),//Make this Mid Teleop
-        HIGHCUBE(16.5,11),
+        HIGHCUBE(17,11),
 
         INTAKEHIGH1CONE(14.9,0),
         INTAKEHIGH1CUBE(14.9,0),
 
-        INTAKEHIGH2CONE(13,0),
-        INTAKEHIGH2CUBE(14.9,0),
+        INTAKEHIGH2CONE(13.5,0),
+        INTAKEHIGH2CUBE(13.5,0),
 
         HOLD(0,0),
         
@@ -80,7 +82,7 @@ public class Elevator extends SubsystemBase {
     // private final DutyCycleEncoder verticaAbsEncoder;
     private final PIDController verticalController;
     private final PIDController horizontalController;
-    private volatile static ElevatorPosition position = ElevatorPosition.START;
+    private static volatile ElevatorPosition position = ElevatorPosition.START;
     public boolean isMovingManually;
     private final WriteOnlyString positionWriter = new WriteOnlyString(position.name(), "Elevator Position", Elevator.class.getSimpleName());
     
@@ -128,7 +130,7 @@ public class Elevator extends SubsystemBase {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        setPosition(ElevatorPosition.START);
+        setPosition(() -> ElevatorPosition.START);
 
         // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
         isMovingManually = false;
@@ -165,9 +167,9 @@ public class Elevator extends SubsystemBase {
         return position.horizontalInches.get();
     }
 
-    public CommandBase setPosition(ElevatorPosition position) {
+    public CommandBase setPosition(Supplier<ElevatorPosition> position) {
         return runOnce(() -> {
-            this.position = position;
+            Elevator.position = position.get();
 
             verticalController.setSetpoint(getTargetVerticalHeight());
             horizontalController.setSetpoint(getTargetHorizontalDistance());
@@ -194,12 +196,12 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveHold() {
-        return setPosition(ElevatorPosition.HOLD);
+        return setPosition(() -> ElevatorPosition.HOLD);
     }
 
     public CommandBase moveIntakeLow() {
         return setPosition(
-            switch(TrackedElement.get()) {
+            () -> switch(TrackedElement.get()) {
                 case CONE -> ElevatorPosition.INTAKELOWCONE;
                 case CUBE -> ElevatorPosition.INTAKELOWCUBE;
                 case NONE -> ElevatorPosition.INTAKELOWCUBE;
@@ -208,7 +210,7 @@ public class Elevator extends SubsystemBase {
     }
     public CommandBase moveIntake1High() {
         return setPosition(
-            switch(TrackedElement.get()) {
+            () ->switch(TrackedElement.get()) {
                 case CONE -> ElevatorPosition.INTAKEHIGH1CONE;
                 case CUBE -> ElevatorPosition.INTAKEHIGH1CUBE;
                 case NONE -> ElevatorPosition.INTAKEHIGH1CUBE;
@@ -218,7 +220,7 @@ public class Elevator extends SubsystemBase {
 
     public CommandBase moveIntake2High() {
         return setPosition(
-            switch(TrackedElement.get()) {
+            () ->switch(TrackedElement.get()) {
                 case CONE -> ElevatorPosition.INTAKEHIGH2CONE;
                 case CUBE -> ElevatorPosition.INTAKEHIGH2CUBE;
                 case NONE -> ElevatorPosition.INTAKEHIGH2CUBE;
@@ -228,7 +230,7 @@ public class Elevator extends SubsystemBase {
 
     public CommandBase moveLow() {
         return setPosition(
-            switch(TrackedElement.get()) {
+            () ->switch(TrackedElement.get()) {
                 case CONE -> ElevatorPosition.LOWCONE;
                 case CUBE -> ElevatorPosition.LOWCUBE;
                 case NONE -> ElevatorPosition.LOWCUBE;
@@ -238,7 +240,7 @@ public class Elevator extends SubsystemBase {
 
     public CommandBase moveMid() {
         return setPosition(
-            switch(TrackedElement.get()) {
+            () ->switch(TrackedElement.get()) {
                 case CONE -> ElevatorPosition.MIDCONE;
                 case CUBE -> ElevatorPosition.MIDCUBE;
                 case NONE -> ElevatorPosition.MIDCUBE;
@@ -247,7 +249,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public CommandBase moveAutoMid() {
-        return setPosition(ElevatorPosition.AUTOMIDCONE);
+        return setPosition(() ->ElevatorPosition.AUTOMIDCONE);
     }
 
     public CommandBase moveHigh() {
@@ -255,7 +257,7 @@ public class Elevator extends SubsystemBase {
             changePosition();
         }
         return setPosition(
-            switch(TrackedElement.get()) {
+            () ->switch(TrackedElement.get()) {
                 case CONE -> ElevatorPosition.HIGHCONE;
                 case CUBE -> ElevatorPosition.HIGHCUBE;
                 case NONE -> ElevatorPosition.HIGHCUBE;
