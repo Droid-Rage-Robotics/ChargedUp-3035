@@ -11,9 +11,12 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Drive/Field": "Field2d",
       "/Shuffleboard/Elevator/Horizontal PID Controller": "PIDController",
+      "/Shuffleboard/Elevator/Reset Elevator Encoders": "Command",
       "/Shuffleboard/Elevator/Vertical PID Controller": "PIDController",
       "/Shuffleboard/Pivot/PID Controller": "PIDController",
+      "/Shuffleboard/Pivot/Reset claw encoder": "Command",
       "/Shuffleboard/frc.robot.subsystems.Drive/Anti Tip X PID Controller": "PIDController",
       "/Shuffleboard/frc.robot.subsystems.Drive/Anti Tip Y PID Controller": "PIDController",
       "/Shuffleboard/frc.robot.subsystems.Drive/Auto Balance X PID Controller": "PIDController",
@@ -38,9 +41,27 @@
     "transitory": {
       "Shuffleboard": {
         ".metadata": {
+          "Drive": {
+            "Is Drive Enabled": {
+              "open": true
+            },
+            "open": true
+          },
           "open": true
         },
         ".recording": {
+          "open": true
+        },
+        "Drive": {
+          "Speed": {
+            "open": true
+          },
+          "Swerve Modules": {
+            "open": true
+          },
+          "SwerveConfig": {
+            "open": true
+          },
           "open": true
         },
         "open": true
