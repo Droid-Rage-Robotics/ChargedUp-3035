@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -304,6 +305,14 @@ public class Drive extends SubsystemBase {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
+    public void drive(double xSpeed, double ySpeed, double turnSpeed) {
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
+
+        SwerveModuleState[] states = Drive.SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+
+        setModuleStates(states);
+    }
+
     public void setModuleStates(SwerveModuleState[] states) {
         if (!isEnabled.get()) return;
         SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -446,8 +455,11 @@ public class Drive extends SubsystemBase {
             AutoConfig.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.value.get(),
             AutoConfig.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.value.get());
     }
+<<<<<<< HEAD
 
     // public boolean getfinished(){
     //     Balance
     // }
+=======
+>>>>>>> 3b3db8d768394560eba35bc185f95ce68b874158
 }
