@@ -8,10 +8,12 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot2;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class AutoMoveMid extends SequentialCommandGroup {
     public AutoMoveMid(Elevator elevator, Pivot pivot) {
         addCommands(
             elevator.moveAutoMid(),
+            new WaitCommand(2),
             pivot.moveMid()
         );
     }
