@@ -38,16 +38,19 @@ public class Elevator extends SubsystemBase {
         LOWCONE(0, 0),
         LOWCUBE(0,0),
         
-        MIDCONE(13.8,11),
-        MIDCUBE(13.5,10.4),
+        MIDCONE(13.2,11),
+        MIDCUBE(13.4,10.4),
 
         AUTOMIDCONE(15.5, 11.5),
 
         HIGHCONE(14.4,11),//Make this Mid Teleop
         HIGHCUBE(16.5,11),
 
-        INTAKEHIGHCONE(14.9,0),
-        INTAKEHIGHCUBE(14.9,0),
+        INTAKEHIGH1CONE(14.9,0),
+        INTAKEHIGH1CUBE(14.9,0),
+
+        INTAKEHIGH2CONE(13,0),
+        INTAKEHIGH2CUBE(14.9,0),
 
         HOLD(0,0),
         
@@ -162,7 +165,7 @@ public class Elevator extends SubsystemBase {
         return position.horizontalInches.get();
     }
 
-    private CommandBase setPosition(ElevatorPosition position) {
+    public CommandBase setPosition(ElevatorPosition position) {
         return runOnce(() -> {
             this.position = position;
 
@@ -203,12 +206,22 @@ public class Elevator extends SubsystemBase {
             }
         );
     }
-    public CommandBase moveIntakeHigh() {
+    public CommandBase moveIntake1High() {
         return setPosition(
             switch(TrackedElement.get()) {
-                case CONE -> ElevatorPosition.INTAKEHIGHCONE;
-                case CUBE -> ElevatorPosition.INTAKEHIGHCUBE;
-                case NONE -> ElevatorPosition.INTAKEHIGHCUBE;
+                case CONE -> ElevatorPosition.INTAKEHIGH1CONE;
+                case CUBE -> ElevatorPosition.INTAKEHIGH1CUBE;
+                case NONE -> ElevatorPosition.INTAKEHIGH1CUBE;
+            }
+        );
+    }
+
+    public CommandBase moveIntake2High() {
+        return setPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> ElevatorPosition.INTAKEHIGH2CONE;
+                case CUBE -> ElevatorPosition.INTAKEHIGH2CUBE;
+                case NONE -> ElevatorPosition.INTAKEHIGH2CUBE;
             }
         );
     }

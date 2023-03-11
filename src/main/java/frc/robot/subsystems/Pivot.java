@@ -37,10 +37,11 @@ public class Pivot extends SubsystemBase {
         HIGHCONE(LOWCONE.degrees.get()),
         HIGHCUBE(30),
 
-        INTAKEHIGHCUBE(25), //parallel - TODO: Make for 2 station
-        INTAKEHIGHCONE(25),
-        // INTAKEHIGHCUBE(43), //parallel - TODO:Make for 1 station
-        // INTAKEHIGHCONE(43),
+        INTAKEHIGH1CUBE(43), //parallel - pickup
+        INTAKEHIGH1CONE(43),
+
+        INTAKEHIGH2CUBE(25), //- drop
+        INTAKEHIGH2CONE(25),
         HOLD(0), // straight up
 
         //AUTO
@@ -119,7 +120,7 @@ public class Pivot extends SubsystemBase {
         return controller.getSetpoint();
     }
 
-    private CommandBase setTargetPosition(PivotPosition position) {
+    public CommandBase setTargetPosition(PivotPosition position) {
         return runOnce(() -> {
             this.position = position;
             controller.setSetpoint(position.degrees.get());
@@ -150,12 +151,22 @@ public class Pivot extends SubsystemBase {
             }
         );
     }
-    public CommandBase moveIntakeHigh() {
+    public CommandBase moveIntake1High() {//The pickup
         return setTargetPosition(
             switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.INTAKEHIGHCONE;
-                case CUBE -> PivotPosition.INTAKEHIGHCUBE;
-                case NONE -> PivotPosition.INTAKEHIGHCUBE;
+                case CONE -> PivotPosition.INTAKEHIGH1CONE;
+                case CUBE -> PivotPosition.INTAKEHIGH1CUBE;
+                case NONE -> PivotPosition.INTAKEHIGH1CUBE;
+            }
+        );
+    }
+
+    public CommandBase moveIntake2High() {//The drop
+        return setTargetPosition(
+            switch(TrackedElement.get()) {
+                case CONE -> PivotPosition.INTAKEHIGH2CONE;
+                case CUBE -> PivotPosition.INTAKEHIGH2CUBE;
+                case NONE -> PivotPosition.INTAKEHIGH2CUBE;
             }
         );
     }

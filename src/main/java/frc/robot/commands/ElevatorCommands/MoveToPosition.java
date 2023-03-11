@@ -18,7 +18,8 @@ public class MoveToPosition extends SequentialCommandGroup {
                 case AUTOMIDCONE -> Commands.none();
                 case HIGHCONE, HIGHCUBE-> Commands.sequence(elevator.moveLow(), pivot.moveLow());
                 case HOLD -> Commands.sequence(elevator.moveHold(), pivot.moveHold());
-                case INTAKEHIGHCONE, INTAKEHIGHCUBE ->Commands.sequence(elevator.moveIntakeHigh(), pivot.moveIntakeHigh()); //TODO: we need two positons for this probably
+                case INTAKEHIGH1CONE, INTAKEHIGH1CUBE ->Commands.sequence(elevator.moveIntake1High(), pivot.moveIntake1High()); //TODO: we need two positons for this probably
+                case INTAKEHIGH2CONE, INTAKEHIGH2CUBE ->Commands.sequence(elevator.moveIntake2High(), pivot.moveIntake2High());
                 case INTAKELOWCONE, INTAKELOWCUBE ->Commands.sequence(elevator.moveIntakeLow(), pivot.moveIntakeLow());
                 case LOWCONE, LOWCUBE ->Commands.sequence(elevator.moveLow(), pivot.moveLow());
                 case MIDCONE, MIDCUBE ->Commands.sequence(elevator.moveMid(), pivot.moveMid());

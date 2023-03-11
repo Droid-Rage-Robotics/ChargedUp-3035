@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Pivot.PivotPosition;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.LockWheels;
@@ -55,7 +56,7 @@ public class RobotContainer {
     private final Drive drive = new Drive();
     private final Elevator elevator = new Elevator();
     // private final Pivot2 pivot = new Pivot2(); 
-    private final Pivot pivot =new Pivot();
+    private final Pivot pivot = new Pivot();
     private final Intake intake = new Intake();
 
     private final CommandXboxController driver =
@@ -107,26 +108,28 @@ public class RobotContainer {
 
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
-        autoChooser.addOption("Turn2", new SequentialCommandGroup(
-            new InstantCommand(() -> drive.resetOdometry(trajectory.getInitialPose())),
-            swerveControllerCommand,
-            new InstantCommand(() -> {
-                    drive.stop();
-                    xController.close();
-                    yController.close();
-                }
-            )));
+
+        // autoChooser.addOption("Turn2", new SequentialCommandGroup(
+        //     new InstantCommand(() -> drive.resetOdometry(trajectory.getInitialPose())),
+        //     swerveControllerCommand,
+        //     new InstantCommand(() -> {
+        //             drive.stop();
+        //             xController.close();
+        //             yController.close();
+        //         }
+        //     )));
+        
         // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
-
+        autoChooser.addOption("Charge2", Autos.charge2(drive, elevator, pivot, intake));
         // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
         new ComplexWidgetBuilder(autoChooser, "Auto Chooser", "Misce")
             .withSize(1, 3);
 
-        new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
-            .withSize(5, 5);
+        // new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
+        //     .withSize(5, 5);
 
             // Shuffleboard.getTab("Drive").getComponents().removeAll(null);
         //     // Shuffleboard.getTab("Drive").add
@@ -210,14 +213,31 @@ public class RobotContainer {
             .onTrue(
                 new MoveHigh(elevator, pivot)  
             );
+         operator.b()
+            .onTrue(
+                new SequentialCommandGroup(
+                elevator.moveIntake2High(),
+                pivot.moveIntake2High())
+            );
         
         operator.povUp()
             .onTrue(
-                new MoveIntakeHigh(elevator, pivot)
+                new MoveIntake1High(elevator, pivot)
+            );
+        operator.povRight()
+            .onTrue(
+                new MoveIntake2High(elevator, pivot)//Make grab cone from the drop
             );
         operator.povLeft()
             .onTrue(
-                new MoveIntakeLow(elevator, pivot)
+                new MoveIntakeLow(elevator, pivot)//Cube and Cone
+            );
+         operator.povRight()
+            .onTrue(new SequentialCommandGroup(
+                elevator.setPosition(Elevator.ElevatorPosition.LOWCUBE),
+                pivot.setTargetPosition(PivotPosition.LOWCUBE)
+            )//Cube
+                
             );
         operator.povDown()
             .onTrue(
