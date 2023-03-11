@@ -50,7 +50,7 @@ public class Drive extends SubsystemBase {
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(1),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(1), // 1 / 8 of a full rotation per second per second),
         TRANSLATIONAL_KP(1.9),
-        THETA_KP(1),//Changed to 1 from 0.2 (Lucky)
+        THETA_KP(0.6),//Changed to 1 from 0.2 (Lucky) =
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -189,7 +189,7 @@ public class Drive extends SubsystemBase {
     private final WriteOnlyDouble backRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
     private final WriteOnlyDouble backRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
 
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Drive Enabled", Drive.class.getSimpleName())
+    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Drive Enabled", Drive.class.getSimpleName())//TODO: Move   
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
@@ -447,7 +447,7 @@ public class Drive extends SubsystemBase {
             AutoConfig.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.value.get());
     }
 
-    public boolean getfinished(){
-        Balance
-    }
+    // public boolean getfinished(){
+    //     Balance
+    // }
 }
