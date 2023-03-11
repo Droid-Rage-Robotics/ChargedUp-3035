@@ -21,6 +21,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -39,7 +42,6 @@ public class RobotContainer {
     // Consider setitng drive motor to break and turn to coast
     // ----Bright Color on shuffleboard when block is detected
     // ----path weaver vs path planner
-    // ----Desaturate wheels speeds
     // reset network tables button
     // auto align 
     // fixnetowrk tables!!!
@@ -70,44 +72,11 @@ public class RobotContainer {
         
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
         // autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
-
-         
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-            Drive.AutoConfig.MAX_SPEED_METERS_PER_SECOND.value.get(), 
-            Drive.AutoConfig.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED.value.get())
-                .setKinematics(Drive.SwerveConstants.DRIVE_KINEMATICS);
         
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            new Pose2d(),
-            List.of(
-                new Translation2d(1,0)
-            ), 
-            new Pose2d(1, 1, Rotation2d.fromDegrees(180)),
-            trajectoryConfig
-        );
-        
-        PIDController xController = new PIDController(Drive.AutoConfig.TRANSLATIONAL_KP.value.get(), 0, 0);
-        PIDController yController = new PIDController(Drive.AutoConfig.TRANSLATIONAL_KP.value.get(), 0, 0);
-        ProfiledPIDController thetaController = new ProfiledPIDController(
-            Drive.AutoConfig.THETA_KP.value.get(), 
-              0, 
-              0, 
-            drive.getThetaConstraints());
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory,
-            drive::getPose,
-            Drive.SwerveConstants.DRIVE_KINEMATICS,
-            xController,
-            yController,
-            thetaController,
-            drive::setModuleStates,
-            drive
-        );
 
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
+<<<<<<< HEAD
 
         // autoChooser.addOption("Turn2", new SequentialCommandGroup(
         //     new InstantCommand(() -> drive.resetOdometry(trajectory.getInitialPose())),
@@ -119,6 +88,8 @@ public class RobotContainer {
         //         }
         //     )));
         
+=======
+>>>>>>> 348af24895718c97ebc27e6b2c161b1d7c24db60
         // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
         autoChooser.addOption("Charge2", Autos.charge2(drive, elevator, pivot, intake));
@@ -140,6 +111,8 @@ public class RobotContainer {
         //         ((SimpleWidget)component).close();
         //     }
         // }
+        new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
+            .withSize(5, 5);
     }
 
     public void configureTeleOpBindings() {
