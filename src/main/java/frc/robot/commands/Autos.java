@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.commands.Drive.AutoBalance;
 import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.PathPlannerFollow;
 import frc.robot.commands.ElevatorCommands.*;
@@ -97,6 +98,26 @@ public final class Autos {
                 .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
             //Command for autobalance
+            new AutoBalance(drive),
+            Commands.waitSeconds(0.5),
+            new LockWheels(drive)
+        );
+    }
+    public static CommandBase charge2(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {
+        return Commands.sequence(
+            Commands.sequence(
+                new AutoMoveMid(elevator,pivot),
+                new WaitCommand(3),
+                new DropCone(elevator, pivot, intake),
+                new WaitCommand(3)
+                ),
+            PathPlannerFollow.create(drive, "Charge2")
+                .setMaxVelocity(1)
+                .setAcceleration(1)
+                .addMarker("wait", Commands.waitSeconds(1))
+                .build(),
+            //Command for autobalance
+            new AutoBalance(drive),
             Commands.waitSeconds(0.5),
             new LockWheels(drive)
         );
@@ -182,8 +203,8 @@ public final class Autos {
     public static CommandBase turnTest(Drive drive) {
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "TurnTest")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
+                .setMaxVelocity(0.5)
+                .setAcceleration(0.5)
                 .build()
         );
     }

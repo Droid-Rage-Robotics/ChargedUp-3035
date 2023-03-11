@@ -87,11 +87,11 @@ public class Elevator extends SubsystemBase {
     // private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
     // private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
 
-    private final MutableBoolean isVerticalEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Vertical Enabled", Elevator.class.getSimpleName())
+    private final MutableBoolean isVerticalEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Vertical Enabled", Elevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
 
-    private final MutableBoolean isHorizontalEnabled = new SimpleWidgetBuilder<Boolean>(false, "Is Horizontal Enabled", Elevator.class.getSimpleName())
+    private final MutableBoolean isHorizontalEnabled = new SimpleWidgetBuilder<Boolean>(true, "Is Horizontal Enabled", Elevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .buildMutableBoolean();
     

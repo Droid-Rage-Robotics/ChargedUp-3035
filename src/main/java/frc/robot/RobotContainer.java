@@ -117,7 +117,7 @@ public class RobotContainer {
                 }
             )));
         // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
-        // autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
+        autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
 
         // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
         // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));

@@ -50,8 +50,8 @@ public class Drive extends SubsystemBase {
         MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10),
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(1),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(1), // 1 / 8 of a full rotation per second per second),
-        TRANSLATIONAL_KP(1.9),
-        THETA_KP(0.6),//Changed to 1 from 0.2 (Lucky) =
+        TRANSLATIONAL_KP(1.9),//1.9
+        THETA_KP(0.4),//Changed to 1 from 0.2 (Lucky) =
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -455,11 +455,8 @@ public class Drive extends SubsystemBase {
             AutoConfig.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.value.get(),
             AutoConfig.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.value.get());
     }
-<<<<<<< HEAD
 
     // public boolean getfinished(){
     //     Balance
     // }
-=======
->>>>>>> 3b3db8d768394560eba35bc185f95ce68b874158
 }

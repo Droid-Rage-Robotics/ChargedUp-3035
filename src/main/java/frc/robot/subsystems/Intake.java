@@ -28,8 +28,8 @@ public class Intake extends SubsystemBase {
 
         CONE(1000),
         CONTINUOUS(600),
-        INTAKE(3000),
-        OUTTAKE(-3000),
+        INTAKE(-3000),
+        OUTTAKE(3000),
         HOLDCONE(500),
         HOLDCUBE(500),
         STOP(0), 

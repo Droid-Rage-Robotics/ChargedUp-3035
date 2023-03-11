@@ -37,8 +37,10 @@ public class Pivot extends SubsystemBase {
         HIGHCONE(LOWCONE.degrees.get()),
         HIGHCUBE(30),
 
-        INTAKEHIGHCUBE(43), //parallel
-        INTAKEHIGHCONE(43),
+        INTAKEHIGHCUBE(25), //parallel - TODO: Make for 2 station
+        INTAKEHIGHCONE(25),
+        // INTAKEHIGHCUBE(43), //parallel - TODO:Make for 1 station
+        // INTAKEHIGHCONE(43),
         HOLD(0), // straight up
 
         //AUTO

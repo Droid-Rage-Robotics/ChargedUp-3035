@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ElevatorCommands;
+package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,7 +22,7 @@ public class AutoBalance extends ProfiledPIDCommand {
         new ProfiledPIDController(
             0.006, 
             0,
-            0.0005,
+            0.0003,
             new TrapezoidProfile.Constraints(1, 1)),
         drive::getPitch,
         -2,
@@ -33,7 +33,7 @@ public class AutoBalance extends ProfiledPIDCommand {
 
     addRequirements(drive);
     this.drive = drive;
-    getController().setTolerance(2); //degrees
+    getController().setTolerance(1); //degrees
 
   }
   
