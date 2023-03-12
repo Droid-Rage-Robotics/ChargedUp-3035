@@ -24,7 +24,7 @@ public class AutoBalance extends ProfiledPIDCommand {
   public AutoBalance(Drive drive) {
     super(
         new ProfiledPIDController(
-            0.04, 
+            0.042, 
             0,
             0.0005,
             new TrapezoidProfile.Constraints(1, 1)),
