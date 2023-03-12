@@ -93,8 +93,8 @@ public final class Autos {
                 new WaitCommand(0.1)
                 ),
             PathPlannerFollow.create(drive, "Charge")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
+                .setMaxVelocity(1.8)
+                .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
             //Command for autobalance
@@ -144,22 +144,28 @@ public final class Autos {
     }*/
 
 
-    public static CommandBase 
-    oneToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
+    public static CommandBase oneToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
             new AutoMoveMid(elevator,pivot),
-            new WaitCommand(0.3),
+            new WaitCommand(1),
             new DropCone(elevator, pivot, intake),
-            new WaitCommand(0.1),
+            new WaitCommand(0.3),
             PathPlannerFollow.create(drive, "ToCube1")
                 .setMaxVelocity(1)
-                .setAcceleration(1)
-                .addMarker("intake", 
-                    new SequentialCommandGroup(
-                        // new MoveIntakeLow(elevator, pivot),
-                        // new IntakeCube(pivot, intake, 4) //TODO:Test Wait Time
-                    ))
-                .build()
+                .setAcceleration(0.8) 
+                // .addMarker(J
+                .build(),
+            new MoveIntakeLow(elevator, pivot)
+            //  PathPlannerFollow.create(drive, "ToCube1Forward")
+            //     .setMaxVelocity(1)
+            //     .setAcceleration(0.8) 
+            //     .addMarker("intake",new SequentialCommandGroup(new IntakeCube(pivot, intake, 6))
+            //      )
+            //     .build()
+
+
+                // new IntakeCube(pivot, intake, 5),
+            // new MoveHold(elevator, pivot)
             // PathPlannerFollow.create(drive, "ToDrop1")
             //     .setMaxVelocity(1)
             //     .setAcceleration(1)
@@ -176,6 +182,56 @@ public final class Autos {
         );
     }
 
+    public static CommandBase threeToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Bottom Red/Top Blue
+        return new SequentialCommandGroup(
+            new AutoMoveMid(elevator,pivot),
+            new WaitCommand(1),
+            new DropCone(elevator, pivot, intake),
+            new WaitCommand(0.3),
+            PathPlannerFollow.create(drive, "ToCube3")
+                .setMaxVelocity(1)
+                .setAcceleration(0.8) 
+                // .addMarker(J
+                .build(),
+            new MoveIntakeLow(elevator, pivot)
+            //  PathPlannerFollow.create(drive, "ToCube1Forward")
+            //     .setMaxVelocity(1)
+            //     .setAcceleration(0.8) 
+            //     .addMarker("intake",new SequentialCommandGroup(new IntakeCube(pivot, intake, 6))
+            //      )
+            //     .build()
+
+
+                // new IntakeCube(pivot, intake, 5),
+            // new MoveHold(elevator, pivot)
+            // PathPlannerFollow.create(drive, "ToDrop1")
+            //     .setMaxVelocity(1)
+            //     .setAcceleration(1)
+            //     .addMarker("pickUp", 
+            //         new SequentialCommandGroup(
+            //             // new MoveHigh(elevator, pivot)
+            //         ))
+            //     .build(),
+            //     new DropCube(elevator, pivot, intake),
+            // PathPlannerFollow.create(drive, "ToCube1")
+            //     .setMaxVelocity(1)
+            //     .setAcceleration(1)
+            //     .build()
+        );
+    }
+
+    public static CommandBase preloadPlusPark(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
+        return new SequentialCommandGroup(
+            new AutoMoveMid(elevator,pivot),
+            new WaitCommand(0.3),
+            new DropCone(elevator, pivot, intake),
+            new WaitCommand(0.1),
+            PathPlannerFollow.create(drive, "PreloadPlusPark")
+                .setMaxVelocity(1)
+                .setAcceleration(1) 
+                .build()
+        );
+    }
     public static CommandBase testShoot(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
             new DropCone(elevator, pivot, intake),//Shoot Cube High
@@ -201,6 +257,14 @@ public final class Autos {
     public static CommandBase straightTest(Drive drive) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "StraightTest")
+                .setMaxVelocity(1)
+                .setAcceleration(1)
+                .build()
+        );
+    }
+    public static CommandBase straightTestBack(Drive drive) {//Top Red/Bottom Blue
+        return new SequentialCommandGroup(
+            PathPlannerFollow.create(drive, "StraightTestBack")
                 .setMaxVelocity(1)
                 .setAcceleration(1)
                 .build()
