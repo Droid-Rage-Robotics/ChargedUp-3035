@@ -24,6 +24,8 @@ import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 import frc.robot.utilities.WriteOnlyString;
 
+//Set Voltage instead of set Power
+//Set them to 90 to 100%
 public class Drive extends SubsystemBase {
     public enum TeleOpNumbers {
         MAX_ACCELERATION_UNITS_PER_SECOND(10),
@@ -50,8 +52,8 @@ public class Drive extends SubsystemBase {
         MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10),
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(1),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(1), // 1 / 8 of a full rotation per second per second),
-        TRANSLATIONAL_KP(1.9),//1.9
-        THETA_KP(0.4),//Changed to 1 from 0.2 (Lucky) =
+        TRANSLATIONAL_KP(1.9),//1.9-0.09
+        THETA_KP(0.01),//Changed to 1 from 0.2 (Lucky) =0.4 0.08
         ;
         public final MutableDouble value;
         private AutoConfig(double value) {
@@ -60,10 +62,10 @@ public class Drive extends SubsystemBase {
     }
 
     public enum SwerveConfig {
-        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.54-0.26), //1.24
-        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.76), //2.26
-        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(2.600092-5.120417), //0.99^//TODO:CHeck
-        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-0.225495), //1.74
+        FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.774966), //1.24
+        FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.854886), //2.26
+        BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.589354), //0.99^//TODO:CHeck
+        BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.334867), //1.74
 
         DEFAULT_HEADING_OFFSET(0)
         ;
@@ -146,7 +148,7 @@ public class Drive extends SubsystemBase {
         5,
         6,
 
-        true, 
+        false, 
         false,
 
         13, 
@@ -326,6 +328,18 @@ public class Drive extends SubsystemBase {
         }
     }
 
+    public void setFeedforwardModuleStates(SwerveModuleState[] states) {
+        if (!isEnabled.get()) return;
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+            states, 
+            SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND
+        );
+
+        for (int i = 0; i < 4; i++) {
+            swerveModules[i].setFeedforwardState(states[i]);
+        }
+    }
+
     public void stop() {
         for (SwerveModule swerveModule: swerveModules) {
             swerveModule.stop();
@@ -454,7 +468,7 @@ public class Drive extends SubsystemBase {
     public CommandBase toggleAutoBalance() {
         return runOnce(() -> setTippingState(
             TippingState.NO_TIP_CORRECTION
-            // switch (tippingState) {
+            // switch (tipp ingState) {
             //     case ANTI_TIP -> TippingState.AUTO_BALANCE_ANTI_TIP;
             //     case AUTO_BALANCE -> TippingState.NO_TIP_CORRECTION;
             //     case AUTO_BALANCE_ANTI_TIP -> TippingState.ANTI_TIP;

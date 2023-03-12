@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -50,6 +51,9 @@ public class RobotContainer {
     // why are swerves not simplifying turns
     //add Physical and digital limit switch
     // make shuffleboard stuff able to use a class instead of a string
+    // safe sparkmax
+    // arm class
+    // 
 
 
 
@@ -74,9 +78,11 @@ public class RobotContainer {
         // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
         // autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
         
-
+        autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, elevator, pivot, intake));
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
-        autoChooser.addOption("One CUbe + drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
+        autoChooser.addOption("Straight Test BACK", Autos.straightTestBack(drive));
+        autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
+        autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, elevator, pivot, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
 
         // autoChooser.addOption("Turn2", new SequentialCommandGroup(
@@ -98,7 +104,7 @@ public class RobotContainer {
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misce")
             .withSize(1, 3);
 
-        // new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
+        // new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Cam2era Stream", "Misce")
         //     .withSize(5, 5);
 
             // Shuffleboard.getTab("Drive").getComponents().removeAll(null);

@@ -34,7 +34,7 @@ public class SwerveModule {
         public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.47;
 
         // private static final double DRIVE_KA = 0.12; 
-        private static final double DRIVE_KV = 2.3; // this value is multiplied by veloicty in meteres per second
+        private static final double DRIVE_KV = 2.6; // this value is multiplied by veloicty in meteres per second
         private static final double DRIVE_KS = 0.5; //this value is the voltage that iwll be constantly applied
     }
 
@@ -48,6 +48,8 @@ public class SwerveModule {
     private final PIDController turningPidController;
 
     private final SimpleMotorFeedforward feedforward;
+
+    // private final double driveSpeedMultiplier;
 
     public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, Supplier<Double> absoluteEncoderOffsetRad, boolean absoluteEncoderReversed) {
