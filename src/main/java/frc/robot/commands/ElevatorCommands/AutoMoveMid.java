@@ -13,7 +13,7 @@ public class AutoMoveMid extends SequentialCommandGroup {
     public AutoMoveMid(Elevator elevator, Pivot pivot) {
         addCommands(
             elevator.moveAutoMid(),
-            new WaitCommand(2),
+            new WaitCommand(1.4),
             pivot.moveMid()
         );
     }
