@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import org.ejml.data.ZMatrixRMaj;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -29,9 +31,9 @@ public class Pivot extends SubsystemBase {
     public enum PivotPosition {
         START(0),
         INTAKELOWCUBE(52),//TODO:Change
-        INTAKELOWCONE(54),
+        INTAKELOWCONE(54.5),
 
-        LOWCONE(30),
+        LOWCONE(31.4),
         LOWCUBE(43.1),
 
         MIDCONE(LOWCONE.degrees.get()),
@@ -40,14 +42,13 @@ public class Pivot extends SubsystemBase {
         HIGHCONE(LOWCONE.degrees.get()),
         HIGHCUBE(33),
 
-        INTAKEHIGH1CUBE(42),
+        INTAKEHIGH1CUBE(36.9),
          //parallel - pickup
-        INTAKEHIGH1CONE(42),
+        INTAKEHIGH1CONE(37),
 
-        INTAKEHIGH2CUBE(15), //- drop
-        INTAKEHIGH2CONE(15),
+        INTAKEHIGH2CUBE(20), //- drop
+        INTAKEHIGH2CONE(20),
         HOLD(-22), // straight up
-
         //AUTO
         INTAKEAUTOCUBE(49.7), //Intaking as far down as possible for cube
         INTAKRAUTOCONE(50), //intake auto position for cone
@@ -80,10 +81,6 @@ public class Pivot extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotRelativeEncoder = pivotMotor.getEncoder();
-        // pivotAbsoluteEncoder = pivotMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle); //TODO:Test // 8192
-        // pivotAbsoluteEncoder.setPositionConversionFactor(Constants.ROTATIONS_TO_DEGREES);
-        // armAbsoluteEncoder.setInverted(false);
-        // armMotor.getForwardLimitSwitch(null);//What does this do
   
 
         controller = new PIDController(0.024, 0, 0);
@@ -96,8 +93,8 @@ public class Pivot extends SubsystemBase {
         setTargetPosition(() -> PivotPosition.START);
 
         ComplexWidgetBuilder.create(resetPivotEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
-        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 15);
-        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);//TODO:Test
+        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 70);
+        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, -25);//TODO:Test
     }
 
     @Override
