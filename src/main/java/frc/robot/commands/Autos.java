@@ -185,21 +185,22 @@ public final class Autos {
     public static CommandBase threeToCubeAndToDrop(Drive drive, Elevator elevator, Pivot pivot, Intake intake) {//Bottom Red/Top Blue
         return new SequentialCommandGroup(
             new AutoMoveMid(elevator,pivot),
-            new WaitCommand(1),
+            new WaitCommand(0.6),
             new DropCone(elevator, pivot, intake),
             new WaitCommand(0.3),
             PathPlannerFollow.create(drive, "ToCube3")
                 .setMaxVelocity(1)
-                .setAcceleration(0.8) 
+                .setAcceleration(0.9) 
                 // .addMarker(J
                 .build(),
-            new MoveIntakeLow(elevator, pivot)
-            //  PathPlannerFollow.create(drive, "ToCube1Forward")
-            //     .setMaxVelocity(1)
-            //     .setAcceleration(0.8) 
-            //     .addMarker("intake",new SequentialCommandGroup(new IntakeCube(pivot, intake, 6))
-            //      )
-            //     .build()
+            new MoveIntakeLow(elevator, pivot),
+            new WaitCommand(0.3),
+             PathPlannerFollow.create(drive, "ToCube1Forward")
+                .setMaxVelocity(0.8)
+                .setAcceleration(0.8) 
+                .addMarker("intake",new SequentialCommandGroup(new IntakeCube(pivot, intake, 6))
+                 )
+                .build()
 
 
                 // new IntakeCube(pivot, intake, 5),
@@ -273,8 +274,8 @@ public final class Autos {
     public static CommandBase turnTest(Drive drive) {
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "TurnTest")
-                .setMaxVelocity(0.5)
-                .setAcceleration(0.5)
+                .setMaxVelocity(0.3)
+                .setAcceleration(0.3)
                 .build()
         );
     }
