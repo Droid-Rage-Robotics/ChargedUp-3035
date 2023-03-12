@@ -50,8 +50,9 @@ public class Intake extends SubsystemBase {
     // }
 
     private double OUTTAKE = -0.28,
-    INTAKE = 1,
-    HOLD = 0.1, STOP =0;
+    CUBEINTAKE = 0.19,
+    INTAKE = 0.3,
+    HOLD = 0.05, STOP =0;
 
     private final CANSparkMax intakeMotor;
     // private final PIDController intakeController;
@@ -130,19 +131,34 @@ public class Intake extends SubsystemBase {
     }
 
     public CommandBase runIntake() {
-        return switch(TrackedElement.get()) {
-            case CONE->setIntakePower(INTAKE);
-            case CUBE->setTargetVelocity(INTAKE);
-            case NONE->setTargetVelocity(INTAKE);
-        };
+        return
+                switch(TrackedElement.get()) {
+                case CONE -> setIntakePower(INTAKE);
+                case CUBE -> setIntakePower(CUBEINTAKE);
+                case NONE -> setIntakePower(INTAKE);
+            };
+        // return runOnce(() -> {
+        //     switch(TrackedElement.get()) {
+        //     case CONE -> setIntakePowerV(INTAKE);
+        //     case CUBE -> setIntakePowerV(CUBEINTAKE);
+        //     case NONE -> setIntakePowerV(INTAKE);
+        // })};
+
+        
     }
 
     public CommandBase runOuttake() {
-        return switch(TrackedElement.get()) {
-            case CONE->setTargetVelocity(OUTTAKE);
-            case CUBE->setTargetVelocity(OUTTAKE);
-            case NONE->setTargetVelocity(OUTTAKE);
-        };
+        return
+                switch(TrackedElement.get()) {
+                case CONE -> setIntakePower(OUTTAKE);
+                case CUBE -> setIntakePower(OUTTAKE);
+                case NONE -> setIntakePower(OUTTAKE);
+            };
+        // return runOnce(() -> {
+        //     switch(TrackedElement.get()){
+
+            
+        // }});
     }
 
     public CommandBase runStop() { 
@@ -174,13 +190,20 @@ public class Intake extends SubsystemBase {
     }
 
     private CommandBase setTargetVelocity(double power) {
+        // return switch(TrackedElement.get()) {
+        //     case CONE -> setIntakePower(INTAKE);
+        //     case CUBE -> setIntakePower(CUBEINTAKE);
+        //     case NONE -> setIntakePower(INTAKE);
+            
+        // };
         return runOnce(() -> {
             intakeMotor.set(power);
-            // intakeController.setSetpoint(velocity.get());
-            // targetVelocityWriter.set(velocity.get());
-            // this.targetVelocity = velocity;
-            
         });
+        //     // intakeController.setSetpoint(velocity.get());
+        //     // targetVelocityWriter.set(velocity.get());
+        //     // this.targetVelocity = velocity;
+            
+        // });
     }
 
     public double getIntakeVelocity() {
@@ -196,6 +219,16 @@ public class Intake extends SubsystemBase {
         return runOnce(() -> {
             intakeMotor.set(power);
         });
+        
+    }
+
+    private void setIntakePowerV(double power) {
+        // if (!isEnabled.get()) return;
+        // return runOnce() ->{
+        //     intakeMotor.set(power);
+        // }
+
+            intakeMotor.set(power);
         
     }
     
