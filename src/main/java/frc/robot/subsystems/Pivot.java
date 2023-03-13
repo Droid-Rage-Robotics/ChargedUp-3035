@@ -30,8 +30,8 @@ public class Pivot extends SubsystemBase {
 
     public enum PivotPosition {
         START(0),
-        INTAKELOWCUBE(52),//TODO:Change
-        INTAKELOWCONE(54.5),
+        INTAKELOWCUBE(49.9),//TODO:Change
+        INTAKELOWCONE(51.),
 
         LOWCONE(31.4),
         LOWCUBE(43.1),
@@ -40,7 +40,7 @@ public class Pivot extends SubsystemBase {
         MIDCUBE(53),
 
         HIGHCONE(LOWCONE.degrees.get()),
-        HIGHCUBE(33),
+        HIGHCUBE(31),
 
         INTAKEHIGH1CUBE(36.9),
          //parallel - pickup
