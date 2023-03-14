@@ -1,10 +1,8 @@
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
 import frc.robot.utilities.WriteOnlyString;
 
-public class TrackedElement {
+public abstract class TrackedElement {
     public enum Element {
         CONE,
         CUBE,
