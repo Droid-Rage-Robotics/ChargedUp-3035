@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Position.Positions;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.LockWheels;
@@ -9,21 +10,8 @@ import frc.robot.commands.ElevatorCommands.*;
 import frc.robot.commands.Manual.ManualPivot;
 import frc.robot.commands.Manual.ToggleIntake;
 
-import java.util.Collection;
-import java.util.List;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -180,15 +168,17 @@ public class RobotContainer {
 
         operator.a()
             .onTrue(
-                    new MoveLow(elevator, pivot)
+                    new MoveElevator(elevator, pivot, Positions.LOWCONE)
             );
         operator.x()
             .onTrue(
-                    new MoveMid(elevator, pivot)
+                    // new MoveMid(elevator, pivot)
+                    new MoveElevator(elevator, pivot, Positions.MIDCONE)
             );
         operator.y()
             .onTrue(
-                new MoveHigh(elevator, pivot)  
+                // new MoveHigh(elevator, pivot)  
+                new MoveElevator(elevator, pivot, Positions.HIGHCONE)
             );
         //  operator.b()
         //     .onTrue(
@@ -199,18 +189,18 @@ public class RobotContainer {
         
         operator.povUp()
             .onTrue(
-                new MoveIntake1High(elevator, pivot)
+                // new MoveIntake1High(elevator, pivot)
+                new MoveElevator(elevator, pivot, Positions.INTAKEHIGH1CONE)
             );
         operator.povRight()
             .onTrue(
-                new SequentialCommandGroup(
-                elevator.moveIntake2High(),
-                pivot.moveIntake2High())
                 // new MoveIntake2High(elevator, pivot)//Make grab cone from the drop
+                new MoveElevator(elevator, pivot, Positions.INTAKEHIGH2CONE)
             );
         operator.povLeft()
             .onTrue(
-                new MoveIntakeLow(elevator, pivot)//Cube and Cone
+                // new MoveIntakeLow(elevator, pivot)//Cube and Cone
+                new MoveElevator(elevator, pivot, Positions.INTAKELOWCONE)
             );
         //  operator.povRight()
         //     .onTrue(new SequentialCommandGroup(
@@ -221,7 +211,8 @@ public class RobotContainer {
             
         operator.povDown()
             .onTrue(
-                new MoveHold(elevator, pivot)
+                // new MoveHold(elevator, pivot)
+                new MoveElevator(elevator, pivot, Positions.HOLD)
             );
 
         operator.rightTrigger()
