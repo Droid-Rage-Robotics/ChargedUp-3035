@@ -159,7 +159,7 @@ public class Drive extends SubsystemBase {
 
     private final Pigeon2 pigeon2 = new Pigeon2(15);
 
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry (
+    private final SwerveDriveOdometry odometery = new SwerveDriveOdometry (
         SwerveConstants.DRIVE_KINEMATICS, 
         new Rotation2d(0), 
         getModulePositions()
@@ -215,7 +215,7 @@ public class Drive extends SubsystemBase {
     
     @Override
     public void periodic() {
-        odometer.update(
+        odometery.update(
             getRotation2d(),
             getModulePositions()
         );
@@ -281,7 +281,7 @@ public class Drive extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return odometer.getPoseMeters();
+        return odometery.getPoseMeters();
     }
 
     public boolean isFieldOriented() {
@@ -305,7 +305,7 @@ public class Drive extends SubsystemBase {
     // }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+        odometery.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
     public void drive(double xSpeed, double ySpeed, double turnSpeed) {
