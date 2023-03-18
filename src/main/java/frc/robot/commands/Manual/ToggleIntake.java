@@ -14,34 +14,34 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot2;
-import frc.robot.subsystems.Elevator.ElevatorPosition;
+import frc.robot.subsystems.Position.Positions;
 public class ToggleIntake extends SequentialCommandGroup {
     Map<Object, Command> commandMap = new HashMap<>();
     public ToggleIntake(Elevator elevator, Pivot pivot, Intake intake) {//TODO: Make sure all elevator Positions are in here
 
-        commandMap.put(ElevatorPosition.AUTOMIDCONE, Commands.none());
+        commandMap.put(Positions.AUTOMIDCONE, Commands.none());
 
-        commandMap.put(ElevatorPosition.HIGHCONE, Commands.sequence(elevator.moveHigh(), pivot.moveHigh()));
-        commandMap.put(ElevatorPosition.HIGHCUBE, Commands.sequence(elevator.moveHigh(), pivot.moveHigh()));
+        commandMap.put(Positions.HIGHCONE, Commands.sequence(elevator.moveHigh(), pivot.moveHigh()));
+        commandMap.put(Positions.HIGHCUBE, Commands.sequence(elevator.moveHigh(), pivot.moveHigh()));
 
-        commandMap.put(ElevatorPosition.HOLD, Commands.sequence(elevator.moveHold(), pivot.moveHold()));
+        commandMap.put(Positions.HOLD, Commands.sequence(elevator.moveHold(), pivot.moveHold()));
 
-        commandMap.put(ElevatorPosition.INTAKEHIGH1CONE, Commands.sequence(elevator.moveIntake1High(), pivot.moveIntake1High()));
-        commandMap.put(ElevatorPosition.INTAKEHIGH1CUBE, Commands.sequence(elevator.moveIntake1High(), pivot.moveIntake1High()));
+        commandMap.put(Positions.INTAKEHIGH1CONE, Commands.sequence(elevator.moveIntake1High(), pivot.moveIntake1High()));
+        commandMap.put(Positions.INTAKEHIGH1CUBE, Commands.sequence(elevator.moveIntake1High(), pivot.moveIntake1High()));
 
-        commandMap.put(ElevatorPosition.INTAKEHIGH2CONE, Commands.sequence(elevator.moveIntake2High(), pivot.moveIntake2High()));
-        commandMap.put(ElevatorPosition.INTAKEHIGH2CUBE, Commands.sequence(elevator.moveIntake2High(), pivot.moveIntake2High()));
+        commandMap.put(Positions.INTAKEHIGH2CONE, Commands.sequence(elevator.moveIntake2High(), pivot.moveIntake2High()));
+        commandMap.put(Positions.INTAKEHIGH2CUBE, Commands.sequence(elevator.moveIntake2High(), pivot.moveIntake2High()));
 
-        commandMap.put(ElevatorPosition.INTAKELOWCONE, Commands.sequence(elevator.moveIntakeLow(), pivot.moveIntakeLow()));
-        commandMap.put(ElevatorPosition.INTAKELOWCUBE, Commands.sequence(elevator.moveIntakeLow(), pivot.moveIntakeLow()));
+        commandMap.put(Positions.INTAKELOWCONE, Commands.sequence(elevator.moveIntakeLow(), pivot.moveIntakeLow()));
+        commandMap.put(Positions.INTAKELOWCUBE, Commands.sequence(elevator.moveIntakeLow(), pivot.moveIntakeLow()));
 
-        commandMap.put(ElevatorPosition.LOWCONE, Commands.sequence(elevator.moveLow(), pivot.moveLow()));
-        commandMap.put(ElevatorPosition.LOWCUBE, Commands.sequence(elevator.moveLow(), pivot.moveLow()));
+        commandMap.put(Positions.LOWCONE, Commands.sequence(elevator.moveLow(), pivot.moveLow()));
+        commandMap.put(Positions.LOWCUBE, Commands.sequence(elevator.moveLow(), pivot.moveLow()));
 
-        commandMap.put(ElevatorPosition.MIDCONE, Commands.sequence(elevator.moveMid(), pivot.moveMid()));
-        commandMap.put(ElevatorPosition.MIDCUBE, Commands.sequence(elevator.moveMid(), pivot.moveMid()));
+        commandMap.put(Positions.MIDCONE, Commands.sequence(elevator.moveMid(), pivot.moveMid()));
+        commandMap.put(Positions.MIDCUBE, Commands.sequence(elevator.moveMid(), pivot.moveMid()));
 
-        commandMap.put(ElevatorPosition.START, Commands.none());
+        commandMap.put(Positions.START, Commands.none());
 
         addCommands(
             intake.toggleCommand(),

@@ -1,7 +1,6 @@
 package frc.robot;
 
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Pivot.PivotPosition;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.LockWheels;

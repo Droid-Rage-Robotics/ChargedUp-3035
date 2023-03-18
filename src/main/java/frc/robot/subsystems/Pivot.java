@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Position.Positions;
 import frc.robot.subsystems.TrackedElement.Element;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.MutableBoolean;
@@ -28,41 +29,42 @@ public class Pivot extends SubsystemBase {
         public static final double ROTATIONS_TO_DEGREES = (GEAR_RATIO * READINGS_PER_REVOLUTION) / 360;
     }
 
-    public enum PivotPosition {
-        START(0),
-        INTAKELOWCUBE(49.9),//TODO:Change
-        INTAKELOWCONE(51.),
+    // public enum PivotPosition {
+    //     START(0),
+    //     INTAKELOWCUBE(49.9),//TODO:Change
+    //     INTAKELOWCONE(51.),
 
-        LOWCONE(31.4),
-        LOWCUBE(43.1),
+    //     LOWCONE(31.4),
+    //     LOWCUBE(43.1),
 
-        MIDCONE(LOWCONE.degrees.get()),
-        MIDCUBE(53),
+    //     MIDCONE(LOWCONE.degrees.get()),
+    //     MIDCUBE(53),
 
-        HIGHCONE(LOWCONE.degrees.get()),
-        HIGHCUBE(31),
+    //     HIGHCONE(LOWCONE.degrees.get()),
+    //     HIGHCUBE(31),
 
-        INTAKEHIGH1CUBE(36.9),
-         //parallel - pickup
-        INTAKEHIGH1CONE(37),
+    //     INTAKEHIGH1CUBE(36.9),
+    //      //parallel - pickup
+    //     INTAKEHIGH1CONE(37),
 
-        INTAKEHIGH2CUBE(20), //- drop
-        INTAKEHIGH2CONE(20),
-        HOLD(-22), // straight up
-        //AUTO
-        INTAKEAUTOCUBE(49.7), //Intaking as far down as possible for cube
-        INTAKRAUTOCONE(50), //intake auto position for cone
-        ;
+    //     INTAKEHIGH2CUBE(20), //- drop
+    //     INTAKEHIGH2CONE(20),
+    //     HOLD(-22), // straight up
+    //     //AUTO
+    //     // INTAKEAUTOCUBE(49.7), //Intaking as far down as possible for cube
+    //     // INTAKRAUTOCONE(50), //intake auto position for cone
+    //     ;
 
-        private final MutableDouble degrees;
+    //     private final MutableDouble degrees;
 
-        private PivotPosition(double degrees) {
-            this.degrees = new MutableDouble(degrees, PivotPosition.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
-        }
-    }
+    //     private PivotPosition(double degrees) {
+    //         this.degrees = new MutableDouble(degrees, PivotPosition.class.getSimpleName()+"/"+name()+" (Degrees)", Pivot.class.getSimpleName());
+    //     }
+    // }
     private final CANSparkMax pivotMotor;
     private final PIDController controller;
-    private volatile PivotPosition position = PivotPosition.START;
+    // private volatile PivotPosition position = PivotPosition.START;
+    private volatile Positions position = Position.Positions.START;
     // private final AbsoluteEncoder pivotAbsoluteEncoder;
     private final RelativeEncoder pivotRelativeEncoder;
     private final WriteOnlyDouble Cube = new WriteOnlyDouble(0, "Cube", Pivot.class.getSimpleName());
@@ -90,11 +92,11 @@ public class Pivot extends SubsystemBase {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        setTargetPosition(() -> PivotPosition.START);
+        setTargetPosition(() -> Positions.START);
 
         ComplexWidgetBuilder.create(resetPivotEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
-        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 70);
-        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, -25);//TODO:Test
+        // pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 70);
+        // pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, -25);//TODO:Test
     }
 
     @Override
@@ -108,9 +110,9 @@ public class Pivot extends SubsystemBase {
         periodic();
     }
 
-    public PivotPosition getPivotPosition() {
-        return position;
-    }
+    // public PivotPosition getPivotPosition() {
+    //     return position;
+    // }
 
     public double getPosition() {
         return pivotRelativeEncoder.getPosition() + offset;
@@ -124,43 +126,51 @@ public class Pivot extends SubsystemBase {
         return controller.getSetpoint();
     }
 
-    public CommandBase setTargetPosition(Supplier<PivotPosition> position) {
-        return runOnce(() -> {
-            this.position = position.get();
-            controller.setSetpoint(position.get().degrees.get());
-        });
-    }
-
-    private void setTargetPosition(double position) {
-
-            controller.setSetpoint(position);
-    }
-    public void setCurrentPositionManually(double position) {
-
-            setTargetPosition(getTargetPosition() + position);
-    }
-    // public CommandBase setTargetPosition(double position) {
+    // public CommandBase setTargetPosition(Supplier<PivotPosition> position) {
     //     return runOnce(() -> {
-    //         this.position.degrees.set(position);
-    //         controller.setSetpoint(position);
+    //         this.position = position.get();
+    //         controller.setSetpoint(position.get().degrees.get());
     //     });
     // }
 
+    public CommandBase setTargetPosition(Supplier<Positions> position) {
+        return runOnce(() -> {
+            this.position = position.get();
+            Position.set(this.position);
+            controller.setSetpoint(Position.getPivotDegrees(this.position));
+        });
+    }
+
+    // private void setTargetPosition(double position) {
+    //         controller.setSetpoint(position);
+    // }
+
+    public void setCurrentPositionManually(double position) {
+            setTargetPosition(getTargetPosition() + position);
+    }
+    public CommandBase setTargetPosition(double position) {
+        return runOnce(() -> {
+            // this.position.degrees.set(position);
+            controller.setSetpoint(position);
+        });
+    }
+
     public CommandBase moveIntakeLow() {
+        // return setTargetPosition(offset)
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.INTAKELOWCONE;
-                case CUBE -> PivotPosition.INTAKELOWCUBE;
-                case NONE -> PivotPosition.INTAKELOWCUBE;
+                case CONE -> Positions.INTAKELOWCONE;
+                case CUBE -> Positions.INTAKELOWCUBE;
+                case NONE -> Positions.INTAKELOWCUBE;
             }
         );
     }
     public CommandBase moveIntake1High() {//The pickup
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.INTAKEHIGH1CONE;
-                case CUBE -> PivotPosition.INTAKEHIGH1CUBE;
-                case NONE -> PivotPosition.INTAKEHIGH1CUBE;
+                case CONE -> Positions.INTAKEHIGH1CONE;
+                case CUBE -> Positions.INTAKEHIGH1CUBE;
+                case NONE -> Positions.INTAKEHIGH1CUBE;
             }
         );
     }
@@ -168,9 +178,9 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveIntake2High() {//The drop
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.INTAKEHIGH2CONE;
-                case CUBE -> PivotPosition.INTAKEHIGH2CUBE;
-                case NONE -> PivotPosition.INTAKEHIGH2CUBE;
+                case CONE -> Positions.INTAKEHIGH2CONE;
+                case CUBE -> Positions.INTAKEHIGH2CUBE;
+                case NONE -> Positions.INTAKEHIGH2CUBE;
             }
         );
     }
@@ -178,9 +188,9 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveLow() {
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.LOWCONE;
-                case CUBE -> PivotPosition.LOWCUBE;
-                case NONE -> PivotPosition.LOWCUBE;
+                case CONE -> Positions.LOWCONE;
+                case CUBE -> Positions.LOWCUBE;
+                case NONE -> Positions.LOWCUBE;
             }
         );
     }
@@ -194,9 +204,9 @@ public class Pivot extends SubsystemBase {
         }
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.MIDCONE;
-                case CUBE -> PivotPosition.MIDCUBE;
-                case NONE -> PivotPosition.MIDCUBE;
+                case CONE -> Positions.MIDCONE;
+                case CUBE -> Positions.MIDCUBE;
+                case NONE -> Positions.MIDCUBE;
             }
         );
     }
@@ -204,15 +214,15 @@ public class Pivot extends SubsystemBase {
     public CommandBase moveHigh() {
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
-                case CONE -> PivotPosition.HIGHCONE;
-                case CUBE -> PivotPosition.HIGHCUBE;
-                case NONE -> PivotPosition.HIGHCUBE;
+                case CONE -> Positions.HIGHCONE;
+                case CUBE -> Positions.HIGHCUBE;
+                case NONE -> Positions.HIGHCUBE;
             }
         );
     }
 
     public CommandBase moveHold() {
-        return setTargetPosition(() -> PivotPosition.HOLD);
+        return setTargetPosition(() -> Positions.HOLD);
     }
 
     private void setPower(double power) {
@@ -222,7 +232,7 @@ public class Pivot extends SubsystemBase {
 
     public CommandBase resetPivotEncoder() {
         return runOnce(() -> {
-            offset = -getRawPosition();//Offset?  
+            offset = -getRawPosition();//Offset? - should work 
         });
     }
 
