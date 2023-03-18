@@ -49,10 +49,10 @@ public class Intake extends SubsystemBase {
     //     }
     // }
 
-    private double OUTTAKE = -0.28,
+    private double OUTTAKE = -0.28, SHOOTCUBE = -1,
     CUBEINTAKE = 0.19,
     INTAKE = 0.3,
-    HOLD = 0.05, STOP =0;
+    HOLD = 0.05, STOP = 0;
 
     private final CANSparkMax intakeMotor;
     // private final PIDController intakeController;
@@ -79,6 +79,8 @@ public class Intake extends SubsystemBase {
         //     0.000173611,
         //     0,
         //     0);
+        /*public double velocityKp = 0.065;
+    public double velocityKf = 0.0519; Spectrum using Falcon */
         // targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = intakeMotor.getEncoder();
         // intakeController.setTolerance(IntakeSpeeds.POSITION_TOLERANCE.get());
