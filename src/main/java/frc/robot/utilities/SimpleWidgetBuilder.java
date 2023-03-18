@@ -11,7 +11,7 @@ public class SimpleWidgetBuilder<T> {
     private final SimpleWidget simpleWidget;
     private final T toAdd;
 
-    private SimpleWidgetBuilder(T value, String title, String tab) {
+    public SimpleWidgetBuilder(T value, String title, String tab) {
         this.toAdd = value;
         this.simpleWidget = Shuffleboard.getTab(tab)
             .add(title, value);
