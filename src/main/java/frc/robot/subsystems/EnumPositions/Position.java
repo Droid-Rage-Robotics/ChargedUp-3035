@@ -1,9 +1,7 @@
 package frc.robot.subsystems.EnumPositions;
 
 import frc.robot.subsystems.Elevator;
-import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.SimpleWidgetBuilder;
-import frc.robot.utilities.WriteOnlyString;
+import frc.robot.utilities.ShuffleboardValue;
 
 public abstract class Position {
     public enum Positions {//16-17 is MAXXXXXX for vert ; 11 is for horiz
@@ -15,13 +13,13 @@ public abstract class Position {
         LOWCONE(0, 0, 31.4),
         LOWCUBE(0,0, 43.1),
         
-        MIDCONE(13.2,11,LOWCONE.pivotAngle.get()),
+        MIDCONE(13.2,11,31.4), // LOWCONE.pivotAngle.get()
         MIDCUBE(13.4,10.4, 53),
 
-        AUTOMIDCONE(15.2, 11.5, MIDCONE.pivotAngle.get()),
+        AUTOMIDCONE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get()
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGHCONE(14.4,11, LOWCONE.pivotAngle.get()),
+        HIGHCONE(14.4,11, 31.4),// LOWCONE.pivotAngle.get()
         HIGHCUBE(17,11, 31),
 
         INTAKEHIGH1CONE(14.9,0, 37),
@@ -34,20 +32,20 @@ public abstract class Position {
         
         ;
 
-        private MutableDouble verticalInches;
-        private MutableDouble horizontalInches;
-        private MutableDouble pivotAngle;
+        private final ShuffleboardValue<Double> verticalInches;
+        private final ShuffleboardValue<Double> horizontalInches;
+        private final ShuffleboardValue<Double> pivotAngle;
 
         private Positions(double verticalInches, double horizontalInches, double pivotAngle) {
-            this.verticalInches = SimpleWidgetBuilder.create(verticalInches, Positions.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
+            this.verticalInches = ShuffleboardValue.create(verticalInches, Positions.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
                 .withSize(1, 3)
-                .buildMutableDouble();
-            this.horizontalInches = SimpleWidgetBuilder.create(horizontalInches, Positions.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
+                .build();
+            this.horizontalInches = ShuffleboardValue.create(horizontalInches, Positions.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
                 .withSize(1, 3)
-                .buildMutableDouble();
-            this.pivotAngle = SimpleWidgetBuilder.create(pivotAngle, Positions.class.getSimpleName()+"/"+name()+"/Pivot Angle", Elevator.class.getSimpleName())
+                .build();
+            this.pivotAngle = ShuffleboardValue.create(pivotAngle, Positions.class.getSimpleName()+"/"+name()+"/Pivot Angle", Elevator.class.getSimpleName())
                 .withSize(1, 3)
-                .buildMutableDouble();
+                .build();
         }
 
         public Positions get(){
@@ -56,7 +54,7 @@ public abstract class Position {
     }
     
     public static volatile Positions position = Positions.START;
-    private static final WriteOnlyString PositionWriter = new WriteOnlyString(position.name(), "Position", "Misc");
+    private static final ShuffleboardValue<String> PositionWriter = ShuffleboardValue.create(position.name(), "Position", "Misc").build();
     
     public static Positions get() {
         return Position.position;

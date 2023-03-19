@@ -61,9 +61,9 @@ public class PathPlannerFollow {
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
             drive::getPose, // Pose2d supplier
             drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-            Drive.SwerveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
-            new PIDConstants(Drive.AutoConfig.TRANSLATIONAL_KP.value.get(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-            new PIDConstants(Drive.AutoConfig.THETA_KP.value.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+            Drive.DRIVE_KINEMATICS, // SwerveDriveKinematics
+            new PIDConstants(Drive.Config.TRANSLATIONAL_KP.get(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(Drive.Config.THETA_KP.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
             drive::setFeedforwardModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true

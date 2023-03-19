@@ -6,9 +6,6 @@ package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Pivot2;
-import frc.robot.utilities.WriteOnlyDouble;
-import frc.robot.utilities.WriteOnlyString;
 
 import java.io.WriteAbortedException;
 

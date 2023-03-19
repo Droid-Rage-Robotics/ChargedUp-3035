@@ -10,15 +10,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.EnumPositions.TrackedElement;
 import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
-import frc.robot.utilities.MutableBoolean;
-import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.SimpleWidgetBuilder;
-import frc.robot.utilities.WriteOnlyDouble;
+import frc.robot.utilities.ShuffleboardValue;
 
 public class Intake2 extends SubsystemBase {
     public enum IntakeSpeeds {
@@ -38,12 +36,12 @@ public class Intake2 extends SubsystemBase {
 
         ;
 
-        private final MutableDouble velocityRPM;
+        private final ShuffleboardValue<Double> velocityRPM;
 
         private IntakeSpeeds(double velocityRPM) {
-            this.velocityRPM = new SimpleWidgetBuilder<Double>(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
+            this.velocityRPM = ShuffleboardValue.create(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
                 .withSize(1, 3)
-                .buildMutableDouble();
+                .build();
         }
         public double get() {
             return velocityRPM.get();
@@ -58,12 +56,12 @@ public class Intake2 extends SubsystemBase {
     private PneumaticHub pneumaticHub;
     
     // private IntakeSpeeds targetVelocity;
-    private final MutableBoolean isEnabled = new SimpleWidgetBuilder<Boolean>
-        (true, "Is Enabled", Intake.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(
+        true, "Is Enabled", Intake.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
-            .buildMutableBoolean();
-    private final WriteOnlyDouble targetVelocityWriter = new WriteOnlyDouble
-        (0, "Target Intake Velocity", "Intake");
+            .build();
+    private final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(
+        0.0, "Target Intake Velocity", "Intake").build();
 
     private boolean isOpen = false;
 
@@ -131,7 +129,6 @@ public class Intake2 extends SubsystemBase {
         return switch(TrackedElement.get()) {
             case CONE->setTargetVelocity(IntakeSpeeds.INTAKE);
             case CUBE->setTargetVelocity(IntakeSpeeds.INTAKE);
-            case NONE->setTargetVelocity(IntakeSpeeds.INTAKE);
         };
     }
 
@@ -139,7 +136,6 @@ public class Intake2 extends SubsystemBase {
         return switch(TrackedElement.get()) {
             case CONE->setTargetVelocity(IntakeSpeeds.OUTTAKE);
             case CUBE->setTargetVelocity(IntakeSpeeds.OUTTAKE);
-            case NONE->setTargetVelocity(IntakeSpeeds.OUTTAKE);
         };
     }
 
@@ -151,7 +147,6 @@ public class Intake2 extends SubsystemBase {
         return switch(TrackedElement.get()) {
             case CONE -> setTargetVelocity(IntakeSpeeds.HOLDCONE);
             case CUBE -> setTargetVelocity(IntakeSpeeds.HOLDCUBE);
-            case NONE -> setTargetVelocity(IntakeSpeeds.HOLDCUBE);
             
         };
     }

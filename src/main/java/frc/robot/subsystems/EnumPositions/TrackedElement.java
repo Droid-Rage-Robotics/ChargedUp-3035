@@ -1,19 +1,18 @@
 package frc.robot.subsystems.EnumPositions;
 
-import frc.robot.utilities.WriteOnlyString;
+import frc.robot.utilities.ShuffleboardValue;
 
 public abstract class TrackedElement {
     public enum Element {
         CONE,
-        CUBE,
-        NONE
+        CUBE
         ;
     }
     
-    private static volatile Element element = Element.NONE;
-    private static final WriteOnlyString ElementWriter = new WriteOnlyString(element.name(), "Tracked Element", "Misc");
+    private static volatile Element element = Element.CONE;
+    private static final ShuffleboardValue<String> ElementWriter = ShuffleboardValue.create(element.name(), "Tracked Element", "Misc").build();
     
-    public static Element get() {
+    public static synchronized Element get() {
         return TrackedElement.element;
     }
 
@@ -21,7 +20,7 @@ public abstract class TrackedElement {
         return element == Element.CONE;
     }
 
-    public static void set(Element element) {
+    public static synchronized void set(Element element) {
         ElementWriter.set(element.name());
         TrackedElement.element = element; // discord
     }

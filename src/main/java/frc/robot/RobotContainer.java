@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.EnumPositions.Position.Positions;
 import frc.robot.utilities.ComplexWidgetBuilder;
+import frc.robot.utilities.ShuffleboardValue;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
@@ -40,7 +41,7 @@ public class RobotContainer {
     // make shuffleboard stuff able to use a class instead of a string
     // safe sparkmax
     // arm class
-    // 
+    // FIX OUTTAKE COMMAND!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -91,6 +92,7 @@ public class RobotContainer {
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misce")
             .withSize(1, 3);
 
+            
         // new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Cam2era Stream", "Misce")
         //     .withSize(5, 5);
 
@@ -216,10 +218,10 @@ public class RobotContainer {
                 new MoveElevator(elevator, pivot, Positions.HOLD)
             );
 
-        operator.rightTrigger()
-            .onTrue(
-                new Outtake(elevator, pivot, intake)
-            );
+        // operator.rightTrigger()
+        //     .onTrue(
+        //         new Outtake(elevator, pivot, intake) //TODO: fix this !!!!!!!!!!!!
+        //     );
             // / make INTAKE ALLWYS RUNNING
 
         operator.start()

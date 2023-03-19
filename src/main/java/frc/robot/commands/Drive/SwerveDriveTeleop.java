@@ -52,9 +52,9 @@ public class SwerveDriveTeleop extends CommandBase {
         this.turn = turn;
         this.lockTrigger = lockTrigger;
 
-        this.xLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ACCELERATION_UNITS_PER_SECOND.value.get());
-        this.yLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ACCELERATION_UNITS_PER_SECOND.value.get());
-        this.turnLimiter = new SlewRateLimiter(Drive.TeleOpNumbers.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.value.get());
+        this.xLimiter = new SlewRateLimiter(Drive.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.yLimiter = new SlewRateLimiter(Drive.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.turnLimiter = new SlewRateLimiter(Drive.Config.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.get());
 
         antiTipX.setTolerance(3);
         antiTipY.setTolerance(3);
@@ -142,12 +142,12 @@ public class SwerveDriveTeleop extends CommandBase {
         turnSpeed = 
             // turnLimiter.calculate(turnSpeed) * 
             turnSpeed *
-            Drive.SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND * 
+            Drive.Config.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.get() * 
             drive.getAngularSpeed();
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
 
-        SwerveModuleState[] states = Drive.SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+        SwerveModuleState[] states = Drive.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
 
         // if (lockTrigger.getAsBoolean()) {
         //     drive.setModuleStates(new SwerveModuleState[] {

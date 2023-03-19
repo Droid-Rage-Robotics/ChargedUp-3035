@@ -15,76 +15,36 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.EnumPositions.TrackedElement;
 import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
-import frc.robot.utilities.MutableBoolean;
-import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.SimpleWidgetBuilder;
-import frc.robot.utilities.WriteOnlyDouble;
+import frc.robot.utilities.ShuffleboardValue;
+import frc.robot.utilities.ShuffleboardValueBuilder;
 
 public class Intake extends SubsystemBase {
-    // public enum IntakeSpeeds {
-    //     // MAX_RPM(5676),
-    //     // FARCUBELOW(4000),
-    //     // FARCUBEMID(5000),
-    //     // FARCUBEHIGH(5400),
 
-    //     // CONE(1000),
-    //     CONTINUOUS(0.1),
-    //     // INTAKE(3000),
-    //     OUTTAKE(0.3),
-    //     HOLDCONE(-0.3),
-    //     HOLDCUBE(-0.3),
-    //     // STOP(0), 
-    //     // POSITION_TOLERANCE(5),
-
-    //     ;
-
-    //     private final MutableDouble velocityRPM;
-
-    //     private IntakeSpeeds(double velocityRPM) {
-    //         this.velocityRPM = SimpleWidgetBuilder.create(velocityRPM, IntakeSpeeds.class.getSimpleName()+"/"+name()+": Velocity (RPM)", Intake.class.getSimpleName())
-    //             .withSize(1, 3)
-    //             .buildMutableDouble();
-    //     }
-    //     public double get() {
-    //         return velocityRPM.get();
-    //     }
-    // }
-
-    private double OUTTAKE = -0.28, SHOOTCUBE = -1,
+    private double SHOOTCUBE = -1,
+    OUTTAKE = -0.28,
     CUBEINTAKE = 0.19,
     INTAKE = 0.3,
     HOLD = 0.05, STOP = 0;
 
     private final CANSparkMax intakeMotor;
-    // private final PIDController intakeController;
     private final RelativeEncoder intakeEncoder;
     private final DoubleSolenoid intakeSolenoid;
     private PneumaticHub pneumaticHub;
-    
-    // private IntakeSpeeds targetVelocity;
-    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create
+
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create
         (true, "Is Enabled", Intake.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
-            .buildMutableBoolean();
-    private final WriteOnlyDouble targetVelocityWriter = new WriteOnlyDouble
-        (0, "Target Intake Velocity", "Intake");
-
-    private boolean isOpen = false;
+            .build();
+            
+    private final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create
+        (0.0, "Target Intake Velocity", "Intake").build();
+    private boolean isOpen = TrackedElement.get() == Element.CUBE ? true : false;
 
     public Intake() {
         intakeMotor = new CANSparkMax(19, MotorType.kBrushless);
         intakeMotor.setIdleMode(IdleMode.kBrake);
         intakeMotor.setInverted(false);
-
-        // intakeController = new PIDController(
-        //     0.000173611,
-        //     0,
-        //     0);
-        /*public double velocityKp = 0.065;
-    public double velocityKf = 0.0519; Spectrum using Falcon */
-        // targetVelocity = IntakeSpeeds.CONTINUOUS;
         intakeEncoder = intakeMotor.getEncoder();
-        // intakeController.setTolerance(IntakeSpeeds.POSITION_TOLERANCE.get());
 
 
         pneumaticHub = new PneumaticHub(10);
@@ -95,10 +55,6 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // setIntakePower(intakeController.calculate(getIntakeVelocity()));
-        // if (!isEnabled.get()) {
-        //     pneumaticHub.disableCompressor();
-        // }  
     }
   
     @Override
@@ -133,21 +89,19 @@ public class Intake extends SubsystemBase {
         return runOnce(() -> open());//Cube
     }
 
+    public void intake() {
+        switch(TrackedElement.get()) {
+            case CONE -> setIntakePower(INTAKE);
+            case CUBE -> setIntakePower(CUBEINTAKE); ////////////////////
+        }
+    }
+
     public CommandBase runIntake() {
         return
                 switch(TrackedElement.get()) {
                 case CONE -> setIntakePower(INTAKE);
-                case CUBE -> setIntakePower(CUBEINTAKE);
-                case NONE -> setIntakePower(INTAKE);
+                case CUBE -> setIntakePower(CUBEINTAKE); ////////////////////
             };
-        // return runOnce(() -> {
-        //     switch(TrackedElement.get()) {
-        //     case CONE -> setIntakePowerV(INTAKE);
-        //     case CUBE -> setIntakePowerV(CUBEINTAKE);
-        //     case NONE -> setIntakePowerV(INTAKE);
-        // })};
-
-        
     }
 
     public CommandBase runOuttake() {
@@ -155,13 +109,7 @@ public class Intake extends SubsystemBase {
                 switch(TrackedElement.get()) {
                 case CONE -> setIntakePower(OUTTAKE);
                 case CUBE -> setIntakePower(OUTTAKE);
-                case NONE -> setIntakePower(OUTTAKE);
             };
-        // return runOnce(() -> {
-        //     switch(TrackedElement.get()){
-
-            
-        // }});
     }
 
     public CommandBase runStop() { 
@@ -172,7 +120,6 @@ public class Intake extends SubsystemBase {
         return switch(TrackedElement.get()) {
             case CONE -> setIntakePower(HOLD);
             case CUBE -> setIntakePower(HOLD);
-            case NONE -> setIntakePower(HOLD);
             
         };
     }
@@ -193,20 +140,9 @@ public class Intake extends SubsystemBase {
     }
 
     private CommandBase setTargetVelocity(double power) {
-        // return switch(TrackedElement.get()) {
-        //     case CONE -> setIntakePower(INTAKE);
-        //     case CUBE -> setIntakePower(CUBEINTAKE);
-        //     case NONE -> setIntakePower(INTAKE);
-            
-        // };
         return runOnce(() -> {
             intakeMotor.set(power);
         });
-        //     // intakeController.setSetpoint(velocity.get());
-        //     // targetVelocityWriter.set(velocity.get());
-        //     // this.targetVelocity = velocity;
-            
-        // });
     }
 
     public double getIntakeVelocity() {
@@ -214,10 +150,6 @@ public class Intake extends SubsystemBase {
     }
       
     private CommandBase setIntakePower(double power) {
-        // if (!isEnabled.get()) return;
-        // return runOnce() ->{
-        //     intakeMotor.set(power);
-        // }
 
         return runOnce(() -> {
             intakeMotor.set(power);
@@ -226,23 +158,9 @@ public class Intake extends SubsystemBase {
     }
 
     private void setIntakePowerV(double power) {
-        // if (!isEnabled.get()) return;
-        // return runOnce() ->{
-        //     intakeMotor.set(power);
-        // }
 
             intakeMotor.set(power);
         
     }
-    
-    // public CommandBase shootHighCube(){ 
-    //     return setTargetVelocity(IntakeSpeeds.FARCUBEHIGH);
-    // }
-    // public CommandBase shootMidCube(){ 
-    //     return setTargetVelocity(IntakeSpeeds.FARCUBEMID);
-    // }
-    // public CommandBase shootLowCube(){ 
-    //     return setTargetVelocity(IntakeSpeeds.FARCUBELOW);
-    // }
 }
 

@@ -18,88 +18,74 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.ComplexWidgetBuilder;
-import frc.robot.utilities.MutableBoolean;
-import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.SimpleWidgetBuilder;
-import frc.robot.utilities.WriteOnlyDouble;
-import frc.robot.utilities.WriteOnlyString;
+import frc.robot.utilities.ShuffleboardValueEnum;
+import frc.robot.utilities.ShuffleboardValue;
 
 //Set Voltage instead of set Power
 //Set them to 90 to 100%
 public class Drive extends SubsystemBase {
-    public enum TeleOpNumbers {
+    public enum Config implements ShuffleboardValueEnum<Double> {
+        PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(2 * (2 * Math.PI)),
+        TRACK_WIDTH(Units.inchesToMeters(20.75)),
+        WHEEL_BASE(Units.inchesToMeters(23.75)),
+
         MAX_ACCELERATION_UNITS_PER_SECOND(10),
         MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND(10),
-        ;
-        public final MutableDouble value;
-        private TeleOpNumbers(double value) {
-            this.value = new MutableDouble(value, TeleOpNumbers.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
-        }
-    }
-    public enum TeleOpOptions { 
-        IS_FIELD_ORIENTED(true),
-        IS_SQUARED_INPUTS(true),
-        ;
 
-        public final MutableBoolean value;
-        private TeleOpOptions(boolean value) {
-            this.value = new MutableBoolean(value, TeleOpOptions.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
-        }
-    }
-    
-    public enum AutoConfig {
         MAX_SPEED_METERS_PER_SECOND(SwerveModule.Constants.PHYSICAL_MAX_SPEED_METERS_PER_SECOND / 4),
-        MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(SwerveConstants.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND / 10),
+        MAX_ANGULAR_SPEED_RADIANS_PER_SECOND(PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.get() / 10),
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(1),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(1), // 1 / 8 of a full rotation per second per second),
         TRANSLATIONAL_KP(1.9),//1.9-0.09
         THETA_KP(0.01),//Changed to 1 from 0.2 (Lucky) =0.4 0.08
-        ;
-        public final MutableDouble value;
-        private AutoConfig(double value) {
-            this.value = new MutableDouble(value, AutoConfig.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
-        }
-    }
 
-    public enum SwerveConfig {
         FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.774966), //1.24
         FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.854886), //2.26
         BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-2.589354), //0.99^//TODO:CHeck
         BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS(-3.334867), //1.74
 
-        DEFAULT_HEADING_OFFSET(0)
+        DEFAULT_HEADING_OFFSET(0),
         ;
-        public final MutableDouble value;
-        private SwerveConfig(double value) {
-            this.value = new MutableDouble(value, SwerveConfig.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName());
+        private final ShuffleboardValue<Double> shuffleboardValue;
+        private Config(double value) {
+            shuffleboardValue = ShuffleboardValue.create(value, Config.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName()).build();
         }
+        @Override 
+        public ShuffleboardValue<Double> getShuffleboardValue() { return shuffleboardValue; }
+    }
+    public enum TeleOpOptions implements ShuffleboardValueEnum<Boolean> { 
+        IS_FIELD_ORIENTED(true),
+        IS_SQUARED_INPUTS(true),
+        ;
+        private final ShuffleboardValue<Boolean> shuffleboardValue;
+        private TeleOpOptions(boolean value) {
+            shuffleboardValue = ShuffleboardValue.create(value, TeleOpOptions.class.getSimpleName()+"/"+name(), Drive.class.getSimpleName()).build();
+        } 
+        @Override 
+        public ShuffleboardValue<Boolean> getShuffleboardValue() { return shuffleboardValue; }
     }
 
-    public static class SwerveConstants {
-        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2 * (2 * Math.PI);
-        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75);
-        public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
-        public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),  // Front Left --
-            new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2),   // Front Right +-
-            new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), // Back Left -+
-            new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2)   // Back Right ++
-        );
-    }
-
-    private enum Speed {
-        TURBO(1, 1), //TODO find what feels best 
+    public enum Speed {
+        TURBO(1, 1),
         NORMAL(1, 1),
         SLOW(0.15, 0.15),
-        SUPERSLOW(0.05, 0.05), //unused
+        SUPER_SLOW(0.05, 0.05),
         ;
-
-        private final MutableDouble translationalSpeed;
-        private final MutableDouble angularSpeed;
-
+        private final ShuffleboardValue<Double> shuffleboardTranslationalValue;
+        private final ShuffleboardValue<Double> shuffleboardAngularValue;
         private Speed(double translationalSpeed, double angularSpeed) {
-            this.translationalSpeed = new MutableDouble(translationalSpeed, Speed.class.getSimpleName()+"/"+name()+"/Translational Speed", Drive.class.getSimpleName());
-            this.angularSpeed = new MutableDouble(angularSpeed, Speed.class.getSimpleName()+"/"+name()+"/Angular Speed", Drive.class.getSimpleName());
+            shuffleboardTranslationalValue = ShuffleboardValue.create(translationalSpeed, Speed.class.getSimpleName()+"/"+name()+": Translational Speed", Drive.class.getSimpleName())
+                .withSize(3, 3)
+                .build();
+            shuffleboardAngularValue = ShuffleboardValue.create(translationalSpeed, Speed.class.getSimpleName()+"/"+name()+": Angular Speed", Drive.class.getSimpleName())
+                .withSize(3, 3)
+                .build();
+        }
+        public double getTranslationalSpeed() {
+            return shuffleboardTranslationalValue.get();
+        }
+        public double getAngularSpeed() {
+            return shuffleboardAngularValue.get();
         }
     }
 
@@ -111,6 +97,13 @@ public class Drive extends SubsystemBase {
         ;
     }
 
+    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
+        new Translation2d(-Config.WHEEL_BASE.get() / 2, Config.TRACK_WIDTH.get() / 2),  // Front Left --
+        new Translation2d(-Config.WHEEL_BASE.get() / 2, -Config.TRACK_WIDTH.get() / 2),   // Front Right +-
+        new Translation2d(Config.WHEEL_BASE.get() / 2, Config.TRACK_WIDTH.get() / 2), // Back Left -+
+        new Translation2d(Config.WHEEL_BASE.get() / 2, -Config.TRACK_WIDTH.get() / 2)   // Back Right ++
+    );
+
     private final SwerveModule frontLeft = new SwerveModule(
         2,
         1,
@@ -119,7 +112,7 @@ public class Drive extends SubsystemBase {
         false,
 
         11, 
-        SwerveConfig.FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        Config.FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
         true
     );
     private final SwerveModule frontRight = new SwerveModule(
@@ -130,7 +123,7 @@ public class Drive extends SubsystemBase {
         false,
 
         12, 
-        SwerveConfig.FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        Config.FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
         true
     );
     private final SwerveModule backLeft = new SwerveModule(
@@ -141,7 +134,7 @@ public class Drive extends SubsystemBase {
         false,
 
         14, 
-        SwerveConfig.BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        Config.BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
         true
     );
     private final SwerveModule backRight = new SwerveModule(
@@ -152,7 +145,7 @@ public class Drive extends SubsystemBase {
         false,
 
         13, 
-        SwerveConfig.BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS.value::get,
+        Config.BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
         true
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
@@ -160,7 +153,7 @@ public class Drive extends SubsystemBase {
     private final Pigeon2 pigeon2 = new Pigeon2(15);
 
     private final SwerveDriveOdometry odometery = new SwerveDriveOdometry (
-        SwerveConstants.DRIVE_KINEMATICS, 
+        DRIVE_KINEMATICS, 
         new Rotation2d(0), 
         getModulePositions()
     );
@@ -168,33 +161,29 @@ public class Drive extends SubsystemBase {
     private volatile Speed speed = Speed.NORMAL;
     private volatile TippingState tippingState = TippingState.NO_TIP_CORRECTION;
 
-    private final WriteOnlyString tippingStateWriter = new WriteOnlyString(tippingState.name(), "Tipping State", Drive.class.getSimpleName());
-    private final WriteOnlyString speedStateWriter = new WriteOnlyString(speed.name(), "Speed State", Drive.class.getSimpleName());
+    private final ShuffleboardValue<String> tippingStateWriter = ShuffleboardValue.create(tippingState.name(), "Tipping State", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<String> speedStateWriter = ShuffleboardValue.create(speed.name(), "Speed/State", Drive.class.getSimpleName()).build();
     
-    private final WriteOnlyDouble headingWriter = new WriteOnlyDouble(0, "Gyro/Heading (Degrees)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble rollWriter = new WriteOnlyDouble(0, "Gyro/Roll (Degrees)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble pitchWriter = new WriteOnlyDouble(0, "Gyro/Pitch (Degrees)", Drive.class.getSimpleName());
-    private final WriteOnlyString locationWriter = new WriteOnlyString("", "Robot Location", Drive.class.getSimpleName());
+    private final ShuffleboardValue<Double> headingWriter = ShuffleboardValue.create(0.0, "Gyro/Heading (Degrees)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> rollWriter = ShuffleboardValue.create(0.0, "Gyro/Roll (Degrees)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> pitchWriter = ShuffleboardValue.create(0.0, "Gyro/Pitch (Degrees)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<String> locationWriter = ShuffleboardValue.create("", "Robot Location", Drive.class.getSimpleName()).build();
 
-    private final WriteOnlyDouble frontLeftTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontLeftTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontLeftDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Left/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final ShuffleboardValue<Double> frontLeftTurnPositionWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Front Left/Turn Position (Radians)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> frontLeftDriveDistanceWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Front Left/Drive Position (Radians)", Drive.class.getSimpleName()).build();
 
-    private final WriteOnlyDouble frontRightTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble frontRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Front Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final ShuffleboardValue<Double> frontRightTurnPositionWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Front Right/Turn Position (Radians)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> frontRightDriveDistanceWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Front Right/Drive Position (Radians)", Drive.class.getSimpleName()).build();
     
-    private final WriteOnlyDouble backLeftTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backLeftTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backLeftDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Left/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final ShuffleboardValue<Double> backLeftTurnPositionWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Left/Turn Position (Radians)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> backLeftDriveDistanceWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Left/Drive Position (Radians)", Drive.class.getSimpleName()).build();
 
-    private final WriteOnlyDouble backRightTurnPositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backRightTurnAbsolutePositionWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Absolute Position (Radians)", Drive.class.getSimpleName());
-    private final WriteOnlyDouble backRightDriveDistanceWriter = new WriteOnlyDouble(0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName());
+    private final ShuffleboardValue<Double> backRightTurnPositionWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> backRightDriveDistanceWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName()).build();
 
-    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create(true, "Is Drive Enabled", Drive.class.getSimpleName())//TODO: Move   
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Drive Enabled", Drive.class.getSimpleName()) 
         .withWidget(BuiltInWidgets.kToggleSwitch)
-        .buildMutableBoolean();
+        .build();
 
     private boolean isBreakMode = false;
 
@@ -285,19 +274,19 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean isFieldOriented() {
-        return TeleOpOptions.IS_FIELD_ORIENTED.value.get();
+        return TeleOpOptions.IS_FIELD_ORIENTED.shuffleboardValue.get();
     }
 
     public boolean isSquaredInputs() {
-        return TeleOpOptions.IS_SQUARED_INPUTS.value.get();
+        return TeleOpOptions.IS_SQUARED_INPUTS.shuffleboardValue.get();
     }
 
     public double getTranslationalSpeed() {
-        return speed.translationalSpeed.get();
+        return speed.getTranslationalSpeed();
     }
 
     public double getAngularSpeed() {
-        return speed.angularSpeed.get();
+        return speed.getAngularSpeed();
     }
 
     // public double getHeadingOffset() {
@@ -311,7 +300,7 @@ public class Drive extends SubsystemBase {
     public void drive(double xSpeed, double ySpeed, double turnSpeed) {
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
 
-        SwerveModuleState[] states = Drive.SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+        SwerveModuleState[] states = Drive.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
 
         setModuleStates(states);
     }
@@ -371,7 +360,7 @@ public class Drive extends SubsystemBase {
     }
 
     public CommandBase setSupserSlowSpeed() {
-        return setSpeed(Speed.SUPERSLOW);
+        return setSpeed(Speed.SUPER_SLOW);
     }
 
 
@@ -406,7 +395,7 @@ public class Drive extends SubsystemBase {
     }
 
     private void resetOffset() {
-        setOffset(SwerveConfig.DEFAULT_HEADING_OFFSET.value.get());
+        setOffset(Config.DEFAULT_HEADING_OFFSET.get());
     }
 
     public CommandBase resetOffsetCommand() {
@@ -439,14 +428,14 @@ public class Drive extends SubsystemBase {
 
 
     public CommandBase toggleFieldOriented() {
-        return runOnce(() -> TeleOpOptions.IS_FIELD_ORIENTED.value.set(
+        return runOnce(() -> TeleOpOptions.IS_FIELD_ORIENTED.shuffleboardValue.set(
                 !isFieldOriented()
             )
         );
     }
 
     public CommandBase toggleSquareInputs() {
-        return runOnce(() -> TeleOpOptions.IS_SQUARED_INPUTS.value.set(
+        return runOnce(() -> TeleOpOptions.IS_SQUARED_INPUTS.shuffleboardValue.set(
                 !isSquaredInputs()
             )
         );
@@ -483,11 +472,7 @@ public class Drive extends SubsystemBase {
 
     public TrapezoidProfile.Constraints getThetaConstraints() { //TODO when do you use this? I think for turning
         return new TrapezoidProfile.Constraints(
-            AutoConfig.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.value.get(),
-            AutoConfig.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.value.get());
+            Config.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.get(),
+            Config.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.get());
     }
-
-    // public boolean getfinished(){
-    //     Balance
-    // }
 }

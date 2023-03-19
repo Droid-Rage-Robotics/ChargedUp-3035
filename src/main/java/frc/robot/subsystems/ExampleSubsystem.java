@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.MutableDouble;
+import frc.robot.utilities.ShuffleboardValue;
+import frc.robot.utilities.ShuffleboardValueBuilder;
 
 public class ExampleSubsystem extends SubsystemBase {
 
@@ -17,12 +19,12 @@ public class ExampleSubsystem extends SubsystemBase {
         ;
 
         // Even though this field is final, it can be changed bc the getters check network table
-        private final MutableDouble first; 
-        private final MutableDouble second;
+        private final ShuffleboardValue<Double> first; 
+        private final ShuffleboardValue<Double> second;
 
         private State(double first, double second) {
-            this.first = new MutableDouble(1, name()+"/First", "Example subysystem");
-            this.second = new MutableDouble(1, name()+"/Second", "Example subysystem");
+            this.first = ShuffleboardValue.create(first, name()+"/First", "Example subysystem").build();
+            this.second = ShuffleboardValue.create(second, name()+"/Second", "Example subysystem").build();
         }
         
     }

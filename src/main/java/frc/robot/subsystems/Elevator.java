@@ -15,11 +15,7 @@ import frc.robot.subsystems.EnumPositions.Position;
 import frc.robot.subsystems.EnumPositions.TrackedElement;
 import frc.robot.subsystems.EnumPositions.Position.Positions;
 import frc.robot.utilities.ComplexWidgetBuilder;
-import frc.robot.utilities.MutableBoolean;
-import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.SimpleWidgetBuilder;
-import frc.robot.utilities.WriteOnlyDouble;
-import frc.robot.utilities.WriteOnlyString;
+import frc.robot.utilities.ShuffleboardValue;
 
 public class Elevator extends SubsystemBase {
     public static class Constants {
@@ -88,21 +84,21 @@ public class Elevator extends SubsystemBase {
     // private static volatile ElevatorPosition position = ElevatorPosition.START;
     private volatile Positions position = Positions.START;
     public boolean isMovingManually;
-    private final WriteOnlyString positionWriter = new WriteOnlyString(position.name(), "Elevator Position", Elevator.class.getSimpleName());
+    private final ShuffleboardValue<String> positionWriter = ShuffleboardValue.create(position.name(), "Elevator Position", Elevator.class.getSimpleName()).build();
     
-    private final WriteOnlyDouble verticalEncoderPositionWriter = new WriteOnlyDouble(0, "Vertical Encoder Position (Inches)", Elevator.class.getSimpleName());
-    private final WriteOnlyDouble horizontalEncoderPositionWriter = new WriteOnlyDouble(0, "Horizontal Encoder Position (Inches)", Elevator.class.getSimpleName());
+    private final ShuffleboardValue<Double> verticalEncoderPositionWriter = ShuffleboardValue.create(0.0, "Vertical Encoder Position (Inches)", Elevator.class.getSimpleName()).build();
+    private final ShuffleboardValue<Double> horizontalEncoderPositionWriter = ShuffleboardValue.create(0.0, "Horizontal Encoder Position (Inches)", Elevator.class.getSimpleName()).build();
     
     // private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
     // private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
 
-    private final MutableBoolean isVerticalEnabled = SimpleWidgetBuilder.create(true, "Is Vertical Enabled", Elevator.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isVerticalEnabled = ShuffleboardValue.create(true, "Is Vertical Enabled", Elevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
-        .buildMutableBoolean();
+        .build();
 
-    private final MutableBoolean isHorizontalEnabled = SimpleWidgetBuilder.create(true, "Is Horizontal Enabled", Elevator.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isHorizontalEnabled = ShuffleboardValue.create(true, "Is Horizontal Enabled", Elevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
-        .buildMutableBoolean();
+        .build();
     
     public Elevator() {
         verticalLeftMotor = new CANSparkMax(16, MotorType.kBrushless);
@@ -142,8 +138,8 @@ public class Elevator extends SubsystemBase {
         ComplexWidgetBuilder.create(resetElevatorEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
     }
 
-    private final WriteOnlyDouble horizontalSetPowerWriter = new WriteOnlyDouble(0.0, "horizontal set power", "Elevator");
-    private final WriteOnlyDouble verticalSetPowerWriter = new WriteOnlyDouble(0.0, "vertical set power", "Elevator");
+    private final ShuffleboardValue<Double> horizontalSetPowerWriter = ShuffleboardValue.create(0.0, "horizontal set power", "Elevator").build();
+    private final ShuffleboardValue<Double> verticalSetPowerWriter = ShuffleboardValue.create(0.0, "vertical set power", "Elevator").build();
     
     private double verticalEncoderOffset = 0;
     private double horizontalEncoderOffset = 0;
@@ -217,10 +213,8 @@ public class Elevator extends SubsystemBase {
         return runOnce(() -> {
             position.verticalInches.set(vertPosition);
             position.horizontalInches.set(horizPosition);
-
             verticalController.setSetpoint(vertPosition);
             horizontalController.setSetpoint(horizPosition);
-
             positionWriter.set(getTargetPosition().name()+" (Modified)");
         });
     }*/
@@ -234,7 +228,6 @@ public class Elevator extends SubsystemBase {
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.INTAKELOWCONE;
                 case CUBE -> Positions.INTAKELOWCUBE;
-                case NONE -> Positions.INTAKELOWCUBE;
             }
         );
     }
@@ -243,7 +236,6 @@ public class Elevator extends SubsystemBase {
             () ->switch(TrackedElement.get()) {
                 case CONE -> Positions.INTAKEHIGH1CONE;
                 case CUBE -> Positions.INTAKEHIGH1CUBE;
-                case NONE -> Positions.INTAKEHIGH1CUBE;
             }
         );
     }
@@ -253,7 +245,6 @@ public class Elevator extends SubsystemBase {
             () ->switch(TrackedElement.get()) {
                 case CONE -> Positions.INTAKEHIGH2CONE;
                 case CUBE -> Positions.INTAKEHIGH2CUBE;
-                case NONE -> Positions.INTAKEHIGH2CUBE;
             }
         );
     }
@@ -263,7 +254,6 @@ public class Elevator extends SubsystemBase {
             () ->switch(TrackedElement.get()) {
                 case CONE -> Positions.LOWCONE;
                 case CUBE -> Positions.LOWCUBE;
-                case NONE -> Positions.LOWCUBE;
             }
         );
     }
@@ -273,7 +263,6 @@ public class Elevator extends SubsystemBase {
             () ->switch(TrackedElement.get()) {
                 case CONE -> Positions.MIDCONE;
                 case CUBE -> Positions.MIDCUBE;
-                case NONE -> Positions.MIDCUBE;
             }
         );
     }
@@ -290,7 +279,6 @@ public class Elevator extends SubsystemBase {
             () ->switch(TrackedElement.get()) {
                 case CONE -> Positions.HIGHCONE;
                 case CUBE -> Positions.HIGHCUBE;
-                case NONE -> Positions.HIGHCUBE;
             }
         );
     }
@@ -323,7 +311,7 @@ public class Elevator extends SubsystemBase {
         return runOnce(() -> {
             verticalEncoderOffset = -getVerticalEncoderPosition() - verticalEncoderOffset;
             horizontalEncoderOffset = -getHorizontalEncoderPosition() - horizontalEncoderOffset;
-            SimpleWidgetBuilder.create(true, "Elevator Encoders were reset", Elevator.class.getSimpleName());
+            // SimpleWidgetBuilder.create(true, "Elevator Encoders were reset", Elevator.class.getSimpleName());
         });
     }
 

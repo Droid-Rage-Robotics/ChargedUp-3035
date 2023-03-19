@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.math.RoundingMode;
 import java.util.function.Supplier;
 
 import org.ejml.data.ZMatrixRMaj;
@@ -19,10 +20,9 @@ import frc.robot.subsystems.EnumPositions.TrackedElement;
 import frc.robot.subsystems.EnumPositions.Position.Positions;
 import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
 import frc.robot.utilities.ComplexWidgetBuilder;
-import frc.robot.utilities.MutableBoolean;
-import frc.robot.utilities.MutableDouble;
-import frc.robot.utilities.SimpleWidgetBuilder;
-import frc.robot.utilities.WriteOnlyDouble;
+import frc.robot.utilities.ShuffleboardValue;
+import frc.robot.utilities.ShuffleboardValueBuilder;
+import frc.robot.utilities.ShuffleboardValueEnum;
 
 public class Pivot extends SubsystemBase {
     public static class Constants {
@@ -69,14 +69,14 @@ public class Pivot extends SubsystemBase {
     private volatile Positions position = Position.Positions.START;
     // private final AbsoluteEncoder pivotAbsoluteEncoder;
     private final RelativeEncoder pivotRelativeEncoder;
-    private final WriteOnlyDouble Cube = new WriteOnlyDouble(0, "Cube", Pivot.class.getSimpleName());
+    private final ShuffleboardValue<Double> cubeWriter = ShuffleboardValue.create(0.0, "Cube", Pivot.class.getSimpleName()).build();
 
     // private final WriteOnlyDouble targetPositionWriter = new WriteOnlyDouble(0, "Target Position (Degrees)", Pivot.class.getSimpleName());
-    private final WriteOnlyDouble encoderPositionWriter = new WriteOnlyDouble(0, "Encoder Position (Degrees)", Pivot.class.getSimpleName());
+    private final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position (Degrees)", Pivot.class.getSimpleName()).build();
 
-    private final MutableBoolean isEnabled = SimpleWidgetBuilder.create(true, "Is Enabled", Pivot.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", Pivot.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
-        .buildMutableBoolean();
+        .build();
 
     private double offset = 0;
     
@@ -163,7 +163,6 @@ public class Pivot extends SubsystemBase {
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.INTAKELOWCONE;
                 case CUBE -> Positions.INTAKELOWCUBE;
-                case NONE -> Positions.INTAKELOWCUBE;
             }
         );
     }
@@ -172,7 +171,6 @@ public class Pivot extends SubsystemBase {
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.INTAKEHIGH1CONE;
                 case CUBE -> Positions.INTAKEHIGH1CUBE;
-                case NONE -> Positions.INTAKEHIGH1CUBE;
             }
         );
     }
@@ -182,7 +180,6 @@ public class Pivot extends SubsystemBase {
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.INTAKEHIGH2CONE;
                 case CUBE -> Positions.INTAKEHIGH2CUBE;
-                case NONE -> Positions.INTAKEHIGH2CUBE;
             }
         );
     }
@@ -192,23 +189,21 @@ public class Pivot extends SubsystemBase {
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.LOWCONE;
                 case CUBE -> Positions.LOWCUBE;
-                case NONE -> Positions.LOWCUBE;
             }
         );
     }
 
     public CommandBase moveMid() {
-        if(TrackedElement.get()==Element.CUBE){
-            Cube.set(1);
-        }
-        if(TrackedElement.get()==Element.CONE){
-            Cube.set(2);
-        }
+        // if(TrackedElement.get()==Element.CUBE){
+        //     Cube.set(1);
+        // }
+        // if(TrackedElement.get()==Element.CONE){
+        //     Cube.set(2);
+        // }
         return setTargetPosition(
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.MIDCONE;
                 case CUBE -> Positions.MIDCUBE;
-                case NONE -> Positions.MIDCUBE;
             }
         );
     }
@@ -218,7 +213,6 @@ public class Pivot extends SubsystemBase {
             () -> switch(TrackedElement.get()) {
                 case CONE -> Positions.HIGHCONE;
                 case CUBE -> Positions.HIGHCUBE;
-                case NONE -> Positions.HIGHCUBE;
             }
         );
     }
@@ -228,7 +222,6 @@ public class Pivot extends SubsystemBase {
     }
 
     private void setPower(double power) {
-        // if (!isEnabled.get()) return;
         pivotMotor.set(power);
     }
 
