@@ -108,6 +108,7 @@ public class RobotContainer {
     }
 
     public void configureTeleOpBindings() {
+        drive.resetOffsetCommand();//TODO:TEST!! - Does this run continuously or just once?
          /*
          * Driver Controls
          */
