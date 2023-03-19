@@ -11,7 +11,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Position.Positions;
+import frc.robot.subsystems.EnumPositions.Position;
+import frc.robot.subsystems.EnumPositions.TrackedElement;
+import frc.robot.subsystems.EnumPositions.Position.Positions;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;
@@ -120,9 +122,9 @@ public class Elevator extends SubsystemBase {
         horizontalEncoder = horizontalMotor.getEncoder();
         horizontalEncoder.setPositionConversionFactor(Constants.HORIZONTAL_ROT_TO_INCHES);
 
-        verticalController = new PIDController(0.15, 0, 0);
-        verticalController.setTolerance(0.1); // inches //TODO:How much tolerence?
-        horizontalController = new PIDController(0.1, 0, 0);
+        verticalController = new PIDController(0.2, 0, 0);//0.15
+        verticalController.setTolerance(0.1); // inches 
+        horizontalController = new PIDController(0.2, 0, 0);//0.1
         horizontalController.setTolerance(0.10); // inches
 
         ComplexWidgetBuilder.create(verticalController, "Vertical PID Controller", Elevator.class.getSimpleName())
