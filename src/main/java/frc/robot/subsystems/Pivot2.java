@@ -1,10 +1,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -18,6 +19,13 @@ import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyDouble;
 
 public class Pivot2 extends SubsystemBase {
+    //Maybe make a function where if we are going backwards, make  it go opposite
+    /*BBQ
+     * public static final double kSecondJointFF = 0.00004;
+     * public static final double kSecondJointP = 0.00006;
+     * public static final double kSecondJointI = 0.0;
+     * public static final double kSecondJointD = 0.00020;
+     */
     public static class Constants {
         public static final double GEAR_RATIO = 3 / 1;
         public static final double READINGS_PER_REVOLUTION = 1;
@@ -133,8 +141,10 @@ public class Pivot2 extends SubsystemBase {
         // setTargetPosition(PivotPosition.START);
 
         // new ComplexWidgetBuilder(resetPivotEncoder(), "Reset claw encoder", Pivot.class.getSimpleName());
-        // pivotMotor.setSoftLimit(SoftLimitDirection.kForward, PivotPosition.FORRWARDSOFTLIMIT);
-        // pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, PivotPosition.START);//TODO:Test
+        pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, (float) PivotPosition.FORRWARDSOFTLIMIT.degrees.get());
+        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) PivotPosition.START.degrees.get());//TODO:Test
     }
 
     @Override
