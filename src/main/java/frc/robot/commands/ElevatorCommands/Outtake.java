@@ -8,8 +8,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot2;
-import frc.robot.subsystems.TrackedElement;
-import frc.robot.subsystems.TrackedElement.Element;
+import frc.robot.subsystems.EnumPositions.TrackedElement;
+import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class Outtake extends SequentialCommandGroup {

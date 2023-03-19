@@ -16,7 +16,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot2;
-import frc.robot.subsystems.Position.Positions;
+import frc.robot.subsystems.EnumPositions.Position.Positions;
 public class MoveElevator extends SequentialCommandGroup {//TODO:Test
     public MoveElevator(Elevator elevator, Pivot pivot, Positions position) {//TODO: Make sure all elevator Positions are in here
 

@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.EnumPositions.TrackedElement;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.MutableBoolean;
 import frc.robot.utilities.MutableDouble;

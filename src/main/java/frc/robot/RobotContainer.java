@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Position.Positions;
+import frc.robot.subsystems.EnumPositions.Position.Positions;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.LockWheels;

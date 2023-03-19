@@ -1,5 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.EnumPositions;
 
+import frc.robot.subsystems.Elevator;
 import frc.robot.utilities.MutableDouble;
 import frc.robot.utilities.SimpleWidgetBuilder;
 import frc.robot.utilities.WriteOnlyString;

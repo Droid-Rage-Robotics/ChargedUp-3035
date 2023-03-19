@@ -14,7 +14,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot2;
-import frc.robot.subsystems.Position.Positions;
+import frc.robot.subsystems.EnumPositions.Position.Positions;
 public class ToggleIntake extends SequentialCommandGroup {
     Map<Object, Command> commandMap = new HashMap<>();
     public ToggleIntake(Elevator elevator, Pivot pivot, Intake intake) {//TODO: Make sure all elevator Positions are in here
