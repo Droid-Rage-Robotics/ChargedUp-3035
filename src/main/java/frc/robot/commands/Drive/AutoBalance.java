@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.utilities.ComplexWidgetBuilder;
@@ -17,11 +18,13 @@ import frc.robot.utilities.ShuffleboardValueBuilder;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoBalance extends ProfiledPIDCommand {
+public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lockwheels
   /** Creates a new AutoBalance. */
   private Drive drive;
+  private Timer timer;
   // private WriteOnlyBoolean atSetpointWriter = new WriteOnlyBoolean(false, "PID Auto balance at positionn", Drive.class.getSimpleName());
   public AutoBalance(Drive drive) {
+    
     super(
         new ProfiledPIDController(
             0.042, 
@@ -34,10 +37,12 @@ public class AutoBalance extends ProfiledPIDCommand {
             // Use the output (and setpoint, if desired) here
             drive.drive(output, 0, 0);
           });
+    timer = new Timer();
+    timer.start();
 
     addRequirements(drive);
     this.drive = drive;
-    getController().setTolerance(1); //degrees
+    getController().setTolerance(0.5); //degrees
     // ComplexWidgetBuilder.create(getController(), "PID Auto balance controller", Drive.class.getSimpleName());
 
   }
@@ -50,6 +55,11 @@ public class AutoBalance extends ProfiledPIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(timer.hasElapsed(8)){
+      timer.stop();
+      return true;
+    }//TODO:test
+
     // atSetpointWriter.set(getController().atSetpoint());
     return getController().atSetpoint();
   }
