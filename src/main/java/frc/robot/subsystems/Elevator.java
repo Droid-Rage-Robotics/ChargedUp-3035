@@ -37,7 +37,7 @@ public class Elevator extends SubsystemBase {
         .build();
     
     public Elevator() {
-        ShuffleboardValue<Boolean> verticalEnabled = ShuffleboardValue.create(true, "Vertical Enabled", Elevator.class.getSimpleName())
+        ShuffleboardValue<Boolean> verticalEnabled = ShuffleboardValue.create(false, "Vertical Enabled", Elevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .build();
 
@@ -61,7 +61,7 @@ public class Elevator extends SubsystemBase {
         horizontalMotor = new SafeCanSparkMax(
             17,
             MotorType.kBrushless,
-            ShuffleboardValue.create(true, "Horizontal Enabled", Elevator.class.getSimpleName())
+            ShuffleboardValue.create(false, "Horizontal Enabled", Elevator.class.getSimpleName())
                 .withWidget(BuiltInWidgets.kToggleSwitch)
                 .build(),
             ShuffleboardValue.create(0.0, "Horizontal Power", Elevator.class.getSimpleName())

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.SuppliedCommand;
+import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.utilities.ShuffleboardValue;
 
 public class Arm {
@@ -58,8 +59,8 @@ public class Arm {
         AUTOMIDCUBE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get() // up first then out
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGHCONE(14.4,11, 31.4),// LOWCONE.pivotAngle.get()
-        HIGHCUBE(17,11, 31),
+        HIGHCONE(15.5,11, 31.4),// LOWCONE.pivotAngle.get()
+        HIGHCUBE(15,11, 31),
 
         INTAKEHIGH1CONE(14.9,0, 37),
         INTAKEHIGH1CUBE(14.9,0, 36.9),
@@ -129,8 +130,10 @@ public class Arm {
                     elevator.runOnce(() -> elevator.setPositions(targetPosition.getHorizontal(), targetPosition.getVertical())),
                     Commands.waitSeconds(1.4),
                     pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
-                );
+                ); 
+                
                 default -> Commands.sequence(
+                    elevator.runOnce(() -> elevator.setPositions(targetPosition.getHorizontal(), targetPosition.getVertical())),
                     pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                 );
             }

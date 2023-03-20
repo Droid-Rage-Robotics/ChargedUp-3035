@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.DroidRageConstants;
-import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Pivot.Pivot;
 
 public class ManualPivot extends CommandBase {
     public static class Constants {    }

@@ -2,6 +2,8 @@ package frc.robot;
 
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.Position;
+import frc.robot.subsystems.Intake.IntakeWithPID;
+import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive.SwerveDriveTeleop;
@@ -47,7 +49,8 @@ public class RobotContainer {
     private final Elevator elevator = new Elevator();
     // private final Pivot2 pivot = new Pivot2(); 
     private final Pivot pivot = new Pivot();
-    private final Intake intake = new Intake();
+    // private final Intake intake = new Intake();
+    private final IntakeWithPID intake = new IntakeWithPID();
     private final Arm arm = new Arm(elevator, pivot);
 
     private final CommandXboxController driver =
@@ -88,11 +91,18 @@ public class RobotContainer {
                 )
             );
 
-        driver.rightBumper()
-            .onTrue(drive.setSlowSpeed())
-            .onFalse(drive.setNormalSpeed());
+        // driver.rightBumper()
+        //     .onTrue(drive.setSlowSpeed())
+        //     .onFalse(drive.setNormalSpeed());
 
 
+        //     driver.rightTrigger()
+        //     .onTrue(pivot.setPower(0.6)) 
+        //     .onFalse(pivot.setPower(0));
+
+        // driver.leftTrigger()
+        //     .onTrue(pivot.setPower(-0.6))
+        //     .onFalse(pivot.setPower(0));
         driver.rightTrigger()
             .onTrue(intake.run(intake::intake)) 
             .onFalse(intake.run(intake::stop));

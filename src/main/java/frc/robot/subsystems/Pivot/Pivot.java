@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Pivot;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -7,7 +7,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Arm.Position;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.SafeCanSparkMax;
 import frc.robot.utilities.ShuffleboardValue;
@@ -44,14 +46,14 @@ public class Pivot extends SubsystemBase {
         encoder.setPositionConversionFactor(Constants.ROTATIONS_TO_RADIANS);
   
 
-        pidController = new PIDController(0.0, 0, 0);
+        pidController = new PIDController(0.024, 0, 0);//0.024
         pidController.setTolerance(0.10);
 
-        feedforward = new ArmFeedforward(0, 0, 0, 0);
+        feedforward = new ArmFeedforward(3, 0, 0, 0);
 
         ComplexWidgetBuilder.create(pidController, "PID Controller", Pivot.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
-            .withSize(2, 2);
+            .withSize(2, 1);
 
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset encoder", Pivot.class.getSimpleName());
     }
@@ -95,4 +97,10 @@ public class Pivot extends SubsystemBase {
         encoderPositionWriter.write(position);
         return position;
     }
+public CommandBase setPower(double power) {
+    return runOnce(() -> {
+        motor.set(power);
+    });
+}
+
 }  

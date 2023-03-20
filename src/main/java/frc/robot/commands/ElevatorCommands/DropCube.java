@@ -5,8 +5,8 @@
 package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Arm.Position;
+import frc.robot.subsystems.Intake.Intake;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class DropCube extends SequentialCommandGroup {
