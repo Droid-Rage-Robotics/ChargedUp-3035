@@ -38,22 +38,23 @@ public class IntakeWithPID extends Intake {
         }
 
     }
-    protected final PIDController intakeController;
-    protected final SimpleMotorFeedforward intakeFeedforward;
-    protected final RelativeEncoder intakeEncoder;
+    protected final PIDController pidController;
+    protected final SimpleMotorFeedforward feedforward;
+    protected final RelativeEncoder encoder;
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Intake.class.getSimpleName()).build();
 
     public IntakeWithPID() {
         super();
-        intakeController = new PIDController(
+        pidController = new PIDController(
             0.000173611, 
             0,
             0);
-        intakeEncoder = intakeMotor.getEncoder();
-        intakeController.setTolerance(5);
-        intakeFeedforward = new SimpleMotorFeedforward(0.1, 0.0001761804, 0);
+        encoder = intakeMotor.getEncoder();
+        pidController.setTolerance(5);
+        feedforward = new SimpleMotorFeedforward(0.1, 0.0001761804, 0);
 
-        ComplexWidgetBuilder.create(intakeController, "PID Controller", Intake.class.getSimpleName());
+        ComplexWidgetBuilder.create(pidController, "PID Controller", Intake.class.getSimpleName());
+        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
     }
 
     @Override
@@ -63,24 +64,24 @@ public class IntakeWithPID extends Intake {
     }
 
     protected double getTargetVelocity() {
-        return intakeController.getSetpoint();
+        return pidController.getSetpoint();
     }
 
     protected void setTargetVelocity(Velocity velocity) {
-        intakeController.setSetpoint(velocity.get());
+        pidController.setSetpoint(velocity.get());
         targetVelocityWriter.set(velocity.get());
     }
 
     protected double getVelocity() {
-        return intakeEncoder.getVelocity();
+        return encoder.getVelocity();
     }
 
     protected double calculatePID(double targetVelocity) {
-        return intakeController.calculate(getVelocity(), targetVelocity);
+        return pidController.calculate(getVelocity(), targetVelocity);
     }
 
     protected double calculateFeedforward(double targetVelocity) {
-        return intakeFeedforward.calculate(targetVelocity);
+        return feedforward.calculate(targetVelocity);
     }
 
     @Override
@@ -107,13 +108,17 @@ public class IntakeWithPID extends Intake {
         };
     }
 
-    public void shootHighCube(){ 
+    public void shootHighCube() { 
         setTargetVelocity(Velocity.SHOOT_CUBE_HIGH);
     }
-    public void shootMidCube(){ 
+    public void shootMidCube() { 
         setTargetVelocity(Velocity.SHOOT_CUBE_MID);
     }
-    public void shootLowCube(){ 
+    public void shootLowCube() { 
         setTargetVelocity(Velocity.SHOOT_CUBE_LOW);
+    }
+
+    public void resetEncoder() {
+        encoder.setPosition(0);
     }
 }
