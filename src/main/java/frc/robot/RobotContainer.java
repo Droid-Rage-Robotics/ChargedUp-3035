@@ -43,6 +43,7 @@ public class RobotContainer {
     // arm class
     // FIX OUTTAKE COMMAND!!!!!!!!!!!!!!!!!!!
     // fix auto balace
+    // fix lock wheels
 
 
 
