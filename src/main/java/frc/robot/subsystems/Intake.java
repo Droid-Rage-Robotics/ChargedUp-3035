@@ -27,7 +27,10 @@ public class Intake extends SubsystemBase {
     OUTTAKE = -0.28,
     CUBE_INTAKE = 0.19,
     CONE_INTAKE = 0.3,
-    HOLD = 0.05, STOP = 0;
+    HOLD = 0.05, STOP = 0,
+    VOLTAGETHRESHOLD = 6;//TODO: Test the 
+    //Input Voltage (nominal): 12V
+    //Absolute Maximum Voltage: 30V
 
     protected final SafeCanSparkMax intakeMotor;
     protected final DoubleSolenoid intakeSolenoid;
@@ -37,6 +40,8 @@ public class Intake extends SubsystemBase {
     protected final ShuffleboardValue<Boolean> isOpen = ShuffleboardValue.create(isOpenDefault, "Is Open", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Boolean> compressorEnabledWriter = ShuffleboardValue.create(true, "Compressor Enabled", Intake.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
+    protected final ShuffleboardValue<Double> voltageWriter = ShuffleboardValue.create(0.0, "Intake Voltage", Intake.class.getSimpleName())
         .build();
 
     public Intake() {
@@ -61,6 +66,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        voltageWriter.set(intakeMotor.getBusVoltage());
         if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor(); // Keep in mind the compressor cannot be reenabled until class is reinitialized becuase there is no enableCompressor() method on PneumaticHub
     }
   
@@ -124,6 +130,14 @@ public class Intake extends SubsystemBase {
             runOnce(this::stop)
         );
     }
-      
+    
+    public boolean detectVoltageSpike() {//TODO: FInd the average voltage when robot is running
+        double voltage = intakeMotor.getBusVoltage();
+        if (voltage > VOLTAGETHRESHOLD) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
