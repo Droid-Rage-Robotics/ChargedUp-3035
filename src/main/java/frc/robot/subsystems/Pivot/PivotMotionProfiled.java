@@ -12,8 +12,8 @@ public class PivotMotionProfiled extends Pivot {
     public PivotMotionProfiled() {
         super();
 
-        pidController.setPID(0, 0, 0);
-        pidController.setTolerance(0.10);
+        controller.setPID(0, 0, 0);
+        controller.setTolerance(0.10);
 
         feedforward = new ArmFeedforward(0, 0, 0, 0);
 

@@ -20,7 +20,7 @@ public class Pivot extends SubsystemBase {
     }
 
     protected final SafeCanSparkMax motor;
-    protected final PIDController pidController;
+    protected final PIDController controller;
     protected ArmFeedforward feedforward;
     protected final RelativeEncoder encoder;
 
@@ -44,12 +44,12 @@ public class Pivot extends SubsystemBase {
         encoder.setPositionConversionFactor(Constants.ROTATIONS_TO_RADIANS);
   
 
-        pidController = new PIDController(0, 0, 0);//0.024
-        pidController.setTolerance(0.0);
+        controller = new PIDController(0, 0, 0);//0.024
+        controller.setTolerance(0.0);
 
         feedforward = new ArmFeedforward(0.01, 0, 0, 0);
 
-        ComplexWidgetBuilder.create(pidController, "PID Controller", Pivot.class.getSimpleName())
+        ComplexWidgetBuilder.create(controller, "PID Controller", Pivot.class.getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 1);
 
@@ -68,11 +68,11 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setTargetPosition(double positionRadians) {
-        pidController.setSetpoint(positionRadians);
+        controller.setSetpoint(positionRadians);
     }
 
     public double getTargetPosition() {
-        return pidController.getSetpoint();
+        return controller.getSetpoint();
     }
 
     public void resetEncoder() {
@@ -88,7 +88,7 @@ public class Pivot extends SubsystemBase {
     }
 
     protected double calculatePID(double positionRadians) {
-        return pidController.calculate(getPosition(), positionRadians);
+        return controller.calculate(getPosition(), positionRadians);
     }
 
     protected double getPosition() {
