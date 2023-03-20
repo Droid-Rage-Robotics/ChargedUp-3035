@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
+        if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor(); // Keep in mind the compressor cannot be reenabled until class is reinitialized becuase there is no enableCompressor() method on PneumaticHub
     }
   
     @Override
