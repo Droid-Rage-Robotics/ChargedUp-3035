@@ -17,11 +17,12 @@ import frc.robot.utilities.ShuffleboardValue;
 public class Intake extends SubsystemBase {
 
     protected double SHOOTCUBE = -1,
-    OUTTAKE = -0.28,
+    OUTTAKE = -0.18,//-0.28
+    //-0.18 shoot cones
     CUBE_INTAKE = 0.19,
     CONE_INTAKE = 0.3,
     HOLD = 0.05, STOP = 0,
-    VOLTAGETHRESHOLD = 6;//TODO: Test the 
+    VOLTAGETHRESHOLD = 13;//TODO: Test the 
     //Input Voltage (nominal): 12V
     //Absolute Maximum Voltage: 30V
 
@@ -35,7 +36,7 @@ public class Intake extends SubsystemBase {
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .withSize(1, 2)
         .build();
-    protected final ShuffleboardValue<Double> voltageWriter = ShuffleboardValue.create(0.0, "Intake Voltage", Intake.class.getSimpleName())
+    protected final ShuffleboardValue<Double> voltageWriter = ShuffleboardValue.create(1.0, "Intake Voltage", Intake.class.getSimpleName())
         .build();
 
     public Intake() {

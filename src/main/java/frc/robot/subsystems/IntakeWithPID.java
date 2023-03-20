@@ -10,17 +10,28 @@ import frc.robot.utilities.ShuffleboardValueEnum;
 
 public class IntakeWithPID extends Intake {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
-        SHOOT_CUBE_LOW(4000),
-        SHOOT_CUBE_MID(5000),
-        SHOOT_CUBE_HIGH(5400),
+        SHOOT_CUBE_LOW(10),
+        SHOOT_CUBE_MID(10),
+        SHOOT_CUBE_HIGH(10),
 
-        CONE(1000),
-        CONTINUOUS(600),
-        INTAKE(-3000),
-        OUTTAKE(3000),
-        HOLD_CONE(500),
-        HOLD_CUBE(500),
+        // CONE(50),
+        CONTINUOUS(50),
+        INTAKE(800),
+        OUTTAKE(-400),
+        HOLD_CONE(100),
+        HOLD_CUBE(100),
         STOP(0)
+        // SHOOT_CUBE_LOW(4000),
+        // SHOOT_CUBE_MID(5000),
+        // SHOOT_CUBE_HIGH(5400),
+
+        // CONE(1000),
+        // CONTINUOUS(600),
+        // INTAKE(-3000),
+        // OUTTAKE(3000),
+        // HOLD_CONE(500),
+        // HOLD_CUBE(500),
+        // STOP(0)
         ;
 
         private final ShuffleboardValue<Double> velocityRPM;
@@ -51,7 +62,7 @@ public class IntakeWithPID extends Intake {
         encoder = intakeMotor.getEncoder();
         pidController.setTolerance(5);
         feedforward = new SimpleMotorFeedforward(0.1, 0.0001761804, 0);
-
+        intakeMotor.setInverted(false);
         ComplexWidgetBuilder.create(pidController, "PID Controller", Intake.class.getSimpleName());
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
     }
@@ -119,5 +130,10 @@ public class IntakeWithPID extends Intake {
 
     public void resetEncoder() {
         encoder.setPosition(0);
+    }
+
+    @Override
+    public void stop() {
+        setTargetVelocity(Velocity.STOP);
     }
 }
