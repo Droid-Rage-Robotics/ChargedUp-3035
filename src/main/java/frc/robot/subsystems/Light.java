@@ -5,14 +5,10 @@ import com.ctre.phoenix.led.CANdle.LEDStripType;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
+import frc.robot.subsystems.TrackedElement.Element;
 
 public class Light extends SubsystemBase {
-
     // private final AddressableLED led;
     // private final AddressableLEDBuffer buffer;
     // private int m_rainbowFirstPixelHue = 0;
@@ -71,12 +67,16 @@ public class Light extends SubsystemBase {
         spark.set(val);
     }
       
-    public Command setColorCargoType(Element element) {
-        if (element == Element.CONE) {
-          return new InstantCommand(() -> setColor(kYellow));
-        } else {
-          return new InstantCommand(() -> setColor(kPurple));
+    public void setColorCargoType(Element element) {
+        switch (element) {
+            case CONE:
+                setColor(kYellow);
+                break;
+            case CUBE:
+                setColor(kPurple);
+                break;
+            
         }
-      }
+    }
 }
 
