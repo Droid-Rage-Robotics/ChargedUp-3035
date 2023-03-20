@@ -10,10 +10,16 @@ public class PivotMotionProfiledAndAbsolute extends PivotMotionProfiled {
         absoluteEncoder.setPositionConversionFactor(Math.PI * 2);
         absoluteEncoder.setInverted(false);
     }
+    
     @Override
     protected double getPosition() {
         double position = absoluteEncoder.getPosition();
         encoderPositionWriter.write(position);
         return position;
+    }
+
+    @Override
+    public void resetEncoder() {
+        absoluteEncoder.setZeroOffset(0);
     }
 }
