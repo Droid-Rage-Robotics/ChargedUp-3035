@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Drive.Drive;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.ShuffleboardValue;
 import frc.robot.utilities.ShuffleboardValueBuilder;

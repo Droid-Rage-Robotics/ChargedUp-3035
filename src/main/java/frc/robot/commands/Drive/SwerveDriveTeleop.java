@@ -8,9 +8,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.SwerveModule;
 import frc.robot.DroidRageConstants;
+import frc.robot.subsystems.Drive.Drive;
+import frc.robot.subsystems.Drive.SwerveModule;
 
 public class SwerveDriveTeleop extends CommandBase {
     private final Drive drive;
