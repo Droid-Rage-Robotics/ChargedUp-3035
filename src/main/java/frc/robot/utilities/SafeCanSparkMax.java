@@ -1,8 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.utilities;
 
 import com.revrobotics.CANSparkMax;
-
-import frc.robot.utilities.ShuffleboardValue;
 
 public class SafeCanSparkMax extends CANSparkMax {
     private final ShuffleboardValue<Boolean> isEnabled;
@@ -23,7 +21,7 @@ public class SafeCanSparkMax extends CANSparkMax {
     @Override
     public void setVoltage(double outputVolts) {
         if (!isEnabled.get()) return;
-        outputWriter.write(super.get());
+        outputWriter.write(outputVolts);
         super.setVoltage(outputVolts);
     }
 }

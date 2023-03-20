@@ -131,13 +131,12 @@ public class RobotContainer {
 
 
         driver.rightTrigger()
-            .onTrue(intake.runIntake()) 
-            .onFalse(intake.runStop()
-            );
+            .onTrue(intake.run(intake::intake)) 
+            .onFalse(intake.run(intake::stop));
 
         driver.leftTrigger()
-            .onTrue(intake.runOuttake())
-            .onFalse(intake.runStop());
+            .onTrue(intake.run(intake::outtake))
+            .onFalse(intake.run(intake::stop));
 
         driver.a()
             .onTrue(drive.resetOffsetCommand());

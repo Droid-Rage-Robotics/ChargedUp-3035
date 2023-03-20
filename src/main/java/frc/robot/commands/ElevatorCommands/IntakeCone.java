@@ -8,7 +8,7 @@ import frc.robot.subsystems.Pivot;
 public class IntakeCone extends SequentialCommandGroup {
     public IntakeCone( Pivot pivot, Intake intake) {
         addCommands(
-            intake.runClose(),
+            intake.runOnce(intake::close),
             intake.runIntakeFor(3),
             Commands.waitSeconds(1),
             pivot.moveHold()

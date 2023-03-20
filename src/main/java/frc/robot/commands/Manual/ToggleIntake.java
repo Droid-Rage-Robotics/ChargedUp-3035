@@ -44,7 +44,7 @@ public class ToggleIntake extends SequentialCommandGroup {
         commandMap.put(Positions.START, Commands.none());
 
         addCommands(
-            intake.toggleCommand(),
+            intake.runOnce(intake::toggle),
             // Commands.sequence(
             //     Commands.run(null, null)
             // )

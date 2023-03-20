@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.concurrent.TimeUnit;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -15,37 +17,41 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.EnumPositions.TrackedElement;
 import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
+import frc.robot.utilities.SafeCanSparkMax;
 import frc.robot.utilities.ShuffleboardValue;
 import frc.robot.utilities.ShuffleboardValueBuilder;
 
 public class Intake extends SubsystemBase {
 
-    private double SHOOTCUBE = -1,
+    protected double SHOOTCUBE = -1,
     OUTTAKE = -0.28,
-    CUBEINTAKE = 0.19,
-    INTAKE = 0.3,
+    CUBE_INTAKE = 0.19,
+    CONE_INTAKE = 0.3,
     HOLD = 0.05, STOP = 0;
 
-    private final CANSparkMax intakeMotor;
-    private final RelativeEncoder intakeEncoder;
-    private final DoubleSolenoid intakeSolenoid;
-    private PneumaticHub pneumaticHub;
+    protected final SafeCanSparkMax intakeMotor;
+    protected final DoubleSolenoid intakeSolenoid;
+    protected PneumaticHub pneumaticHub;
 
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create
-        (true, "Is Enabled", Intake.class.getSimpleName())
-            .withWidget(BuiltInWidgets.kToggleSwitch)
-            .build();
-            
-    private final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create
-        (0.0, "Target Intake Velocity", "Intake").build();
-    private boolean isOpen = TrackedElement.get() == Element.CUBE ? true : false;
+    protected static final boolean isOpenDefault = TrackedElement.get() == Element.CUBE ? true : false;
+    protected final ShuffleboardValue<Boolean> isOpen = ShuffleboardValue.create(isOpenDefault, "Is Open", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Boolean> compressorEnabledWriter = ShuffleboardValue.create(true, "Compressor Enabled", Intake.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
 
     public Intake() {
-        intakeMotor = new CANSparkMax(19, MotorType.kBrushless);
+        intakeMotor = new SafeCanSparkMax(
+            19, 
+            MotorType.kBrushless,
+            ShuffleboardValue.create(true, "Motor Enabled", Intake.class.getSimpleName())
+                .withWidget(BuiltInWidgets.kToggleSwitch)
+                .build(),
+            ShuffleboardValue.create(0.0, "Power", Intake.class.getSimpleName())
+                .build()
+        );
+
         intakeMotor.setIdleMode(IdleMode.kBrake);
         intakeMotor.setInverted(false);
-        intakeEncoder = intakeMotor.getEncoder();
-
 
         pneumaticHub = new PneumaticHub(10);
         intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
@@ -55,112 +61,69 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
     }
   
     @Override
     public void simulationPeriodic() {}
   
     public void close() {
-        if (!isEnabled.get()) return;
         intakeSolenoid.set(Value.kForward);//TODO:change
-        isOpen = false;
+        isOpen.set(false);
         TrackedElement.set(Element.CONE); 
     }
 
     public void open() {
-        if (!isEnabled.get()) return;
         intakeSolenoid.set(Value.kReverse);//TODO:change
-        isOpen = true;
+        isOpen.set(true);
         TrackedElement.set(Element.CUBE);
     }
-  
-    public CommandBase toggleCommand() {
-        return runOnce(() -> {
-            if(isOpen) close();
+
+    public void toggle() {
+        if(isOpen.get()) close();
             else open();
-        });
     }
 
-    public CommandBase runClose() {
-        return runOnce(() -> close());//Cone
-    }
-
-    public CommandBase runOpen() {
-        return runOnce(() -> open());//Cube
+    protected void setVoltage(double power) {
+        intakeMotor.setVoltage(power * 12);
     }
 
     public void intake() {
         switch(TrackedElement.get()) {
-            case CONE -> setIntakePower(INTAKE);
-            case CUBE -> setIntakePower(CUBEINTAKE); ////////////////////
+            case CONE -> setVoltage(CONE_INTAKE);
+            case CUBE -> setVoltage(CUBE_INTAKE);
         }
     }
 
-    public CommandBase runIntake() {
-        return
-                switch(TrackedElement.get()) {
-                case CONE -> setIntakePower(INTAKE);
-                case CUBE -> setIntakePower(CUBEINTAKE); ////////////////////
-            };
+    public void outtake() {
+        switch(TrackedElement.get()) {
+            case CONE -> setVoltage(OUTTAKE);
+            case CUBE -> setVoltage(OUTTAKE);
+        }
     }
 
-    public CommandBase runOuttake() {
-        return
-                switch(TrackedElement.get()) {
-                case CONE -> setIntakePower(OUTTAKE);
-                case CUBE -> setIntakePower(OUTTAKE);
-            };
+    public void stop() {
+        setVoltage(STOP);
     }
 
-    public CommandBase runStop() { 
-        return setTargetVelocity(STOP);
+    public void hold() {
+        setVoltage(HOLD);
     }
 
-    public CommandBase runHoldIntake() { 
-        return switch(TrackedElement.get()) {
-            case CONE -> setIntakePower(HOLD);
-            case CUBE -> setIntakePower(HOLD);
-            
-        };
-    }
-
-    public CommandBase runIntakeFor(double wait) {
+    public CommandBase runIntakeFor(double waitSeconds) {
         return Commands.sequence(
-            runIntake(),
-            Commands.waitSeconds(wait),
-            runStop()
+            runOnce(this::intake),
+            Commands.waitSeconds(waitSeconds),
+            runOnce(this::stop)
         );
     }
-    public CommandBase runOuttakeFor(double wait) {
+    public CommandBase runOuttakeFor(double waitSeconds) {
         return Commands.sequence(
-            runOuttake(),
-            Commands.waitSeconds(wait),
-            runStop()
+            runOnce(this::outtake),
+            Commands.waitSeconds(waitSeconds),
+            runOnce(this::stop)
         );
-    }
-
-    private CommandBase setTargetVelocity(double power) {
-        return runOnce(() -> {
-            intakeMotor.set(power);
-        });
-    }
-
-    public double getIntakeVelocity() {
-        return intakeEncoder.getVelocity();
     }
       
-    private CommandBase setIntakePower(double power) {
-
-        return runOnce(() -> {
-            intakeMotor.set(power);
-        });
-        
-    }
-
-    private void setIntakePowerV(double power) {
-
-            intakeMotor.set(power);
-        
-    }
 }
 

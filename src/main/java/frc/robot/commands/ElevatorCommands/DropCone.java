@@ -11,7 +11,7 @@ public class DropCone extends SequentialCommandGroup {
         addCommands(
             elevator.dropVerticalElevator(),
             Commands.waitSeconds(0.2),
-            intake.runOpen(),
+            intake.runOnce(intake::toggle),
             // intake.runOuttakeFor(1),
             elevator.moveInHorizontalElevator(),
             // Commands.waitSeconds(2),
