@@ -15,8 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.EnumPositions.TrackedElement;
-import frc.robot.subsystems.EnumPositions.TrackedElement.Element;
+import frc.robot.subsystems.TrackedElement.Element;
 import frc.robot.utilities.SafeCanSparkMax;
 import frc.robot.utilities.ShuffleboardValue;
 import frc.robot.utilities.ShuffleboardValueBuilder;
@@ -37,6 +36,7 @@ public class Intake extends SubsystemBase {
     protected final ShuffleboardValue<Boolean> isOpen = ShuffleboardValue.create(isOpenDefault, "Is Open", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Boolean> compressorEnabledWriter = ShuffleboardValue.create(true, "Compressor Enabled", Intake.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
+        .withSize(1, 2)
         .build();
 
     public Intake() {

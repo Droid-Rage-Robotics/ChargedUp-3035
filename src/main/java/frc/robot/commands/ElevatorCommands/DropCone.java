@@ -2,20 +2,19 @@ package frc.robot.commands.ElevatorCommands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Arm.Position;
 
 public class DropCone extends SequentialCommandGroup {
-    public DropCone(Elevator elevator, Pivot pivot, Intake intake) {
+    public DropCone(Arm arm, Intake intake) {
         addCommands(
-            elevator.dropVerticalElevator(),
+            arm.lowerElevatorCommand(),
             Commands.waitSeconds(0.2),
-            intake.runOnce(intake::toggle),
-            // intake.runOuttakeFor(1),
-            elevator.moveInHorizontalElevator(),
-            // Commands.waitSeconds(2),
-            new MoveHold(elevator, pivot)
+            intake.runOnce(intake::open),
+            arm.setPositionCommand(Position.HOLD)
         );
     }
 }

@@ -1,19 +1,21 @@
 package frc.robot.commands.ElevatorCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Arm.Position;
 
 public class IntakeCube extends SequentialCommandGroup {
     //TODO: Maybe make a position where the pivot iks downwards so cube doesn't roll away
-    public IntakeCube(Pivot pivot, Intake intake, double wait) {
+    public IntakeCube(Arm arm, Intake intake, double wait) {
         addCommands(
             intake.runOnce(intake::open),
             intake.runIntakeFor(wait),
-            pivot.moveHold()
+            arm.setPositionCommand(Position.HOLD)
         );
     }
-    public IntakeCube(Pivot pivot, Intake intake) {
-        new IntakeCube(pivot, intake, 6);
+    public IntakeCube(Arm arm, Intake intake) {
+        this(arm, intake, 6.0);
     }
 }

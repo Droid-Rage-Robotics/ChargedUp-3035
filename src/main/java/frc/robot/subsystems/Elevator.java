@@ -1,20 +1,13 @@
 package frc.robot.subsystems;
-
-import java.util.function.Supplier;
-
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.EnumPositions.Position;
-import frc.robot.subsystems.EnumPositions.TrackedElement;
-import frc.robot.subsystems.EnumPositions.Position.Positions;
 import frc.robot.utilities.ComplexWidgetBuilder;
+import frc.robot.utilities.SafeCanSparkMax;
 import frc.robot.utilities.ShuffleboardValue;
 
 public class Elevator extends SubsystemBase {
@@ -29,81 +22,51 @@ public class Elevator extends SubsystemBase {
         public static final double HORIZONTAL_DISTANCE_PER_PULSE = 1; // 1 bc built in encoder
         public static final double HORIZONTAL_ROT_TO_INCHES = (HORIZONTAL_DISTANCE_PER_PULSE * HORIZONTAL_GEAR_RATIO) / (HORIZONTAL_GEAR_DIAMETER_INCHES * Math.PI);
     }
-
-    // public enum ElevatorPosition {//16-17 is MAXXXXXX for vert ; 11 is for horiz
-    //     START(0,0),
-
-    //     INTAKELOWCONE(0,0),
-    //     INTAKELOWCUBE(0,0),
-       
-    //     LOWCONE(0, 0),
-    //     LOWCUBE(0,0),
-        
-    //     MIDCONE(13.2,11),
-    //     MIDCUBE(13.4,10.4),
-
-    //     AUTOMIDCONE(15.2, 11.5),
-
-    //     HIGHCONE(14.4,11),//Make this Mid Teleop
-    //     HIGHCUBE(17,11),
-
-    //     INTAKEHIGH1CONE(14.9,0),
-    //     INTAKEHIGH1CUBE(14.9,0),
-
-    //     INTAKEHIGH2CONE(13.5,0),
-    //     INTAKEHIGH2CUBE(13.5,0),
-
-    //     HOLD(0,0),
-        
-    //     ;
-
-    //     private MutableDouble verticalInches;
-    //     private MutableDouble horizontalInches;
-
-    //     private ElevatorPosition(double verticalInches, double horizontalInches) {
-    //         this.verticalInches = SimpleWidgetBuilder.create(verticalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Vertical (Inches)", Elevator.class.getSimpleName())
-    //             .withSize(1, 3)
-    //             .buildMutableDouble();
-    //         this.horizontalInches = SimpleWidgetBuilder.create(horizontalInches, ElevatorPosition.class.getSimpleName()+"/"+name()+"/Horizontal (Inches)", Elevator.class.getSimpleName())
-    //             .withSize(1, 3)
-    //             .buildMutableDouble();
-    //     }
-
-    //     public static ElevatorPosition get(){
-    //         return position;
-    //     }
-    // }
     
-    private final CANSparkMax verticalLeftMotor, verticalRightElevator, horizontalMotor;
-    // private final Encoder verticalEncoder;
+    private final SafeCanSparkMax verticalLeftMotor, verticalRightElevator, horizontalMotor;
     private final RelativeEncoder verticalEncoder;
     private final RelativeEncoder horizontalEncoder;
-    // private final DutyCycleEncoder verticaAbsEncoder;
     private final PIDController verticalController;
     private final PIDController horizontalController;
-    // private static volatile ElevatorPosition position = ElevatorPosition.START;
-    private volatile Positions position = Positions.START;
-    public boolean isMovingManually;
-    private final ShuffleboardValue<String> positionWriter = ShuffleboardValue.create(position.name(), "Elevator Position", Elevator.class.getSimpleName()).build();
     
-    private final ShuffleboardValue<Double> verticalEncoderPositionWriter = ShuffleboardValue.create(0.0, "Vertical Encoder Position (Inches)", Elevator.class.getSimpleName()).build();
-    private final ShuffleboardValue<Double> horizontalEncoderPositionWriter = ShuffleboardValue.create(0.0, "Horizontal Encoder Position (Inches)", Elevator.class.getSimpleName()).build();
-    
-    // private final WriteOnlyDouble verticalTargetPositionWriter = new WriteOnlyDouble(0, "Vertical Target Position (Meters)", Elevator.class.getSimpleName());
-    // private final WriteOnlyDouble horizontalTargetPositionWriter = new WriteOnlyDouble(0, "Horizontal Target Position (Meters)", Elevator.class.getSimpleName());
-
-    private final ShuffleboardValue<Boolean> isVerticalEnabled = ShuffleboardValue.create(true, "Is Vertical Enabled", Elevator.class.getSimpleName())
-        .withWidget(BuiltInWidgets.kToggleSwitch)
+    private final ShuffleboardValue<Double> verticalEncoderPositionWriter = ShuffleboardValue.create(0.0, "Vertical Encoder Position (Inches)", Elevator.class.getSimpleName())
+        .withSize(1, 3)
         .build();
-
-    private final ShuffleboardValue<Boolean> isHorizontalEnabled = ShuffleboardValue.create(true, "Is Horizontal Enabled", Elevator.class.getSimpleName())
-        .withWidget(BuiltInWidgets.kToggleSwitch)
+    private final ShuffleboardValue<Double> horizontalEncoderPositionWriter = ShuffleboardValue.create(0.0, "Horizontal Encoder Position (Inches)", Elevator.class.getSimpleName())
+        .withSize(1, 3)
         .build();
     
     public Elevator() {
-        verticalLeftMotor = new CANSparkMax(16, MotorType.kBrushless);
-        verticalRightElevator = new CANSparkMax(15, MotorType.kBrushless);//TODO: Where is it plugged in?
-        horizontalMotor = new CANSparkMax(17, MotorType.kBrushless);
+        ShuffleboardValue<Boolean> verticalEnabled = ShuffleboardValue.create(true, "Vertical Enabled", Elevator.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kToggleSwitch)
+            .build();
+
+        ShuffleboardValue<Double> verticalPower = ShuffleboardValue.create(0.0, "Vertical Power", Elevator.class.getSimpleName())
+            .build();
+
+        verticalLeftMotor = new SafeCanSparkMax(
+            16, 
+            MotorType.kBrushless,
+            verticalEnabled,
+            verticalPower
+        );
+
+        verticalRightElevator = new SafeCanSparkMax(
+            15, 
+            MotorType.kBrushless,
+            verticalEnabled,
+            verticalPower
+        );
+
+        horizontalMotor = new SafeCanSparkMax(
+            17,
+            MotorType.kBrushless,
+            ShuffleboardValue.create(true, "Horizontal Enabled", Elevator.class.getSimpleName())
+                .withWidget(BuiltInWidgets.kToggleSwitch)
+                .build(),
+            ShuffleboardValue.create(0.0, "Horizontal Power", Elevator.class.getSimpleName())
+                .build()
+        );
 
         verticalLeftMotor.setIdleMode(IdleMode.kBrake);
         verticalRightElevator.setIdleMode(IdleMode.kBrake);
@@ -130,24 +93,13 @@ public class Elevator extends SubsystemBase {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        setPosition(() -> Positions.START);
-
-        // verticaAbsEncoder = new DutyCycleEncoder(9);/No Absolute
-        isMovingManually = false;
-
-        ComplexWidgetBuilder.create(resetElevatorEncoders(), "Reset Elevator Encoders", Elevator.class.getSimpleName());
+        ComplexWidgetBuilder.create(runOnce(this::resetEncoders), "Reset Elevator Encoders", Elevator.class.getSimpleName());
     }
 
-    private final ShuffleboardValue<Double> horizontalSetPowerWriter = ShuffleboardValue.create(0.0, "horizontal set power", "Elevator").build();
-    private final ShuffleboardValue<Double> verticalSetPowerWriter = ShuffleboardValue.create(0.0, "vertical set power", "Elevator").build();
-    
-    private double verticalEncoderOffset = 0;
-    private double horizontalEncoderOffset = 0;
-    // private final WriteOnlyDouble horizeEcoderReading = new WriteOnlyDouble(0.0, "horiz encoder reading", "Elevator");
     @Override
     public void periodic() {
-        setHorizontalPower(horizontalController.calculate(getHorizontalEncoderPosition()));
-        setVerticalPower(verticalController.calculate(getVerticalEncoderPosition()));
+        horizontalMotor.set(horizontalController.calculate(getHorizontalEncoderPosition()));
+        verticalLeftMotor.set(verticalController.calculate(getVerticalEncoderPosition()));
     }
 
     @Override
@@ -155,168 +107,26 @@ public class Elevator extends SubsystemBase {
         periodic();
     }
 
-    // public ElevatorPosition getTargetPosition() {
-    //     return position;
-    // }
-
-    public Positions getTargetPosition() {
-        return position;
-    }
-
-    // public double getTargetVerticalHeight() {
-    //     return position.verticalInches.get();
-    // }
-
-    // public double getTargetHorizontalDistance() {
-    //     return position.horizontalInches.get();
-    // }
-
     public double getTargetVerticalHeight() {
-        return Position.getVerticalHeight(position);
+        return verticalController.getSetpoint();
     }
 
     public double getTargetHorizontalDistance() {
-        return Position.getHorizonotalDistance(position);
+        return horizontalController.getSetpoint();
     }
 
-    // public CommandBase setPosition(Supplier<ElevatorPosition> position) {
-    //     return runOnce(() -> {
-    //         Elevator.position = position.get();
-
-    //         verticalController.setSetpoint(getTargetVerticalHeight());
-    //         horizontalController.setSetpoint(getTargetHorizontalDistance());
-
-    //         positionWriter.set(getTargetPosition().name());
-    //     });
-    // }
-
-    public CommandBase setPosition(Supplier<Positions> position) {
-        return runOnce(() -> {
-            this.position = position.get();
-            Position.set(this.position);
-            verticalController.setSetpoint(getTargetVerticalHeight());
-            horizontalController.setSetpoint(getTargetHorizontalDistance());
-        });
+    public void setPositions(double horizontalPosition, double verticalPosition) {
+        verticalController.setSetpoint(verticalPosition);
+        horizontalController.setSetpoint(horizontalPosition);
     }
 
-
-
-
-    // public CommandBase runSetVerticalPosition(double verticalPosition) {
-    //     return runOnce(() -> position.verticalInches.set(verticalPosition));
-    // }
-    // public CommandBase runSetHorizontalPosition(double horizontalPosition) {
-    //     return runOnce(() -> position.horizontalInches.set(horizontalPosition));
-    // }
-    
-    /*public CommandBase setPosition(double vertPosition, double horizPosition) {
-        return runOnce(() -> {
-            position.verticalInches.set(vertPosition);
-            position.horizontalInches.set(horizPosition);
-            verticalController.setSetpoint(vertPosition);
-            horizontalController.setSetpoint(horizPosition);
-            positionWriter.set(getTargetPosition().name()+" (Modified)");
-        });
-    }*/
-
-    public CommandBase moveHold() {
-        return setPosition(() -> Positions.HOLD);
-    }
-
-    public CommandBase moveIntakeLow() {
-        return setPosition(
-            () -> switch(TrackedElement.get()) {
-                case CONE -> Positions.INTAKELOWCONE;
-                case CUBE -> Positions.INTAKELOWCUBE;
-            }
-        );
-    }
-    public CommandBase moveIntake1High() {
-        return setPosition(
-            () ->switch(TrackedElement.get()) {
-                case CONE -> Positions.INTAKEHIGH1CONE;
-                case CUBE -> Positions.INTAKEHIGH1CUBE;
-            }
-        );
-    }
-
-    public CommandBase moveIntake2High() {
-        return setPosition(
-            () ->switch(TrackedElement.get()) {
-                case CONE -> Positions.INTAKEHIGH2CONE;
-                case CUBE -> Positions.INTAKEHIGH2CUBE;
-            }
-        );
-    }
-
-    public CommandBase moveLow() {
-        return setPosition(
-            () ->switch(TrackedElement.get()) {
-                case CONE -> Positions.LOWCONE;
-                case CUBE -> Positions.LOWCUBE;
-            }
-        );
-    }
-
-    public CommandBase moveMid() {
-        return setPosition(
-            () ->switch(TrackedElement.get()) {
-                case CONE -> Positions.MIDCONE;
-                case CUBE -> Positions.MIDCUBE;
-            }
-        );
-    }
-
-    public CommandBase moveAutoMid() {
-        return setPosition(() ->Positions.AUTOMIDCONE);
-    }
-
-    public CommandBase moveHigh() {
-        // if(isMovingManually){//TODO:Test
-        //     changePosition();
-        // }
-        return setPosition(
-            () ->switch(TrackedElement.get()) {
-                case CONE -> Positions.HIGHCONE;
-                case CUBE -> Positions.HIGHCUBE;
-            }
-        );
-    }
-
-    // public void changePosition() {
-    //     position.verticalInches.set(getTargetVerticalHeight());
-    //     position.horizontalInches.set(getTargetHorizontalDistance());
-    // }
-
-    private void setHorizontalPower(double power) {
-        horizontalSetPowerWriter.set(power);
-        if (!isHorizontalEnabled.get()) return;
-        horizontalMotor.set(power);
-    }
-
-    private void setVerticalPower(double power) {
-        verticalSetPowerWriter.set(power);
-        if (!isVerticalEnabled.get()) return;
-        verticalLeftMotor.set(power);
-    }
-    public CommandBase dropVerticalElevator(){
-        return runOnce(() -> verticalController.setSetpoint(getTargetVerticalHeight()-7));
-    }
-
-    public CommandBase moveInHorizontalElevator(){
-        return runOnce(() -> verticalController.setSetpoint(getTargetHorizontalDistance()-2));
-    }
-
-    public CommandBase resetElevatorEncoders() {
-        return runOnce(() -> {
-            verticalEncoderOffset = -getVerticalEncoderPosition() - verticalEncoderOffset;
-            horizontalEncoderOffset = -getHorizontalEncoderPosition() - horizontalEncoderOffset;
-            // SimpleWidgetBuilder.create(true, "Elevator Encoders were reset", Elevator.class.getSimpleName());
-        });
+    public void resetEncoders() {
+        verticalEncoder.setPosition(0);
+        horizontalEncoder.setPosition(0);
     }
 
     public double getVerticalEncoderPosition() {
-        double verticalEncoderPosition = verticalEncoder.getPosition() + verticalEncoderOffset;
+        double verticalEncoderPosition = verticalEncoder.getPosition();
         verticalEncoderPositionWriter.set(verticalEncoderPosition);
         return verticalEncoderPosition;
     }
@@ -336,10 +146,6 @@ public class Elevator extends SubsystemBase {
 
     public void setTargetPositionsManually(double x, double y) {
         verticalController.setSetpoint(getVerticalTargetPosition() + (y*0.1));
-        // horizontalController.setSetpoint(getHorizontalEncoderPosition() + (x*0.1));
     }
 
-    // public static Position get(){
-    //     return position;
-    // }
 }  

@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.EnumPositions.Position.Positions;
+import frc.robot.subsystems.Arm.Position;
 import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.utilities.ShuffleboardValue;
 import frc.robot.commands.Autos;
@@ -42,6 +42,7 @@ public class RobotContainer {
     // safe sparkmax
     // arm class
     // FIX OUTTAKE COMMAND!!!!!!!!!!!!!!!!!!!
+    // fix auto balace
 
 
 
@@ -53,6 +54,7 @@ public class RobotContainer {
     // private final Pivot2 pivot = new Pivot2(); 
     private final Pivot pivot = new Pivot();
     private final Intake intake = new Intake();
+    private final Arm arm = new Arm(elevator, pivot);
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -62,55 +64,22 @@ public class RobotContainer {
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
 
     public RobotContainer() {
-        
-        // autoChooser.addOption("Top", Autos.top(drive, elevator, pivot, intake));
-        // autoChooser.setDefaultOption("Middle", Autos.dropPlusPark(drive, elevator, pivot, intake));
-        
-        autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, elevator, pivot, intake));
+        autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, arm, intake));
         autoChooser.addOption("Straight Test", Autos.straightTest(drive));
         autoChooser.addOption("Straight Test BACK", Autos.straightTestBack(drive));
-        autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
-        autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, elevator, pivot, intake));
+        autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
+        autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
+        autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
 
-        // autoChooser.addOption("Turn2", new SequentialCommandGroup(
-        //     new InstantCommand(() -> drive.resetOdometry(trajectory.getInitialPose())),
-        //     swerveControllerCommand,
-        //     new InstantCommand(() -> {
-        //             drive.stop();
-        //             xController.close();
-        //             yController.close();
-        //         }
-        //     )));
-        
-        // autoChooser.addOption("Preload+Drop", Autos.oneToCubeAndToDrop(drive, elevator, pivot, intake));
-        autoChooser.addOption("Charge", Autos.charge(drive, elevator, pivot, intake));
-        // autoChooser.addOption("Charge2", Autos.charge2(drive, elevator, pivot, intake)); - no use 
-        // autoChooser.addOption("Intake", Autos.intake(drive, elevator, pivot, intake));
-        // autoChooser.addOption("Strafe Left", Autos.strafeRight(drive, elevator, pivot, intake));
-        // autoChooser.addOption("Strafe Right", Autos.strafeRight(drive, elevator, pivot, intake));
-        ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misce")
+        ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
-            
-        // new ComplexWidgetBuilder(CameraServer.startAutomaticCapture(), "USB Cam2era Stream", "Misce")
-        //     .withSize(5, 5);
-
-            // Shuffleboard.getTab("Drive").getComponents().removeAll(null);
-        //     // Shuffleboard.getTab("Drive").add
-        // List<ShuffleboardComponent<?>> components = Shuffleboard.getTab("Drive").getComponents();
-
-        // for (ShuffleboardComponent<?> component: components) {
-        //     if (component.getClass() == SimpleWidget.class) {
-        //         ((SimpleWidget)component).close();
-        //     }
-        // }
-        ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misce")
+        ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
             .withSize(5, 5);
     }
 
     public void configureTeleOpBindings() {
-        drive.resetOffsetCommand();//TODO:TEST!! - Does this run continuously or just once?
          /*
          * Driver Controls
          */
@@ -146,7 +115,7 @@ public class RobotContainer {
                 // new MoveToPosition(elevator, pivot, intake)
                 // Commands.sequence(
                     // intake.toggleCommand()
-                    new ToggleIntake(elevator, pivot, intake)
+                    new ToggleIntake(arm, intake)
                     
                 // )
             ); 
@@ -170,85 +139,44 @@ public class RobotContainer {
 
         operator.a()
             .onTrue(
-                    new MoveElevator(elevator, pivot, Positions.LOWCONE)
+                arm.setPositionCommand(Position.LOW)
             );
         operator.x()
             .onTrue(
-                    // new MoveMid(elevator, pivot)
-                    new MoveElevator(elevator, pivot, Positions.MIDCONE)
+                arm.setPositionCommand(Position.MID)
             );
         operator.y()
             .onTrue(
-                // new MoveHigh(elevator, pivot)  
-                new MoveElevator(elevator, pivot, Positions.HIGHCONE)
+                arm.setPositionCommand(Position.HIGH)
             );
-        //  operator.b()
-        //     .onTrue(
-        //         new SequentialCommandGroup(
-        //         elevator.moveIntake2High(),
-        //         pivot.moveIntake2High())
-        //     );
         
         operator.povUp()
             .onTrue(
-                // new MoveIntake1High(elevator, pivot)
-                new MoveElevator(elevator, pivot, Positions.INTAKEHIGH1CONE)
+                arm.setPositionCommand(Position.INTAKE_HIGH_1)
             );
         operator.povRight()
             .onTrue(
-                // new MoveIntake2High(elevator, pivot)//Make grab cone from the drop
-                new MoveElevator(elevator, pivot, Positions.INTAKEHIGH2CONE)
+                arm.setPositionCommand(Position.INTAKE_HIGH_2)
             );
         operator.povLeft()
             .onTrue(
-                // new MoveIntakeLow(elevator, pivot)//Cube and Cone
-                new MoveElevator(elevator, pivot, Positions.INTAKELOWCONE)
+                arm.setPositionCommand(Position.INTAKE_LOW)
             );
-        //  operator.povRight()
-        //     .onTrue(new SequentialCommandGroup(
-        //         elevator.setPosition(Elevator.ElevatorPosition.LOWCUBE),
-        //         pivot.setTargetPosition(PivotPosition.LOWCUBE)
-        //     )//Cube
-            // );
+
             
         operator.povDown()
             .onTrue(
-                // new MoveHold(elevator, pivot)
-                new MoveElevator(elevator, pivot, Positions.HOLD)
+
+                arm.setPositionCommand(Position.HOLD)
             );
 
-        // operator.rightTrigger()
-        //     .onTrue(
-        //         new Outtake(elevator, pivot, intake) //TODO: fix this !!!!!!!!!!!!
-        //     );
-            // / make INTAKE ALLWYS RUNNING
-
         operator.start()
-            .onTrue(elevator.resetElevatorEncoders());
+            .onTrue(elevator.runOnce(elevator::resetEncoders));
       
       
       
         operator.back()
-            .onTrue(pivot.resetPivotEncoder()); //Pivot is Absolute(not)
-
-        /* 
-            pivot.setPowerC(-operator.getLeftY())
-        operator.rightBumper()
-            .onTrue(pivot.setPowerC(0.4))
-            .onFalse(pivot.setPowerC(0));
-        
-        operator.leftBumper()
-            .onTrue(pivot.setPowerC(-0.4))
-            .onFalse(pivot.setPowerC(0));*/
-
-        // operator.leftTrigger()
-        //     .onTrue(
-        //         new SequentialCommandGroup(
-        //             new MoveMid(elevator,pivot),
-        //             new WaitCommand(3),
-        //             new DropCone(elevator, pivot, intake)
-        //         )
-        //     );
+            .onTrue(pivot.runOnce(pivot::resetEncoder)); //Pivot is Absolute(not)
     }
 
     public void configureTestBindings(){}

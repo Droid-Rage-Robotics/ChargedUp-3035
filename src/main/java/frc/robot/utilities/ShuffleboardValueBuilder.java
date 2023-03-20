@@ -28,7 +28,7 @@ public abstract class ShuffleboardValueBuilder<T> {
 
     public ShuffleboardValueBuilder<T> withSize(int height, int width) {
         return add(
-            simpleWidget.withSize(height, width)
+            simpleWidget.withSize(width, height)
         );
     }
 
