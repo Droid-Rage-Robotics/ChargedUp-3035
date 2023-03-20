@@ -13,15 +13,15 @@ public class SafeCanSparkMax extends CANSparkMax {
 
     @Override
     public void set(double speed) {
-        if (!isEnabled.get()) return;
         outputWriter.write(speed);
-        super.set(speed);
+        if (!isEnabled.get()) super.set(0);
+            else super.set(speed);
     }
 
     @Override
     public void setVoltage(double outputVolts) {
-        if (!isEnabled.get()) return;
         outputWriter.write(outputVolts);
-        super.setVoltage(outputVolts);
+        if (!isEnabled.get()) super.set(0);
+            else super.setVoltage(outputVolts);
     }
 }
