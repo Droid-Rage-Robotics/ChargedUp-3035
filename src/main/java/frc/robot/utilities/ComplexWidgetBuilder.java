@@ -56,7 +56,4 @@ public class ComplexWidgetBuilder {
             this.complexWidget.withWidget(widgetType)
             );
     }
-    public void get() {
-        
-    }
 }

@@ -2,44 +2,21 @@ package frc.robot.commands.Drive;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SwerveModule;
-import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.DroidRageConstants;
 
 public class SwerveDriveTeleop extends CommandBase {
     private final Drive drive;
     private final Supplier<Double> x, y, turn;
     private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
-    private static final PIDController antiTipX = new PIDController(-0.1, 0, 0);
-    private static final PIDController antiTipY = new PIDController(-0.1, 0, 0);
-    private static final PIDController autoBalanceX = new PIDController(0.006, 0, 0.0005);
     // private static final PIDController autoBalanceY = new PIDController(0.006, 0, 0.0005);
-
-    private static final ComplexWidgetBuilder antiTipXWidget = ComplexWidgetBuilder.create(
-        antiTipX, "Anti Tip X PID Controller", Drive.class.getSimpleName()
-    ).withWidget(BuiltInWidgets.kPIDController);
-
-    private static final ComplexWidgetBuilder antiTipYWidget = ComplexWidgetBuilder.create(
-        antiTipX, "Anti Tip Y PID Controller", Drive.class.getSimpleName()
-    ).withWidget(BuiltInWidgets.kPIDController);
-
-    private static final ComplexWidgetBuilder autoBalanceXWidget = ComplexWidgetBuilder.create(
-        antiTipX, "Auto Balance X PID Controller", Drive.class.getSimpleName()
-    ).withWidget(BuiltInWidgets.kPIDController);
-
-    private static final ComplexWidgetBuilder autoBalanceYWidget = ComplexWidgetBuilder.create(
-        antiTipX, "Auto Balance Y PID Controller", Drive.class.getSimpleName()
-    ).withWidget(BuiltInWidgets.kPIDController)
-        .withSize(0, 2);
 
     private volatile double xSpeed, ySpeed, turnSpeed;
 
@@ -56,17 +33,9 @@ public class SwerveDriveTeleop extends CommandBase {
         this.yLimiter = new SlewRateLimiter(Drive.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
         this.turnLimiter = new SlewRateLimiter(Drive.Config.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.get());
 
-        antiTipX.setTolerance(3);
-        antiTipY.setTolerance(3);
-        autoBalanceX.setTolerance(2);
-        // autoBalanceY.setTolerance(1);
 
 
         addRequirements(drive);
-        antiTipXWidget.get();
-        antiTipYWidget.get();
-        autoBalanceXWidget.get();
-        autoBalanceYWidget.get();
     }
 
     @Override
@@ -101,27 +70,27 @@ public class SwerveDriveTeleop extends CommandBase {
             ySpeed = modifiedYSpeed;
         }
 
-        //Apply tipping
-        double xTilt = drive.getRoll();
-        double yTilt = drive.getPitch();
+        // //Apply tipping
+        // double xTilt = drive.getRoll();
+        // double yTilt = drive.getPitch();
 
-        switch (drive.getTippingState()) {
-            case ANTI_TIP:
-                if (Math.abs(xTilt) > antiTipX.getPositionTolerance())
-                    xSpeed = antiTipX.calculate(xSpeed, xTilt);
-                if (Math.abs(yTilt) > antiTipY.getPositionTolerance())
-                    ySpeed = antiTipY.calculate(ySpeed, yTilt);
-                break;
-            case AUTO_BALANCE:
-            case AUTO_BALANCE_ANTI_TIP:
-                if (Math.abs(xTilt) > autoBalanceX.getPositionTolerance())
-                    xSpeed = autoBalanceX.calculate(xSpeed, xTilt);
-                // if (Math.abs(yTilt) > autoBalanceY.getPositionTolerance())
-                //     ySpeed = autoBalanceY.calculate(ySpeed, yTilt);
-                break;
-            case NO_TIP_CORRECTION:
-                break;            
-        }
+        // switch (drive.getTippingState()) {
+        //     case ANTI_TIP:
+        //         if (Math.abs(xTilt) > antiTipX.getPositionTolerance())
+        //             xSpeed = antiTipX.calculate(xSpeed, xTilt);
+        //         if (Math.abs(yTilt) > antiTipY.getPositionTolerance())
+        //             ySpeed = antiTipY.calculate(ySpeed, yTilt);
+        //         break;
+        //     case AUTO_BALANCE:
+        //     case AUTO_BALANCE_ANTI_TIP:
+        //         if (Math.abs(xTilt) > autoBalanceX.getPositionTolerance())
+        //             xSpeed = autoBalanceX.calculate(xSpeed, xTilt);
+        //         // if (Math.abs(yTilt) > autoBalanceY.getPositionTolerance())
+        //         //     ySpeed = autoBalanceY.calculate(ySpeed, yTilt);
+        //         break;
+        //     case NO_TIP_CORRECTION:
+        //         break;            
+        // }
 
         // Apply deadband
         if (Math.abs(xSpeed) < DroidRageConstants.Gamepad.DRIVER_STICK_DEADZONE) xSpeed = 0;
@@ -163,9 +132,6 @@ public class SwerveDriveTeleop extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        antiTipX.close();
-        antiTipY.close();
-        autoBalanceX.close();
         // autoBalanceY.close();
         drive.stop();
     }

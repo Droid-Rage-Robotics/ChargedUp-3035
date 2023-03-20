@@ -1,13 +1,8 @@
 package frc.robot.subsystems;
 
-import java.util.concurrent.TimeUnit;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -18,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.TrackedElement.Element;
 import frc.robot.utilities.SafeCanSparkMax;
 import frc.robot.utilities.ShuffleboardValue;
-import frc.robot.utilities.ShuffleboardValueBuilder;
 
 public class Intake extends SubsystemBase {
 

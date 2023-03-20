@@ -1,19 +1,15 @@
 package frc.robot.commands;
 
 import frc.robot.commands.Drive.AutoBalance;
-import frc.robot.commands.Drive.LockWheels;
 import frc.robot.commands.Drive.PathPlannerFollow;
 import frc.robot.commands.ElevatorCommands.*;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Arm.Position;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
 
