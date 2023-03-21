@@ -35,7 +35,7 @@ public class Pivot extends SubsystemBase {
         motor = new SafeCanSparkMax(
             18, 
             MotorType.kBrushless,
-            ShuffleboardValue.create(true, "Is Enabled", Pivot.class.getSimpleName())
+            ShuffleboardValue.create(false, "Is Enabled", Pivot.class.getSimpleName())
                 .withWidget(BuiltInWidgets.kToggleSwitch)
                 .build(),
             ShuffleboardValue.create(0.0, "Power", Pivot.class.getSimpleName())

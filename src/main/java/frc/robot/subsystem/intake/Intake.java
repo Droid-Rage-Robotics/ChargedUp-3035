@@ -37,8 +37,6 @@ public class Intake extends SubsystemBase {
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .withSize(1, 2)
         .build();
-    protected final ShuffleboardValue<Double> voltageWriter = ShuffleboardValue.create(1.0, "Intake Voltage", Intake.class.getSimpleName())
-        .build();
 
     public Intake() {
         intakeMotor = new SafeCanSparkMax(
@@ -62,7 +60,6 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        voltageWriter.set(intakeMotor.getBusVoltage());
         if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor(); // Keep in mind the compressor cannot be reenabled until class is reinitialized becuase there is no enableCompressor() method on PneumaticHub
     }
   
@@ -86,30 +83,34 @@ public class Intake extends SubsystemBase {
             else open();
     }
 
-    protected void setVoltage(double power) {
-        intakeMotor.setVoltage(power * 12);
+    protected void setPower(double power) {
+        intakeMotor.set(power);
+    }
+
+    protected void setVoltage(double voltage) {
+        intakeMotor.setVoltage(voltage);
     }
 
     public void intake() {
         switch(TrackedElement.get()) {
-            case CONE -> setVoltage(CONE_INTAKE);
-            case CUBE -> setVoltage(CUBE_INTAKE);
+            case CONE -> setPower(CONE_INTAKE);
+            case CUBE -> setPower(CUBE_INTAKE);
         }
     }
 
     public void outtake() {
         switch(TrackedElement.get()) {
-            case CONE -> setVoltage(OUTTAKE);
-            case CUBE -> setVoltage(OUTTAKE);
+            case CONE -> setPower(OUTTAKE);
+            case CUBE -> setPower(OUTTAKE);
         }
     }
 
     public void stop() {
-        setVoltage(STOP);
+        setPower(STOP);
     }
 
     public void hold() {
-        setVoltage(HOLD);
+        setPower(HOLD);
     }
 
     public CommandBase runIntakeFor(double waitSeconds) {

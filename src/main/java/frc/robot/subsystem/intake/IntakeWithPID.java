@@ -11,14 +11,18 @@ import frc.robot.utility.ShuffleboardValueEnum;
 
 public class IntakeWithPID extends Intake {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
-        SHOOT_CUBE_LOW(10),
-        SHOOT_CUBE_MID(10),
-        SHOOT_CUBE_HIGH(10),
+        SHOOT_CUBE_LOW(500),
+        SHOOT_CUBE_MID(500),
+        SHOOT_CUBE_HIGH(500),
+
+        SHOOT_CONE_LOW(500),
+        SHOOT_CONE_MID(500),
+        SHOOT_CONE_HIGH(500),
 
         // CONE(50),
         CONTINUOUS(50),
-        INTAKE(800),
-        OUTTAKE(-400),
+        INTAKE(1500),
+        OUTTAKE(-500),
         HOLD_CONE(100),
         HOLD_CUBE(100),
         STOP(0)
@@ -53,16 +57,17 @@ public class IntakeWithPID extends Intake {
     protected final SimpleMotorFeedforward feedforward;
     protected final RelativeEncoder encoder;
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> encoderVelocityWriter = ShuffleboardValue.create(0.0, "Encoder Velocity", Intake.class.getSimpleName()).build();
 
     public IntakeWithPID() {
         super();
         controller = new PIDController(
-            0.000173611, 
+            0.002, 
             0,
             0);
         encoder = intakeMotor.getEncoder();
         controller.setTolerance(5);
-        feedforward = new SimpleMotorFeedforward(0.1, 0.0001761804, 0);
+        feedforward = new SimpleMotorFeedforward(0.2, 0.0022, 0);
         intakeMotor.setInverted(false);
         ComplexWidgetBuilder.create(controller, "PID Controller", Intake.class.getSimpleName());
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
@@ -84,7 +89,9 @@ public class IntakeWithPID extends Intake {
     }
 
     protected double getVelocity() {
-        return encoder.getVelocity();
+        double velocity = encoder.getVelocity();
+        encoderVelocityWriter.write(velocity);
+        return velocity;
     }
 
     protected double calculatePID(double targetVelocity) {
