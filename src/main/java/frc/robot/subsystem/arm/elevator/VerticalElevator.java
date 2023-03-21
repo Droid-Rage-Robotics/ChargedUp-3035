@@ -18,7 +18,7 @@ public class VerticalElevator extends Elevator {
         public static final double COUNTS_PER_PULSE = 1; // 2048 bc rev through bore
         public static final double ROT_TO_INCHES = (COUNTS_PER_PULSE * GEAR_RATIO) / (GEAR_DIAMETER_INCHES * Math.PI);
     }
-    private final PIDController controller = new PIDController(0.2, 0, 0);
+    private final PIDController controller = new PIDController(2.4, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0, 0, 0, 0);
     private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
