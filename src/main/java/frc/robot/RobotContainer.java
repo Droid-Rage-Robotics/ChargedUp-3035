@@ -32,6 +32,8 @@ public class RobotContainer {
     // fix auto balace
     // fix lock wheels
     // limielite
+    // detect when intake velocity error drops and light leds
+    
 
     private final Drive drive = new Drive();
     // private final Elevator elevator = new Elevator();
