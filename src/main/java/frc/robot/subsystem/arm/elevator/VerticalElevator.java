@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
 
@@ -19,29 +20,37 @@ public class VerticalElevator extends Elevator {
     }
     private final PIDController controller = new PIDController(0.2, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0, 0, 0, 0);
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
+        
+    private final ShuffleboardValue<Double> voltage = ShuffleboardValue.create(0.0, "Voltage", VerticalElevator.class.getSimpleName())
+        .build();
+
     private final SafeCanSparkMax leftMotor = new SafeCanSparkMax(
         16, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", getSimpleName())
-            .withWidget(BuiltInWidgets.kToggleSwitch)
-            .build(),
-        ShuffleboardValue.create(0.0, "Voltage", getSimpleName())
-            .build()
+        isEnabled,
+        voltage
     );
+
     private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
         15, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", getSimpleName())
-            .withWidget(BuiltInWidgets.kToggleSwitch)
-            .build(),
-        ShuffleboardValue.create(0.0, "Voltage", getSimpleName())
-            .build()
+        isEnabled,
+        voltage
     );
+
+    protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", VerticalElevator.class.getSimpleName())
+        .withSize(1, 3)
+        .build();
+
+    protected final ShuffleboardValue<Boolean> isMovingManually = ShuffleboardValue.create(false, "Moving manually", VerticalElevator.class.getSimpleName())
+        .build();
 
     private final RelativeEncoder encoder;
 
     public VerticalElevator() {
-        super();
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.setInverted(false);
@@ -51,6 +60,12 @@ public class VerticalElevator extends Elevator {
 
         encoder = leftMotor.getEncoder();
         encoder.setPositionConversionFactor(Constants.ROT_TO_INCHES);
+
+        ComplexWidgetBuilder.create(getController(), " PID Controller", VerticalElevator.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController)
+            .withSize(2, 2);
+
+        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Elevator Encoders", VerticalElevator.class.getSimpleName());
     }
 
     @Override
@@ -69,6 +84,11 @@ public class VerticalElevator extends Elevator {
     }
 
     @Override
+    protected ShuffleboardValue<Boolean> getIsMovingManually() {
+        return isMovingManually;
+    }
+
+    @Override
     public void resetEncoder() {
         encoder.setPosition(0);
     }
@@ -79,10 +99,4 @@ public class VerticalElevator extends Elevator {
         encoderPositionWriter.write(position);
         return position;
     }
-
-    @Override
-    protected String getSimpleName() {
-        return VerticalElevator.class.getSimpleName();
-    }
-    
 }

@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
 
@@ -20,19 +21,25 @@ public class HorizontalElevator extends Elevator {
     private final PIDController controller = new PIDController(0.2, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0, 0, 0, 0);
     private final SafeCanSparkMax motor = new SafeCanSparkMax(
-        16, 
+        17, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", getSimpleName())
+        ShuffleboardValue.create(true, "Is Enabled", HorizontalElevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .build(),
-        ShuffleboardValue.create(0.0, "Voltage", getSimpleName())
+        ShuffleboardValue.create(0.0, "Voltage", HorizontalElevator.class.getSimpleName())
             .build()
     );
+
+    protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", HorizontalElevator.class.getSimpleName())
+        .withSize(1, 3)
+        .build();
+
+    protected final ShuffleboardValue<Boolean> isMovingManually = ShuffleboardValue.create(false, "Moving manually", HorizontalElevator.class.getSimpleName())
+        .build();
 
     private final RelativeEncoder encoder;
 
     public HorizontalElevator() {
-        super();
         motor.setIdleMode(IdleMode.kBrake);
         motor.setInverted(true);
 
@@ -40,6 +47,12 @@ public class HorizontalElevator extends Elevator {
 
         encoder = motor.getEncoder();
         encoder.setPositionConversionFactor(Constants.ROT_TO_INCHES);
+
+        ComplexWidgetBuilder.create(getController(), " PID Controller", HorizontalElevator.class.getSimpleName())
+            .withWidget(BuiltInWidgets.kPIDController)
+            .withSize(2, 2);
+
+        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Elevator Encoders", HorizontalElevator.class.getSimpleName());
     }
 
     @Override
@@ -58,6 +71,11 @@ public class HorizontalElevator extends Elevator {
     }
 
     @Override
+    protected ShuffleboardValue<Boolean> getIsMovingManually() {
+        return isMovingManually;
+    }
+
+    @Override
     public void resetEncoder() {
         encoder.setPosition(0);
     }
@@ -68,10 +86,4 @@ public class HorizontalElevator extends Elevator {
         encoderPositionWriter.write(position);
         return position;
     }
-
-    @Override
-    protected String getSimpleName() {
-        return HorizontalElevator.class.getSimpleName();
-    }
-    
 }
