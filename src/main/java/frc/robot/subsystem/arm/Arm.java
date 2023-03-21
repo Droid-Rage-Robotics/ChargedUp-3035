@@ -28,12 +28,14 @@ public class Arm {
             this.coneValue = coneValue;
             this.cubeValue = cubeValue;
         }
-        private Value getCurrentValue() {
+
+        public Value getCurrentValue() {
             return switch (TrackedElement.get()) {
                 case CONE -> coneValue;
                 case CUBE -> cubeValue;
             };
         }
+
         public double getVertical() {
             return getCurrentValue().getVertical();
         }
@@ -46,7 +48,7 @@ public class Arm {
             return getCurrentValue().getPivotDegrees();
         }
     }
-    private enum Value {//16-17 is MAXXXXXX for vert ; 11 is for horiz
+    public enum Value {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0,0),
 
         INTAKE_LOW_CONE(0,0, 51),
@@ -102,6 +104,18 @@ public class Arm {
         public double getPivotDegrees() {
             return pivotAngle.get();
         }
+
+        public void setVertical(double inches) {
+            verticalInches.set(inches);
+        }
+
+        public void setHorizontal(double inches) {
+            horizontalInches.set(inches);
+        }
+
+        public void setPivotDegrees(double degrees) {
+            pivotAngle.set(degrees);
+        }
     }
 
     private final VerticalElevator verticalElevator;
@@ -141,7 +155,13 @@ public class Arm {
                 default -> Commands.sequence(
                     verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                     horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees()))),
+                    Commands.run(() -> {
+                        Value currentValue = position.getCurrentValue();
+                        currentValue.setHorizontal(horizontalElevator.getTargetPosition());
+                        currentValue.setVertical(verticalElevator.getTargetPosition());
+                        currentValue.setPivotDegrees(pivot.getTargetPosition());
+                    })
                 );
             }
         ));
