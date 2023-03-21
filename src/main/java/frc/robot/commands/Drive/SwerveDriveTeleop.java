@@ -51,9 +51,9 @@ public class SwerveDriveTeleop extends CommandBase {
 
         // Square inputs
         if (drive.isSquaredInputs()) {
-            xSpeed = squareInput(xSpeed);
-            ySpeed = squareInput(ySpeed);
-            turnSpeed = squareInput(turnSpeed);
+            xSpeed = DroidRageConstants.squareInput(xSpeed);
+            ySpeed = DroidRageConstants.squareInput(ySpeed);
+            turnSpeed = DroidRageConstants.squareInput(turnSpeed);
         }
 
         // Apply Field Oriented
@@ -139,12 +139,5 @@ public class SwerveDriveTeleop extends CommandBase {
     @Override
     public boolean isFinished() {
         return false;
-    }
-
-    /**
-     * Square magnitude of number while keeping the sign.
-     */
-    private double squareInput(double input) {
-        return input * Math.abs(input);
     }
 }
