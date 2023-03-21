@@ -1,4 +1,4 @@
-package frc.robot.commands.Drive;
+package frc.robot.commands.drive;
 
 import java.util.function.Supplier;
 
@@ -9,8 +9,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.DroidRageConstants;
-import frc.robot.subsystems.Drive.Drive;
-import frc.robot.subsystems.Drive.SwerveModule;
+import frc.robot.subsystem.drive.Drive;
+import frc.robot.subsystem.drive.SwerveModule;
 
 public class SwerveDriveTeleop extends CommandBase {
     private final Drive drive;

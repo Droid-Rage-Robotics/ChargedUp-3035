@@ -1,10 +1,10 @@
-package frc.robot.commands.Drive;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Drive.Drive;
+import frc.robot.subsystem.drive.Drive;
 
 public class LockWheels extends SequentialCommandGroup {
     public LockWheels(Drive drive) {

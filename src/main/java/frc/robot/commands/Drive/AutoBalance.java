@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Drive;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,10 +10,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.subsystems.Drive.Drive;
-import frc.robot.utilities.ComplexWidgetBuilder;
-import frc.robot.utilities.ShuffleboardValue;
-import frc.robot.utilities.ShuffleboardValueBuilder;
+import frc.robot.subsystem.drive.Drive;
+import frc.robot.utility.ComplexWidgetBuilder;
+import frc.robot.utility.ShuffleboardValue;
+import frc.robot.utility.ShuffleboardValueBuilder;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

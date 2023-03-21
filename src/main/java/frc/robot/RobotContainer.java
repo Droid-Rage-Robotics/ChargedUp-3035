@@ -1,18 +1,19 @@
 package frc.robot;
 
-import frc.robot.subsystems.*;
-import frc.robot.subsystems.Arm.Position;
-import frc.robot.subsystems.Drive.Drive;
-import frc.robot.subsystems.Intake.IntakeWithPID;
-import frc.robot.subsystems.Pivot.Pivot;
-import frc.robot.subsystems.Pivot.PivotMotionProfiled;
-import frc.robot.utilities.ComplexWidgetBuilder;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Drive.SwerveDriveTeleop;
-import frc.robot.commands.Manual.ManualPivot;
-import frc.robot.commands.Manual.ToggleIntake;
-
-
+import frc.robot.commands.arm.ManualPivot;
+import frc.robot.commands.arm.ToggleIntake;
+import frc.robot.commands.drive.SwerveDriveTeleop;
+import frc.robot.subsystem.*;
+import frc.robot.subsystem.arm.Arm;
+import frc.robot.subsystem.arm.Arm.Position;
+import frc.robot.subsystem.arm.elevator.HorizontalElevator;
+import frc.robot.subsystem.arm.elevator.VerticalElevator;
+import frc.robot.subsystem.arm.pivot.Pivot;
+import frc.robot.subsystem.arm.pivot.PivotMotionProfiled;
+import frc.robot.subsystem.drive.Drive;
+import frc.robot.subsystem.intake.IntakeWithPID;
+import frc.robot.utility.ComplexWidgetBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;

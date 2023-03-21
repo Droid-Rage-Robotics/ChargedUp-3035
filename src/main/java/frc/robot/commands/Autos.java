@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
-import frc.robot.commands.Drive.AutoBalance;
-import frc.robot.commands.Drive.PathPlannerFollow;
-import frc.robot.commands.ElevatorCommands.*;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Arm.Position;
-import frc.robot.subsystems.Drive.Drive;
-import frc.robot.subsystems.Intake.Intake;
+import frc.robot.commands.arm.*;
+import frc.robot.commands.drive.AutoBalance;
+import frc.robot.commands.drive.PathPlannerFollow;
+import frc.robot.subsystem.arm.Arm;
+import frc.robot.subsystem.arm.Arm.Position;
+import frc.robot.subsystem.drive.Drive;
+import frc.robot.subsystem.intake.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
