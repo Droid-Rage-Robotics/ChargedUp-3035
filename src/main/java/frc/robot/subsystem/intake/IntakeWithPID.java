@@ -58,6 +58,7 @@ public class IntakeWithPID extends Intake {
     protected final RelativeEncoder encoder;
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityWriter = ShuffleboardValue.create(0.0, "Encoder Velocity", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> encoderVelocityErrorWriter = ShuffleboardValue.create(0.0, "Encoder Velocity Error", Intake.class.getSimpleName()).build();
 
     public IntakeWithPID() {
         super();
@@ -79,23 +80,28 @@ public class IntakeWithPID extends Intake {
         setVoltage(calculatePID(getTargetVelocity()) + calculateFeedforward(getTargetVelocity()));
     }
 
-    protected double getTargetVelocity() {
+    public double getTargetVelocity() {
         return controller.getSetpoint();
     }
 
-    protected void setTargetVelocity(Velocity velocity) {
+    public void setTargetVelocity(Velocity velocity) {
         controller.setSetpoint(velocity.get());
         targetVelocityWriter.set(velocity.get());
     }
 
-    protected double getVelocity() {
+    public double getEncoderVelocity() {
         double velocity = encoder.getVelocity();
         encoderVelocityWriter.write(velocity);
+        encoderVelocityErrorWriter.write(getTargetVelocity() - velocity);
         return velocity;
     }
 
+    public double getEncoderVelocityError() {
+        return encoderVelocityErrorWriter.get();
+    }
+
     protected double calculatePID(double targetVelocity) {
-        return controller.calculate(getVelocity(), targetVelocity);
+        return controller.calculate(getEncoderVelocity(), targetVelocity);
     }
 
     protected double calculateFeedforward(double targetVelocity) {
