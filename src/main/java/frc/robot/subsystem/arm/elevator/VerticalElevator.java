@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import frc.robot.subsystem.arm.pivot.Pivot;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
 
@@ -23,19 +22,19 @@ public class VerticalElevator extends Elevator {
     private final SafeCanSparkMax leftMotor = new SafeCanSparkMax(
         16, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
+        ShuffleboardValue.create(true, "Is Enabled", getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .build(),
-        ShuffleboardValue.create(0.0, "Voltage", Pivot.class.getSimpleName())
+        ShuffleboardValue.create(0.0, "Voltage", getSimpleName())
             .build()
     );
     private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
         15, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
+        ShuffleboardValue.create(true, "Is Enabled", getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .build(),
-        ShuffleboardValue.create(0.0, "Voltage", Pivot.class.getSimpleName())
+        ShuffleboardValue.create(0.0, "Voltage", getSimpleName())
             .build()
     );
 
@@ -79,6 +78,11 @@ public class VerticalElevator extends Elevator {
         double position = encoder.getPosition();
         encoderPositionWriter.write(position);
         return position;
+    }
+
+    @Override
+    protected String getSimpleName() {
+        return VerticalElevator.class.getSimpleName();
     }
     
 }

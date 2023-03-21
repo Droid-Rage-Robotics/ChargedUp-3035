@@ -22,10 +22,11 @@ public class ManualVerticalElevator extends CommandBase {
 
     @Override
     public void execute() {
-        double target = -verticalElevatorMove.get();
-        target = DroidRageConstants.squareInput(target);
-        target = DroidRageConstants.applyDeadBand(target);
-        verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() + target * 0.1);
+        double move = -verticalElevatorMove.get();
+        move = DroidRageConstants.squareInput(move);
+        move = DroidRageConstants.applyDeadBand(move);
+        verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() + move * 0.1);
+        verticalElevator.setMovingManually(!(move == 0));
     }
 
     @Override

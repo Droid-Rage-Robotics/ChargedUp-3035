@@ -8,16 +8,19 @@ import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
 
 public abstract class Elevator extends SubsystemBase {
-    protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", Elevator.class.getSimpleName())
+    protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", getSimpleName())
         .withSize(1, 3)
         .build();
 
+    protected final ShuffleboardValue<Boolean> isMovingManually = ShuffleboardValue.create(false, "Moving manually", getSimpleName())
+        .build();
+
     public Elevator() {
-        ComplexWidgetBuilder.create(getController(), " PID Controller", Elevator.class.getSimpleName())
+        ComplexWidgetBuilder.create(getController(), " PID Controller", getSimpleName())
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Elevator Encoders", Elevator.class.getSimpleName());
+        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Elevator Encoders", getSimpleName());
     }
 
     @Override
@@ -33,6 +36,7 @@ public abstract class Elevator extends SubsystemBase {
     protected abstract PIDController getController();
     protected abstract ElevatorFeedforward getFeedforward();
     protected abstract SafeCanSparkMax getMotor();
+    protected abstract String getSimpleName();
     public abstract void resetEncoder();
     public abstract double getEncoderPosition();
 
@@ -42,6 +46,14 @@ public abstract class Elevator extends SubsystemBase {
 
     public double getTargetPosition() {
         return getController().getSetpoint();
+    }
+
+    public void setMovingManually(boolean value) {
+        isMovingManually.set(value);
+    }
+
+    public boolean isMovingManually() {
+        return isMovingManually.get();
     }
 
     protected void setVoltage(double voltage) {

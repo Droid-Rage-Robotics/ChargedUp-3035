@@ -153,15 +153,21 @@ public class Arm {
                 ); 
                 
                 default -> Commands.sequence(
-                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees()))),
                     Commands.run(() -> {
                         Value currentValue = position.getCurrentValue();
-                        currentValue.setHorizontal(horizontalElevator.getTargetPosition());
-                        currentValue.setVertical(verticalElevator.getTargetPosition());
-                        currentValue.setPivotDegrees(pivot.getTargetPosition());
-                    })
+                        
+                        if (horizontalElevator.isMovingManually()) 
+                            currentValue.setHorizontal(horizontalElevator.getTargetPosition());
+
+                        if (verticalElevator.isMovingManually()) 
+                            currentValue.setVertical(verticalElevator.getTargetPosition());
+
+                        if (pivot.isMovingManually())
+                            currentValue.setPivotDegrees(pivot.getTargetPosition());
+                    }),
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                 );
             }
         ));

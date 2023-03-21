@@ -24,10 +24,11 @@ public class ManualPivot extends CommandBase {
 
     @Override
     public void execute() {
-        double target = pivotMove.get();
-        target = DroidRageConstants.squareInput(target);
-        target = DroidRageConstants.applyDeadBand(target);
-        pivot.setTargetPosition(pivot.getTargetPosition() + target * 0.5);
+        double move = pivotMove.get();
+        move = DroidRageConstants.squareInput(move);
+        move = DroidRageConstants.applyDeadBand(move);
+        pivot.setTargetPosition(pivot.getTargetPosition() + move * 0.5);
+        pivot.setMovingManually(!(move == 0));
     }
 
     @Override

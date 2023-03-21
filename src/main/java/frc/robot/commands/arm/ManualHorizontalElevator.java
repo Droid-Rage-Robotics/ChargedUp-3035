@@ -22,10 +22,11 @@ public class ManualHorizontalElevator extends CommandBase {
 
     @Override
     public void execute() {
-        double target = -horizontalElevatorMove.get();
-        target = DroidRageConstants.squareInput(target);
-        target = DroidRageConstants.applyDeadBand(target);
-        horizontalElevator.setTargetPosition(horizontalElevator.getTargetPosition() + target * 0.1);
+        double move = -horizontalElevatorMove.get();
+        move = DroidRageConstants.squareInput(move);
+        move = DroidRageConstants.applyDeadBand(move);
+        horizontalElevator.setTargetPosition(horizontalElevator.getTargetPosition() + move * 0.1);
+        horizontalElevator.setMovingManually(!(move == 0));
     }
 
     @Override

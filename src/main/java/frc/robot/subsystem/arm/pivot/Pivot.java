@@ -27,6 +27,9 @@ public class Pivot extends SubsystemBase {
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position (Degrees)", Pivot.class.getSimpleName())
         .withSize(1, 3)
         .build();
+
+    protected final ShuffleboardValue<Boolean> isMovingManually = ShuffleboardValue.create(false, "Moving manually", Pivot.class.getSimpleName())
+        .build();
     
     public Pivot() {
         motor = new SafeCanSparkMax(
@@ -66,6 +69,15 @@ public class Pivot extends SubsystemBase {
     public void simulationPeriodic() {
         periodic();
     }
+
+    public void setMovingManually(boolean value) {
+        isMovingManually.set(value);
+    }
+
+    public boolean isMovingManually() {
+        return isMovingManually.get();
+    }
+
 
     public void setTargetPosition(double positionRadians) {
         controller.setSetpoint(positionRadians);
