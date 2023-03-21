@@ -22,31 +22,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
     //TODO: Ideas
-    // all abort button
     // override button for when sensors fail
-    // read about shuffleboard and do great things
     // find out how to make a field graph with robot pose on it and preferably a visual for path following
     // custom shuffleboard droid rage theme
     // Consider setitng drive motor to break and turn to coast
-    // ----Bright Color on shuffleboard when block is detected
-    // ----path weaver vs path planner
-    // reset network tables button
     // auto align 
-    // fixnetowrk tables!!!
-    // recalibrate pigeon on start
-    // why are swerves not simplifying turns
-    //add Physical and digital limit switch
-    // make shuffleboard stuff able to use a class instead of a string
-    // safe sparkmax
-    // arm class
-    // FIX OUTTAKE COMMAND!!!!!!!!!!!!!!!!!!!
+    // add Physical and digital limit switch
     // fix auto balace
     // fix lock wheels
-
-
-
     // limielite
-    // 
 
     private final Drive drive = new Drive();
     // private final Elevator elevator = new Elevator();
