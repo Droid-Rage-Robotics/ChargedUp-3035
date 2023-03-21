@@ -8,54 +8,12 @@ public final class DroidRageConstants {
         public static final double OPERATOR_STICK_DEADZONE = 0.2;//TODO::FIX
     }
 
-    // public static void registerSendable(Sendable sendable, String title, String tab) {
-    //     Shuffleboard.getTab(tab)
-    //         .add(title, sendable);
-    // }
-
-    // public static void registerVideo(VideoSource video, String title, String tab) {
-    //     Shuffleboard.getTab(tab)
-    //         .add(title, video);
-    // }
-
-    // public static SuppliedValueWidget<Double> makeShuffleboardDouble(DoubleSupplier valueSupplier, String title, String tab) {
-    //     return Shuffleboard.getTab(tab)
-    //         .addDouble(title, valueSupplier);
-    // }
-    
-    // public static double getNumber(String name, double value) {
-    //     double myValue = SmartDashboard.getNumber(name, value);
-    //     // if (myValue == value) {
-    //     //     SmartDashboard.putNumber(name, value);
-    //     // }
-    //     return myValue;
-    // }
-
-    // public static boolean getBoolean(String name, boolean value) {
-    //     boolean myValue = SmartDashboard.getBoolean(name, value);
-    //     if (myValue == value) {
-    //         SmartDashboard.putBoolean(name, value);
-    //     }
-    //     return myValue;
-    // }
-
-    // public static String getString(String name, String value) {
-    //     String myValue = SmartDashboard.getString(name, value);
-    //     if (myValue == value) {
-    //         SmartDashboard.putString(name, value);
-    //     }
-    //     return myValue;
-    // }
-
-    // public static void putNumber(String name, double value) {
-    //     SmartDashboard.putNumber(name, value);
-    // }
-
-    // public static void putBoolean(String name, boolean value) {
-    //     SmartDashboard.putBoolean(name, value);
-    // }
-
-    // public static void putString(String name, String value) {
-    //     SmartDashboard.putString(name, value);
-    // }
+    public static double LOOP_TYPE_SECONDS = 0.02;
+    public static double squareInput(double value) {
+        return value * Math.abs(value);
+    }
+    public static double applyDeadBand(double value) {
+        if (Math.abs(value) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE) value = 0;
+        return value;
+    }
 }

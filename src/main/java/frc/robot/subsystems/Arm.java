@@ -101,15 +101,17 @@ public class Arm {
         }
     }
 
-    private final Elevator elevator;
+    private final VerticalElevator verticalElevator;
+    private final HorizontalElevator horizontalElevator;
     private final Pivot pivot;
     private Position position = Position.START;
     private final ShuffleboardValue<String> positionWriter = ShuffleboardValue.create(position.name(), "Current Arm Position", "Misc")
         .withSize(1, 3)
         .build();
 
-    public Arm(Elevator elevator, Pivot pivot) {
-        this.elevator = elevator;
+    public Arm(VerticalElevator verticalElevator, HorizontalElevator horizontalElevator, Pivot pivot) {
+        this.verticalElevator = verticalElevator;
+        this.horizontalElevator = horizontalElevator;
         this.pivot = pivot;
     }
 
@@ -127,13 +129,15 @@ public class Arm {
             Commands.runOnce(() -> logPosition(targetPosition)),
             switch (targetPosition) {
                 case AUTO_MID -> Commands.sequence(
-                    elevator.runOnce(() -> elevator.setPositions(targetPosition.getHorizontal(), targetPosition.getVertical())),
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
                     Commands.waitSeconds(1.4),
                     pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                 ); 
                 
                 default -> Commands.sequence(
-                    elevator.runOnce(() -> elevator.setPositions(targetPosition.getHorizontal(), targetPosition.getVertical())),
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
                     pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                 );
             }
@@ -141,6 +145,6 @@ public class Arm {
     }
 
     public CommandBase lowerElevatorCommand() {
-        return elevator.runOnce(() -> elevator.setPositions(position.getHorizontal(), position.getVertical() - 7));
+        return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 7));
     }
 }

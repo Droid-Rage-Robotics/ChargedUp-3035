@@ -17,6 +17,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -48,13 +49,15 @@ public class RobotContainer {
     // 
 
     private final Drive drive = new Drive();
-    private final Elevator elevator = new Elevator();
+    // private final Elevator elevator = new Elevator();
+    private final VerticalElevator verticalElevator = new VerticalElevator();
+    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     // private final Pivot2 pivot = new Pivot2(); 
     // private final Pivot pivot = new Pivot();
     private final PivotMotionProfiled pivot = new PivotMotionProfiled();
     // private final Intake intake = new Intake();
     private final IntakeWithPID intake = new IntakeWithPID();
-    private final Arm arm = new Arm(elevator, pivot);
+    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -178,7 +181,10 @@ public class RobotContainer {
             );
 
         operator.start()
-            .onTrue(elevator.runOnce(elevator::resetEncoders));
+            .onTrue(Commands.sequence(
+                verticalElevator.runOnce(verticalElevator::resetEncoder),
+                horizontalElevator.runOnce(horizontalElevator::resetEncoder)
+            ));
       
       
       

@@ -10,12 +10,11 @@ public class ManualPivot extends CommandBase {
     public static class Constants {    }
 
     private final Pivot pivot;
-    // private final CommandXboxController operator;
     private final Supplier<Double> pivotMove;
     
-    public ManualPivot(Supplier<Double> yPivotMove, Pivot pivot) {
+    public ManualPivot(Supplier<Double> pivotMove, Pivot pivot) {
         this.pivot = pivot;
-        this.pivotMove = yPivotMove;
+        this.pivotMove = pivotMove;
 
         addRequirements(pivot);
     }
@@ -25,9 +24,10 @@ public class ManualPivot extends CommandBase {
 
     @Override
     public void execute() {
-        double y = squareInput(pivotMove.get()); // reveresed intentnioally
-        if (Math.abs(y) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE) y = 0;
-        pivot.setTargetPosition(pivot.getTargetPosition() + y * 0.5);
+        double target = pivotMove.get();
+        target = DroidRageConstants.squareInput(target);
+        target = DroidRageConstants.applyDeadBand(target);
+        pivot.setTargetPosition(pivot.getTargetPosition() + target * 0.5);
     }
 
     @Override
@@ -36,10 +36,6 @@ public class ManualPivot extends CommandBase {
     @Override
     public boolean isFinished() {
         return false;
-    }
-
-    private double squareInput(double input) {
-        return input * Math.abs(input);
     }
 }
 
