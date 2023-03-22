@@ -46,7 +46,8 @@ public class RobotContainer {
     // private final Pivot pivot = new Pivot();
     private final Pivot pivot = new Pivot();
     // private final Intake intake = new Intake();
-    private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
+    private final IntakeWithPID intake = new IntakeWithPID();
+    // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
 
     private final CommandXboxController driver =
@@ -92,20 +93,20 @@ public class RobotContainer {
             .onFalse(drive.setNormalSpeed());
 
 
-            driver.rightTrigger()
-            .onTrue(intake.run(()->intake.setManualOutput(0.1))) 
-            .onFalse(intake.run(()->intake.setManualOutput(0)));
-
-        driver.leftTrigger()
-            .onTrue(intake.run(()->intake.setManualOutput(-0.1)))
-            .onFalse(intake.run(()->intake.setManualOutput(0)));
-        // driver.rightTrigger()
-        //     .onTrue(intake.run(intake::intake)) 
-        //     .onFalse(intake.run(intake::stop));
+        //     driver.rightTrigger()
+        //     .onTrue(intake.run(()->intake.setManualOutput(0.1))) 
+        //     .onFalse(intake.run(()->intake.setManualOutput(0)));
 
         // driver.leftTrigger()
-        //     .onTrue(intake.run(intake::outtake))
-        //     .onFalse(intake.run(intake::stop));
+        //     .onTrue(intake.run(()->intake.setManualOutput(-0.1)))
+        //     .onFalse(intake.run(()->intake.setManualOutput(0)));
+        driver.rightTrigger()
+            .onTrue(intake.run(intake::intake)) 
+            .onFalse(intake.run(intake::stop));
+
+        driver.leftTrigger()
+            .onTrue(intake.run(intake::outtake))
+            .onFalse(intake.run(intake::stop));
 
         driver.a()
             .onTrue(drive.resetOffsetCommand());
