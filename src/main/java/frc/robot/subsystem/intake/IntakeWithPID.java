@@ -110,26 +110,26 @@ public class IntakeWithPID extends Intake {
 
     @Override
     public void intake() {
-        switch(TrackedElement.get()) {
-            case CONE -> setTargetVelocity(Velocity.INTAKE);
-            case CUBE -> setTargetVelocity(Velocity.INTAKE);
-        }
+        setTargetVelocity(switch(TrackedElement.get()) {
+            case CONE -> Velocity.INTAKE;
+            case CUBE -> Velocity.INTAKE;
+        });
     }
 
     @Override
     public void outtake() {
-        switch(TrackedElement.get()) {
-            case CONE -> setTargetVelocity(Velocity.OUTTAKE);
-            case CUBE -> setTargetVelocity(Velocity.OUTTAKE);
-        }
+        setTargetVelocity(switch(TrackedElement.get()) {
+            case CONE -> Velocity.OUTTAKE;
+            case CUBE -> Velocity.OUTTAKE;
+        });
     }
 
     @Override
     public void hold() {
-        switch(TrackedElement.get()) {
-            case CONE -> setTargetVelocity(Velocity.HOLD_CONE);
-            case CUBE -> setTargetVelocity(Velocity.HOLD_CUBE);
-        };
+        setTargetVelocity(switch(TrackedElement.get()) {
+            case CONE -> Velocity.HOLD_CONE;
+            case CUBE -> Velocity.HOLD_CUBE;
+        });
     }
 
     public void shootHighCube() { 
