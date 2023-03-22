@@ -25,7 +25,10 @@ public class Pivot extends SubsystemBase {
     protected final RelativeEncoder encoder;
 
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position (Radians)", Pivot.class.getSimpleName())
-        .withSize(1, 3)
+        .withSize(1, 2)
+        .build();
+        protected final ShuffleboardValue<Double> encoderVelocityWriter = ShuffleboardValue.create(0.0, "Encoder Velocity (Radians per Second)", Pivot.class.getSimpleName())
+        .withSize(1, 2)
         .build();
 
     protected final ShuffleboardValue<Boolean> isMovingManually = ShuffleboardValue.create(false, "Moving manually", Pivot.class.getSimpleName())
@@ -38,16 +41,17 @@ public class Pivot extends SubsystemBase {
             ShuffleboardValue.create(false, "Is Enabled", Pivot.class.getSimpleName())
                 .withWidget(BuiltInWidgets.kToggleSwitch)
                 .build(),
-            ShuffleboardValue.create(0.0, "Power", Pivot.class.getSimpleName())
+            ShuffleboardValue.create(0.0, "Voltage", Pivot.class.getSimpleName())
                 .build()
         );
-        motor.setIdleMode(IdleMode.kBrake);
+        motor.setIdleMode(IdleMode.kCoast);
 
         encoder = motor.getEncoder();
-        encoder.setPositionConversionFactor(1 / 240);
+        encoder.setPositionConversionFactor(Constants.ROTATIONS_TO_RADIANS);
+        encoder.setVelocityConversionFactor(Constants.ROTATIONS_TO_RADIANS);
   
 
-        controller = new PIDController(0, 0, 0);//0.024
+        controller = new PIDController(0.0, 0.0, 0.0);//0.024
         // controller.setTolerance(0.0);
 
         feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.052763);
@@ -58,6 +62,8 @@ public class Pivot extends SubsystemBase {
             .withSize(2, 1);
 
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset encoder", Pivot.class.getSimpleName());
+
+        motor.burnFlash();
     }
 
     @Override
@@ -92,10 +98,16 @@ public class Pivot extends SubsystemBase {
         encoder.setPosition(0);
     }
 
-    public double getPosition() {
+    public double getEncoderPosition() {
         double position = encoder.getPosition();
         encoderPositionWriter.write(position);
         return position;
+    }
+
+    public double getEncoderVelocity() {
+        double velocity = encoder.getVelocity();
+        encoderVelocityWriter.write(velocity);
+        return velocity;
     }
 
     protected void setVoltage(double voltage) {
@@ -107,7 +119,7 @@ public class Pivot extends SubsystemBase {
     }
 
     protected double calculatePID(double positionRadians) {
-        return controller.calculate(getPosition(), positionRadians);
+        return controller.calculate(getEncoderPosition(), positionRadians);
     }
 
    

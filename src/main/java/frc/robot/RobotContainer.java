@@ -12,6 +12,7 @@ import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.Pivot;
+import frc.robot.subsystem.arm.pivot.PivotAbsolute;
 import frc.robot.subsystem.arm.pivot.PivotMotionProfiled;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.subsystem.intake.IntakeWithPID;
@@ -36,6 +37,9 @@ public class RobotContainer {
     // fix lock wheels
     // limielite
     // detect when intake velocity error drops and light leds
+
+    //Add a rawgetposition in pivot Absolute - important 
+    //reset button for pivot; and make sure that it moves all of the limits
     
 
     private final Drive drive = new Drive();
@@ -44,7 +48,7 @@ public class RobotContainer {
     private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     // private final Pivot2 pivot = new Pivot2(); 
     // private final Pivot pivot = new Pivot();
-    private final Pivot pivot = new Pivot();
+    private final PivotAbsolute pivot = new PivotAbsolute();
     // private final Intake intake = new Intake();
     private final IntakeWithPID intake = new IntakeWithPID();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
@@ -140,38 +144,38 @@ public class RobotContainer {
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getRightX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
-        operator.a()
-            .whileTrue( // while true to update positions when moving manually
-                arm.setPositionCommand(Position.LOW)
-            );
-        operator.x()
-            .whileTrue(
-                arm.setPositionCommand(Position.MID)
-            );
-        operator.y()
-            .whileTrue(
-                arm.setPositionCommand(Position.HIGH)
-            );
+        // operator.a()
+        //     .whileTrue( // while true to update positions when moving manually
+        //         arm.setPositionCommand(Position.LOW)
+        //     );
+        // operator.x()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.MID)
+        //     );
+        // operator.y()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.HIGH)
+        //     );
         
-        operator.povUp()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-            );
-        operator.povRight()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-            );
-        operator.povLeft()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_LOW)
-            );
+        // operator.povUp()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
+        //     );
+        // operator.povRight()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
+        //     );
+        // operator.povLeft()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_LOW)
+        //     );
+        // operator.povDown()
+        //     .whileTrue(
 
-            
-        operator.povDown()
-            .whileTrue(
-
-                arm.setPositionCommand(Position.HOLD)
-            );
+        //         arm.setPositionCommand(Position.HOLD)
+        //     );
+        operator.a()
+            .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
 
         operator.start()
             .onTrue(Commands.sequence(
