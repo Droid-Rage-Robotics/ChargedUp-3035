@@ -17,13 +17,15 @@ public class HorizontalElevator extends Elevator {
         public static final double GEAR_DIAMETER_INCHES = 1.4;
         public static final double COUNTS_PER_PULSE = 1; // 2048 bc rev through bore
         public static final double ROT_TO_INCHES = (COUNTS_PER_PULSE * GEAR_RATIO) / (GEAR_DIAMETER_INCHES * Math.PI);
+        public static final double MIN_POSITION = 0;
+        public static final double MAX_POSITION = 12.8;
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0, 0, 0, 0);
     private final SafeCanSparkMax motor = new SafeCanSparkMax(
         17, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", HorizontalElevator.class.getSimpleName())
+        ShuffleboardValue.create(false, "Is Enabled", HorizontalElevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .build(),
         ShuffleboardValue.create(0.0, "Voltage", HorizontalElevator.class.getSimpleName())
@@ -76,6 +78,16 @@ public class HorizontalElevator extends Elevator {
     }
 
     @Override
+    public double getMaxPosition() {
+        return Constants.MAX_POSITION;
+    }
+
+    @Override
+    public double getMinPosition() {
+        return Constants.MIN_POSITION;
+    }
+
+    @Override
     public void resetEncoder() {
         encoder.setPosition(0);
     }
@@ -85,5 +97,5 @@ public class HorizontalElevator extends Elevator {
         double position = encoder.getPosition();
         encoderPositionWriter.write(position);
         return position;
-    }
+    } 
 }

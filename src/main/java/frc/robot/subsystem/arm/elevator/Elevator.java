@@ -22,9 +22,13 @@ public abstract class Elevator extends SubsystemBase {
     protected abstract ShuffleboardValue<Boolean> getIsMovingManually();
     public abstract void resetEncoder();
     public abstract double getEncoderPosition();
+    public abstract double getMaxPosition();
+    public abstract double getMinPosition();
     
 
     public void setTargetPosition(double positionRadians) {
+        if (positionRadians < getMinPosition()) return;
+        if (positionRadians > getMaxPosition()) return;
         getController().setSetpoint(positionRadians);
     }
 
