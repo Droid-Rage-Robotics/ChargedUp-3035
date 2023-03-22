@@ -64,8 +64,8 @@ public class Arm {
         AUTO_MID_CUBE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get() // up first then out
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGH_CONE(15.5,11.6, 31.4),// LOWCONE.pivotAngle.get()
-        HIGH_CUBE(15,11, 31),
+        HIGH_CONE(15.8,11.6, 31.4),// LOWCONE.pivotAngle.get()
+        HIGH_CUBE(15.1,11, 31),
 
         INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14.9,0, 37),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(14.9,0, 36.9),
@@ -153,18 +153,18 @@ public class Arm {
                 ); 
                 
                 default -> Commands.sequence(
-                    Commands.run(() -> {
-                        Value currentValue = position.getCurrentValue();
+                    // Commands.run(() -> { // todo fix this please
+                    //     Value currentValue = position.getCurrentValue();
                         
-                        if (horizontalElevator.isMovingManually()) 
-                            currentValue.setHorizontal(horizontalElevator.getTargetPosition());
+                    //     if (horizontalElevator.isMovingManually()) 
+                    //         currentValue.setHorizontal(horizontalElevator.getTargetPosition());
 
-                        if (verticalElevator.isMovingManually()) 
-                            currentValue.setVertical(verticalElevator.getTargetPosition());
+                    //     if (verticalElevator.isMovingManually()) 
+                    //         currentValue.setVertical(verticalElevator.getTargetPosition());
 
-                        if (pivot.isMovingManually())
-                            currentValue.setPivotDegrees(pivot.getTargetPosition());
-                    }),
+                    //     if (pivot.isMovingManually())
+                    //         currentValue.setPivotDegrees(pivot.getTargetPosition());
+                    // }),
                     verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                     horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
                     pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
