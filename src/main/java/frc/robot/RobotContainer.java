@@ -1,7 +1,9 @@
 package frc.robot;
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.arm.ManualHorizontalElevator;
 import frc.robot.commands.arm.ManualPivot;
+import frc.robot.commands.arm.ManualVerticalElevator;
 import frc.robot.commands.arm.ToggleIntake;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
@@ -41,7 +43,7 @@ public class RobotContainer {
     private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     // private final Pivot2 pivot = new Pivot2(); 
     // private final Pivot pivot = new Pivot();
-    private final PivotMotionProfiled pivot = new PivotMotionProfiled();
+    private final Pivot pivot = new Pivot();
     // private final Intake intake = new Intake();
     private final IntakeWithPID intake = new IntakeWithPID();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
@@ -132,6 +134,8 @@ public class RobotContainer {
          * Operator Controls
          */
         pivot.setDefaultCommand(new ManualPivot(operator::getLeftY, pivot));
+        verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getRightY, verticalElevator));
+        horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getRightX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
         operator.a()
