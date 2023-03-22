@@ -12,7 +12,7 @@ public class PivotMotionProfiledAndAbsolute extends PivotMotionProfiled {
     }
     
     @Override
-    protected double getPosition() {
+    public double getPosition() {
         double position = absoluteEncoder.getPosition();
         encoderPositionWriter.write(position);
         return position;
