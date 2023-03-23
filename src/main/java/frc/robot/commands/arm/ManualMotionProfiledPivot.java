@@ -35,7 +35,7 @@ public class ManualMotionProfiledPivot extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        pivot.setTargetPosition(0);
+        pivot.setTarget(0, 0);
         pivot.setMovingManually(false);
     }
 
