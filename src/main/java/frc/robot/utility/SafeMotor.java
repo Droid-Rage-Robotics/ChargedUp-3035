@@ -1,6 +1,5 @@
 package frc.robot.utility;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 public abstract class SafeMotor {
     protected final ShuffleboardValue<Boolean> isEnabled;

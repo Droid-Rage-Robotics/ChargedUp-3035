@@ -1,7 +1,5 @@
 package frc.robot.subsystem;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -14,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.utility.ComplexWidgetBuilder;
-import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.SafeTalonFX;
 import frc.robot.utility.ShuffleboardValue;
 import frc.robot.utility.ShuffleboardValueEnum;

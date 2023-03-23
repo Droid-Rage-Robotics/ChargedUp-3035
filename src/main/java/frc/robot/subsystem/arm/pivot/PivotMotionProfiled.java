@@ -2,7 +2,6 @@ package frc.robot.subsystem.arm.pivot;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.utility.ShuffleboardValue;
 
 public class PivotMotionProfiled extends Pivot {

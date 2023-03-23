@@ -2,8 +2,6 @@ package frc.robot.subsystem.arm.pivot;
 
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 
-import frc.robot.utility.ComplexWidgetBuilder;
-
 public class PivotAbsolute extends PivotMotionProfiled {
     public static class Consants {
         public static double RADIANS_PER_ROTATION = Math.PI * 2;
