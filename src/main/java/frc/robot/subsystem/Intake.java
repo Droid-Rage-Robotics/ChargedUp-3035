@@ -1,15 +1,26 @@
-package frc.robot.subsystem.intake;
+package frc.robot.subsystem;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import frc.robot.subsystem.TrackedElement;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.utility.ComplexWidgetBuilder;
+import frc.robot.utility.SafeCanSparkMax;
+import frc.robot.utility.SafeTalonFX;
 import frc.robot.utility.ShuffleboardValue;
 import frc.robot.utility.ShuffleboardValueEnum;
+import frc.robot.utility.SafeMotor.IdleMode;
 
-public class IntakeWithPID extends Intake {
+public class Intake extends SubsystemBase {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
         SHOOT_CUBE_LOW(500),
         SHOOT_CUBE_MID(500),
@@ -26,17 +37,6 @@ public class IntakeWithPID extends Intake {
         HOLD_CONE(100),
         HOLD_CUBE(100),
         STOP(0)
-        // SHOOT_CUBE_LOW(4000),
-        // SHOOT_CUBE_MID(5000),
-        // SHOOT_CUBE_HIGH(5400),
-
-        // CONE(1000),
-        // CONTINUOUS(600),
-        // INTAKE(-3000),
-        // OUTTAKE(3000),
-        // HOLD_CONE(500),
-        // HOLD_CUBE(500),
-        // STOP(0)
         ;
 
         private final ShuffleboardValue<Double> velocityRPM;
@@ -53,47 +53,84 @@ public class IntakeWithPID extends Intake {
         }
 
     }
-    protected final PIDController controller;
-    protected final SimpleMotorFeedforward feedforward;
-    protected final RelativeEncoder encoder;
+
+    protected final SafeTalonFX motor;
+    protected final DoubleSolenoid intakeSolenoid;
+    protected PneumaticHub pneumaticHub;
+    protected static final boolean isOpenDefault = TrackedElement.get() == Element.CUBE ? true : false;
+    protected final ShuffleboardValue<Boolean> isOpen = ShuffleboardValue.create(isOpenDefault, "Is Open", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Boolean> compressorEnabledWriter = ShuffleboardValue.create(true, "Compressor Enabled", Intake.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .withSize(1, 2)
+        .build();
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityWriter = ShuffleboardValue.create(0.0, "Encoder Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityErrorWriter = ShuffleboardValue.create(0.0, "Encoder Velocity Error", Intake.class.getSimpleName()).build();
+    protected final PIDController controller;
+    protected final SimpleMotorFeedforward feedforward;
+        
 
-    public IntakeWithPID() {
-        super();
+    public Intake() {
+        motor = new SafeTalonFX(
+            19,
+            ShuffleboardValue.create(false, "Is Enabled", Intake.class.getSimpleName())
+                    .withWidget(BuiltInWidgets.kToggleSwitch)
+                    .build(),
+                ShuffleboardValue.create(0.0, "Voltage", Intake.class.getSimpleName())
+                    .build()
+        );
+
+        motor.setIdleMode(IdleMode.Brake);
+        motor.setInverted(false);
+
+        pneumaticHub = new PneumaticHub(10);
+        intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
+
+        
         controller = new PIDController(
             0.002, 
             0,
             0);
-        encoder = motor.getEncoder();
         controller.setTolerance(5);
         feedforward = new SimpleMotorFeedforward(0.2, 0.0022, 0);
         motor.setInverted(false);
         ComplexWidgetBuilder.create(controller, "PID Controller", Intake.class.getSimpleName());
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
+        close();
     }
 
     @Override
     public void periodic() {
-        super.periodic();
+        if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
         setVoltage(calculatePID(getTargetVelocity()) + calculateFeedforward(getTargetVelocity()));
+    }
+  
+    public void close() {
+        intakeSolenoid.set(Value.kForward);//TODO:change
+        isOpen.set(false);
+        TrackedElement.set(Element.CONE); 
+    }
+
+    public void open() {
+        intakeSolenoid.set(Value.kReverse);//TODO:change
+        isOpen.set(true);
+        TrackedElement.set(Element.CUBE);
+    }
+
+    public void toggle() {
+        if(isOpen.get()) close();
+            else open();
+    }
+
+    public double getEncoderVelocity() {
+        double velocity = motor.getVelocity();
+        encoderVelocityWriter.write(velocity);
+        encoderVelocityErrorWriter.write(getTargetVelocity() - velocity);
+        return velocity;
     }
 
     public double getTargetVelocity() {
         return controller.getSetpoint();
-    }
-
-    public void setTargetVelocity(Velocity velocity) {
-        controller.setSetpoint(velocity.get());
-        targetVelocityWriter.set(velocity.get());
-    }
-
-    public double getEncoderVelocity() {
-        double velocity = encoder.getVelocity();
-        encoderVelocityWriter.write(velocity);
-        encoderVelocityErrorWriter.write(getTargetVelocity() - velocity);
-        return velocity;
     }
 
     public double getEncoderVelocityError() {
@@ -108,7 +145,19 @@ public class IntakeWithPID extends Intake {
         return feedforward.calculate(targetVelocity);
     }
 
-    @Override
+    protected void setPower(double power) {
+        motor.setPower(power);
+    }
+
+    protected void setVoltage(double voltage) {
+        motor.setVoltage(voltage);
+    }
+
+    public void setTargetVelocity(Velocity velocity) {
+        controller.setSetpoint(velocity.get());
+        targetVelocityWriter.set(velocity.get());
+    }
+
     public void intake() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> Velocity.INTAKE;
@@ -116,7 +165,6 @@ public class IntakeWithPID extends Intake {
         });
     }
 
-    @Override
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> Velocity.OUTTAKE;
@@ -124,7 +172,6 @@ public class IntakeWithPID extends Intake {
         });
     }
 
-    @Override
     public void hold() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> Velocity.HOLD_CONE;
@@ -135,19 +182,36 @@ public class IntakeWithPID extends Intake {
     public void shootHighCube() { 
         setTargetVelocity(Velocity.SHOOT_CUBE_HIGH);
     }
+    
     public void shootMidCube() { 
         setTargetVelocity(Velocity.SHOOT_CUBE_MID);
     }
+
     public void shootLowCube() { 
         setTargetVelocity(Velocity.SHOOT_CUBE_LOW);
     }
 
     public void resetEncoder() {
-        encoder.setPosition(0);
+        motor.setPosition(0);
     }
 
-    @Override
     public void stop() {
         setTargetVelocity(Velocity.STOP);
     }
+
+    public CommandBase runIntakeFor(double waitSeconds) {
+        return Commands.sequence(
+            runOnce(this::intake),
+            Commands.waitSeconds(waitSeconds),
+            runOnce(this::stop)
+        );
+    }
+    public CommandBase runOuttakeFor(double waitSeconds) {
+        return Commands.sequence(
+            runOnce(this::outtake),
+            Commands.waitSeconds(waitSeconds),
+            runOnce(this::stop)
+        );
+    }
 }
+

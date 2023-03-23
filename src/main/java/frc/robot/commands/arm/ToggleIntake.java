@@ -4,8 +4,8 @@
 
 package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.arm.Arm;
-import frc.robot.subsystem.intake.Intake;
 public class ToggleIntake extends SequentialCommandGroup {
     public ToggleIntake(Arm arm, Intake intake) {
         addCommands(

@@ -16,8 +16,6 @@ import frc.robot.subsystem.arm.pivot.Pivot;
 import frc.robot.subsystem.arm.pivot.PivotAbsolute;
 import frc.robot.subsystem.arm.pivot.PivotMotionProfiled;
 import frc.robot.subsystem.drive.Drive;
-import frc.robot.subsystem.intake.IntakeWithPID;
-import frc.robot.subsystem.intake.IntakeWithPIDTalon;
 import frc.robot.utility.ComplexWidgetBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.util.concurrent.Event;
@@ -48,7 +46,7 @@ public class RobotContainer {
     private final VerticalElevator verticalElevator = new VerticalElevator();
     private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     private final PivotAbsolute pivot = new PivotAbsolute();
-    private final IntakeWithPID intake = new IntakeWithPID();
+    private final Intake intake = new Intake();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
 

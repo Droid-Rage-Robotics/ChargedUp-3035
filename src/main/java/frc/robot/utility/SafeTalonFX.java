@@ -48,4 +48,12 @@ public class SafeTalonFX extends SafeMotor{
     public double getVelocity() {
         return motor.getSelectedSensorVelocity();
     }
+
+    public double getPosition() {
+        return motor.getSelectedSensorPosition();
+    }
+
+    public void setPosition(double position) {
+        motor.setSelectedSensorPosition(position);
+    }
 }
