@@ -5,23 +5,19 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystem.drive.Drive;
-import frc.robot.utility.ComplexWidgetBuilder;
-import frc.robot.utility.ShuffleboardValue;
-import frc.robot.utility.ShuffleboardValueBuilder;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lockwheels
   /** Creates a new AutoBalance. */
+  // private static DriverStation driverStation;
   private Drive drive;
-  private Timer timer;
+  // private Timer timer;
   // private WriteOnlyBoolean atSetpointWriter = new WriteOnlyBoolean(false, "PID Auto balance at positionn", Drive.class.getSimpleName());
   public AutoBalance(Drive drive) {
     
@@ -37,8 +33,6 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
             // Use the output (and setpoint, if desired) here
             drive.drive(output, 0, 0);
           });
-    timer = new Timer();
-    timer.start();
 
     addRequirements(drive);
     this.drive = drive;
@@ -55,23 +49,18 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timer.hasElapsed(8)){
-      timer.stop();
+    // final int time = driverStation.getMatchTime();
+    if(isMatchTime()){
+      // timer.stop();
       return true;
-    }//TODO:test
+    }
 
     // atSetpointWriter.set(getController().atSetpoint());
     return getController().atSetpoint();
   }
 
-  // @Override
-  // public void end(boolean interrupted) {
-  //   System.out.println("autobalance end");
-  //   drive.setModuleStates(new SwerveModuleState[] {
-  //       new SwerveModuleState(0.01, new Rotation2d(Math.PI / 4)),
-  //       new SwerveModuleState(0.01, new Rotation2d(-Math.PI / 4)),
-  //       new SwerveModuleState(0.01, new Rotation2d(-Math.PI / 4)),
-  //       new SwerveModuleState(0.01, new Rotation2d(Math.PI / 4))
-  //   });
-  // }
+  public boolean isMatchTime(){//TODO:test
+    return DriverStation.getMatchTime()>13;
+  }
+
 }
