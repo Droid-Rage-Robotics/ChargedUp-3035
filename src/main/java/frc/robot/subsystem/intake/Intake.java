@@ -127,14 +127,5 @@ public class Intake extends SubsystemBase {
             runOnce(this::stop)
         );
     }
-    
-    public boolean detectVoltageSpike() {//TODO: FInd the average voltage when robot is running
-        double voltage = intakeMotor.getBusVoltage();
-        if (voltage > VOLTAGETHRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
 
