@@ -1,7 +1,6 @@
 package frc.robot.subsystem.arm.pivot;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -11,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
+import frc.robot.utility.SafeMotor.IdleMode;
 
 public class Pivot extends SubsystemBase {
     public static class Constants {
@@ -44,7 +44,7 @@ public class Pivot extends SubsystemBase {
             ShuffleboardValue.create(0.0, "Voltage", Pivot.class.getSimpleName())
                 .build()
         );
-        motor.setIdleMode(IdleMode.kCoast);
+        motor.setIdleMode(IdleMode.Brake);
 
         encoder = motor.getEncoder();
         encoder.setPositionConversionFactor(Constants.ROTATIONS_TO_RADIANS);

@@ -1,6 +1,5 @@
 package frc.robot.subsystem.intake;
 
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -14,6 +13,7 @@ import frc.robot.subsystem.TrackedElement;
 import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
+import frc.robot.utility.SafeMotor.IdleMode;
 
 public class Intake extends SubsystemBase {
 
@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
     //Input Voltage (nominal): 12V
     //Absolute Maximum Voltage: 30V
 
-    protected final SafeCanSparkMax intakeMotor;
+    protected final SafeCanSparkMax motor;
     protected final DoubleSolenoid intakeSolenoid;
     protected PneumaticHub pneumaticHub;
 
@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
         .build();
 
     public Intake() {
-        intakeMotor = new SafeCanSparkMax(
+        motor = new SafeCanSparkMax(
             19, 
             MotorType.kBrushless,
             ShuffleboardValue.create(true, "Motor Enabled", Intake.class.getSimpleName())
@@ -49,8 +49,8 @@ public class Intake extends SubsystemBase {
                 .build()
         );
 
-        intakeMotor.setIdleMode(IdleMode.kBrake);
-        intakeMotor.setInverted(false);
+        motor.setIdleMode(IdleMode.Brake);
+        motor.setInverted(false);
 
         pneumaticHub = new PneumaticHub(10);
         intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
@@ -84,11 +84,11 @@ public class Intake extends SubsystemBase {
     }
 
     protected void setPower(double power) {
-        intakeMotor.set(power);
+        motor.setPower(power);
     }
 
     protected void setVoltage(double voltage) {
-        intakeMotor.setVoltage(voltage);
+        motor.setVoltage(voltage);
     }
 
     public void intake() {

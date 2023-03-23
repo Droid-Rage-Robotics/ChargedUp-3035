@@ -1,7 +1,6 @@
 package frc.robot.subsystem.arm.elevator;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -10,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
+import frc.robot.utility.SafeMotor.IdleMode;
 
 public class VerticalElevator extends Elevator {
     public static class Constants {
@@ -53,8 +53,8 @@ public class VerticalElevator extends Elevator {
     private final RelativeEncoder encoder;
 
     public VerticalElevator() {
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
+        leftMotor.setIdleMode(IdleMode.Brake);
+        rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);
 

@@ -3,51 +3,55 @@ package frc.robot.utility;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class SafeCanSparkMax {
-    private final ShuffleboardValue<Boolean> isEnabled;
-    private final ShuffleboardValue<Double> outputWriter;
+public class SafeCanSparkMax extends SafeMotor {
     private final CANSparkMax motor;
     public SafeCanSparkMax(int deviceId, MotorType type, ShuffleboardValue<Boolean> isEnabled, ShuffleboardValue<Double> outputWriter) {
+        super(isEnabled, outputWriter);
         motor = new CANSparkMax(deviceId, type);
-        this.isEnabled = isEnabled;
-        this.outputWriter = outputWriter;
     }
 
-    public void set(double speed) {
-        outputWriter.write(speed);
+    @Override
+    public void setPower(double power) {
+        outputWriter.write(power);
         if (!isEnabled.get()) motor.set(0);
-            else motor.set(speed);
+            else motor.set(power);
     }
 
+    @Override
     public void setVoltage(double outputVolts) {
         outputWriter.write(outputVolts);
         if (!isEnabled.get()) motor.set(0);
             else motor.setVoltage(outputVolts);
     }
 
+    @Override
     public void setInverted(boolean isInverted) {
         motor.setInverted(isInverted);
     }
 
-    public RelativeEncoder getEncoder() {
-        return motor.getEncoder();
-    }
-
+    @Override
     public void setIdleMode(IdleMode mode) {
-        motor.setIdleMode(mode);
+        motor.setIdleMode(switch (mode) {
+            case Brake -> CANSparkMax.IdleMode.kBrake;
+            case Coast -> CANSparkMax.IdleMode.kBrake;
+        });
     }
-
-    public SparkMaxAbsoluteEncoder getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type encoderType) {
-        return motor.getAbsoluteEncoder(encoderType);
-    }
-
+    
     private CANSparkMax getSparkMax() {
         return motor;
     }
 
+
+    public RelativeEncoder getEncoder() {
+        return motor.getEncoder();
+    }    
+
+    public SparkMaxAbsoluteEncoder getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type encoderType) {
+        return motor.getAbsoluteEncoder(encoderType);
+    }
+    
     public void follow(SafeCanSparkMax leader, boolean invert) {
         motor.follow(leader.getSparkMax(), false);
     }

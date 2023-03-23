@@ -66,10 +66,10 @@ public class IntakeWithPID extends Intake {
             0.002, 
             0,
             0);
-        encoder = intakeMotor.getEncoder();
+        encoder = motor.getEncoder();
         controller.setTolerance(5);
         feedforward = new SimpleMotorFeedforward(0.2, 0.0022, 0);
-        intakeMotor.setInverted(false);
+        motor.setInverted(false);
         ComplexWidgetBuilder.create(controller, "PID Controller", Intake.class.getSimpleName());
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
     }
