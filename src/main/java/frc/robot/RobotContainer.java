@@ -33,7 +33,6 @@ public class RobotContainer {
     // limielite
     // detect when intake velocity error drops and light leds
 
-    //Add a rawgetposition in pivot Absolute - important 
     //reset button for pivot; and make sure that it moves all of the limits
     
 

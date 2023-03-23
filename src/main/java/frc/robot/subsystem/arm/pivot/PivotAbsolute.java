@@ -2,12 +2,17 @@ package frc.robot.subsystem.arm.pivot;
 
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 
+import frc.robot.utility.ShuffleboardValue;
+
 public class PivotAbsolute extends PivotMotionProfiled {
     public static class Consants {
         public static double RADIANS_PER_ROTATION = Math.PI * 2;
         public static double OFFSET = Math.PI / 2;
     }
     SparkMaxAbsoluteEncoder absoluteEncoder;
+    protected final ShuffleboardValue<Double> rawEncoderPositionWriter = ShuffleboardValue.create(0.0, "Raw Encoder Position (Radians)", Pivot.class.getSimpleName())
+        .withSize(1, 2)
+        .build();
     public PivotAbsolute() {
         super();
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
@@ -17,11 +22,18 @@ public class PivotAbsolute extends PivotMotionProfiled {
         setTargetPosition(Consants.OFFSET);
     }
     
+    
     @Override
     public double getEncoderPosition() {
         double position = (absoluteEncoder.getPosition() + Consants.OFFSET) % Consants.RADIANS_PER_ROTATION;
         encoderPositionWriter.write(position);
+        getRawEncoderPositions();
         return position;
+    }
+
+    public void getRawEncoderPositions() {
+        double position = (absoluteEncoder.getPosition());
+        rawEncoderPositionWriter.write(position);
     }
 
     @Override
