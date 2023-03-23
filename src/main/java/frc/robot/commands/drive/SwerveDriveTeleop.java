@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.DroidRageConstants;
 import frc.robot.subsystem.drive.Drive;
+import frc.robot.subsystem.drive.DriveConstants;
 import frc.robot.subsystem.drive.SwerveModule;
 
 public class SwerveDriveTeleop extends CommandBase {
@@ -29,9 +30,9 @@ public class SwerveDriveTeleop extends CommandBase {
         this.turn = turn;
         this.lockTrigger = lockTrigger;
 
-        this.xLimiter = new SlewRateLimiter(Drive.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
-        this.yLimiter = new SlewRateLimiter(Drive.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
-        this.turnLimiter = new SlewRateLimiter(Drive.Config.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.get());
+        this.xLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.yLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.turnLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.get());
 
 
 
@@ -111,7 +112,7 @@ public class SwerveDriveTeleop extends CommandBase {
         turnSpeed = 
             // turnLimiter.calculate(turnSpeed) * 
             turnSpeed *
-            Drive.Config.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.get() * 
+            DriveConstants.Config.PHYSICAL_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.get() * 
             drive.getAngularSpeed();
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);

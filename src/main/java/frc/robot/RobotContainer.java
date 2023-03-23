@@ -30,7 +30,6 @@ public class RobotContainer {
     // override button for when sensors fail
     // find out how to make a field graph with robot pose on it and preferably a visual for path following
     // custom shuffleboard droid rage theme
-    // Consider setitng drive motor to break and turn to coast
     // auto align 
     // add Physical and digital limit switch
     // fix auto balace
@@ -43,13 +42,9 @@ public class RobotContainer {
     
 
     private final Drive drive = new Drive();
-    // private final Elevator elevator = new Elevator();
     private final VerticalElevator verticalElevator = new VerticalElevator();
     private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    // private final Pivot2 pivot = new Pivot2(); 
-    // private final Pivot pivot = new Pivot();
     private final PivotAbsolute pivot = new PivotAbsolute();
-    // private final Intake intake = new Intake();
     private final IntakeWithPID intake = new IntakeWithPID();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
