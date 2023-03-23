@@ -21,21 +21,28 @@ public class ManualMotionProfiledPivot extends CommandBase {
 
     @Override
     public void initialize() {
-        pivot.setMovingManually(true);
-     }
+        
+    }
 
     @Override
     public void execute() {
         double move = pivotMove.get();
         move = DroidRageConstants.squareInput(move);
         move = DroidRageConstants.applyDeadBand(move);
-        pivot.setTargetVelocity(move * 0.5);
+        if (move == 0 && pivot.isMovingManually()) {
+            pivot.setTargetPosition(pivot.getEncoderPosition() + (pivot.getEncoderVelocity() / 6));
+            pivot.setMovingManually(false);
+            return;
+        }
+        if (move != 0) {
+            pivot.setTargetVelocity(move);
+        }
+        
+       
     }
 
     @Override
     public void end(boolean interrupted) {
-        pivot.setTarget(0, 0);
-        pivot.setMovingManually(false);
     }
 
     @Override

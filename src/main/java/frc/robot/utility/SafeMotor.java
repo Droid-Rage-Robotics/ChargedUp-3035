@@ -17,4 +17,7 @@ public abstract class SafeMotor {
     public abstract void setVoltage(double outputVolts);
     public abstract void setInverted(boolean isInverted);
     public abstract void setIdleMode(IdleMode mode);
+    public void stop() {
+        setPower(0);
+    }
 }

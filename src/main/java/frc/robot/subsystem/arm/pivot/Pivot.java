@@ -114,6 +114,10 @@ public class Pivot extends SubsystemBase {
         motor.setVoltage(voltage);
     }
 
+    protected void stop() {
+        motor.stop();
+    }
+
     protected double calculateFeedforward(double positionRadians, double velocity) {
         return feedforward.calculate(positionRadians, velocity);
     }

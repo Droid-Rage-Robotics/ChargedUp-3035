@@ -6,8 +6,8 @@ import frc.robot.utility.ShuffleboardValue;
 
 public class PivotMotionProfiled extends Pivot {
     public static class Constants {
-        public static double MIN_POSITION = Math.toRadians(30);
-        public static double MAX_POSITION = Math.toRadians(250);
+        public static double MIN_POSITION = Math.toRadians(20);
+        public static double MAX_POSITION = Math.toRadians(200);
     }
     protected TrapezoidProfile profile;
     protected final TrapezoidProfile.Constraints constraints;
@@ -15,7 +15,8 @@ public class PivotMotionProfiled extends Pivot {
     protected TrapezoidProfile.State goal;
 
     protected final ShuffleboardValue<Double> goalPositionWriter = ShuffleboardValue.create(0.0, "Goal Position", Pivot.class.getSimpleName()).build();
-    protected final ShuffleboardValue<Double> goalVelocityWriter = ShuffleboardValue.create(0.0, "Goal Velcotiy", Pivot.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> goalVelocityWriter = ShuffleboardValue.create(0.0, "Goal Velocity", Pivot.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Pivot.class.getSimpleName()).build();
     
     public PivotMotionProfiled() {
         super();
@@ -27,8 +28,8 @@ public class PivotMotionProfiled extends Pivot {
         // feedforward = new ArmFeedforward(0,0,0,0);
 
         constraints = new TrapezoidProfile.Constraints(
-            2, // radians per second // The theorical max velocity 0.104719755 rad/s
-            2 //radians per second per second
+            4, // radians per second // The theorical max velocity 0.104719755 rad/s
+            8 //radians per second per second
         );
 
         state = new TrapezoidProfile.State(0, 0);
@@ -39,10 +40,24 @@ public class PivotMotionProfiled extends Pivot {
 
     @Override
     public void periodic() {
+        if (isMovingManually()) {
+            double encoderPosition = getEncoderPosition();
+            if (encoderPosition < Constants.MIN_POSITION) {
+                stop();
+                return;
+            }
+            if (encoderPosition > Constants.MAX_POSITION) {
+                stop();
+                return;
+            }
+            setVoltage(calculateFeedforward(encoderPosition, getTargetVelocity()));
+            return;
+        } 
         profile = new TrapezoidProfile(constraints, goal, state);
         state = profile.calculate(0.02); // 0.02 taken from TrapezoidProfileSubsystem measured in seconds
         setVoltage(calculateFeedforward(state.position, state.velocity) + calculatePID(state.position));
         getEncoderVelocity();
+        
     }
   
     @Override
@@ -52,14 +67,21 @@ public class PivotMotionProfiled extends Pivot {
 
     @Override
     public void setTargetPosition(double positionRadians) {
+        setMovingManually(false);
         setTarget(positionRadians, 0);
     }
 
     public void setTargetVelocity(double velocityRadiansPerSecond) {
-        setTarget(getEncoderPosition() + velocityRadiansPerSecond, velocityRadiansPerSecond);
+        setMovingManually(true);
+        targetVelocityWriter.write(velocityRadiansPerSecond);
+    }
+
+    public double getTargetVelocity() {
+        return targetVelocityWriter.get();
     }
 
     public void setTarget(double positionRadians, double velocityRadiansPerSecond) {
+        setMovingManually(false);
         if (positionRadians < Constants.MIN_POSITION) return;
         if (positionRadians > Constants.MAX_POSITION) return;
         goalPositionWriter.write(positionRadians);
