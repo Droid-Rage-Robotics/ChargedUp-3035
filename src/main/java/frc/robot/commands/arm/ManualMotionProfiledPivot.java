@@ -5,15 +5,15 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.DroidRageConstants;
-import frc.robot.subsystem.arm.pivot.Pivot;
+import frc.robot.subsystem.arm.pivot.PivotMotionProfiled;
 
-public class ManualPivot extends CommandBase {
+public class ManualMotionProfiledPivot extends CommandBase {
     public static class Constants {    }
 
-    private final Pivot pivot;
+    private final PivotMotionProfiled pivot;
     private final Supplier<Double> pivotMove;
     
-    public ManualPivot(Supplier<Double> pivotMove, Pivot pivot) {
+    public ManualMotionProfiledPivot(Supplier<Double> pivotMove, PivotMotionProfiled pivot) {
         this.pivot = pivot;
         this.pivotMove = pivotMove;
 
@@ -23,15 +23,14 @@ public class ManualPivot extends CommandBase {
     @Override
     public void initialize() {
         pivot.setMovingManually(true);
-    }
+     }
 
     @Override
     public void execute() {
         double move = pivotMove.get();
         move = DroidRageConstants.squareInput(move);
         move = DroidRageConstants.applyDeadBand(move);
-        pivot.setTargetPosition(pivot.getTargetPosition() + move * 0.5);
-        pivot.setMovingManually(true);
+        pivot.setTargetVelocity(move * 0.5);
     }
 
     @Override

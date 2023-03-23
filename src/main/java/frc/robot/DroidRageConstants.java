@@ -9,11 +9,17 @@ public final class DroidRageConstants {
     }
 
     public static double LOOP_TYPE_SECONDS = 0.02;
+
     public static double squareInput(double value) {
         return value * Math.abs(value);
     }
+
     public static double applyDeadBand(double value) {
         if (Math.abs(value) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE) value = 0;
         return value;
+    }
+
+    public static boolean isWithinDeadzone(double stick) {
+        return Math.abs(stick) < DroidRageConstants.Gamepad.OPERATOR_STICK_DEADZONE;
     }
 }

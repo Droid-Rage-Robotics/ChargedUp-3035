@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.arm.ManualHorizontalElevator;
+import frc.robot.commands.arm.ManualMotionProfiledPivot;
 import frc.robot.commands.arm.ManualPivot;
 import frc.robot.commands.arm.ManualVerticalElevator;
 import frc.robot.commands.arm.ToggleIntake;
@@ -19,11 +20,13 @@ import frc.robot.subsystem.intake.IntakeWithPID;
 import frc.robot.subsystem.intake.IntakeWithPIDTalon;
 import frc.robot.utility.ComplexWidgetBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.util.concurrent.Event;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     //TODO: Ideas
@@ -134,7 +137,8 @@ public class RobotContainer {
         /*
          * Operator Controls
          */
-        pivot.setDefaultCommand(new ManualPivot(operator::getLeftY, pivot));
+        // Trigger pivotManual = 
+        pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getLeftY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
         verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getRightY, verticalElevator));
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getRightX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));

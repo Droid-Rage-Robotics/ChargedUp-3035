@@ -11,7 +11,8 @@ public class PivotMotionProfiled extends Pivot {
     protected TrapezoidProfile.State state;
     protected TrapezoidProfile.State goal;
 
-    protected final ShuffleboardValue<Double> goalWriter = ShuffleboardValue.create(0.0, "Goal", Pivot.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> goalPositionWriter = ShuffleboardValue.create(0.0, "Goal Position", Pivot.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> goalVelocityWriter = ShuffleboardValue.create(0.0, "Goal Velcotiy", Pivot.class.getSimpleName()).build();
     
     public PivotMotionProfiled() {
         super();
@@ -48,9 +49,17 @@ public class PivotMotionProfiled extends Pivot {
 
     @Override
     public void setTargetPosition(double positionRadians) {
-        super.setTargetPosition(positionRadians);
-        goalWriter.write(positionRadians);
+        setTarget(positionRadians, 0);
+    }
+
+    public void setTargetVelocity(double velocityRadiansPerSecond) {
+        setTarget(getEncoderPosition() + velocityRadiansPerSecond, velocityRadiansPerSecond);
+    }
+
+    public void setTarget(double positionRadians, double velocityRadiansPerSecond) {
+        goalPositionWriter.write(positionRadians);
+        goalVelocityWriter.write(velocityRadiansPerSecond);
         state = new TrapezoidProfile.State(getEncoderPosition(), getEncoderVelocity());
-        goal = new TrapezoidProfile.State(positionRadians, 0);
+        goal = new TrapezoidProfile.State(positionRadians, velocityRadiansPerSecond);
     }
 }  
