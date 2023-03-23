@@ -6,6 +6,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.utility.ShuffleboardValue;
 
 public class PivotMotionProfiled extends Pivot {
+    public static class Constants {
+        public static double MIN_POSITION = Math.toRadians(30);
+        public static double MAX_POSITION = Math.toRadians(250);
+    }
     protected TrapezoidProfile profile;
     protected final TrapezoidProfile.Constraints constraints;
     protected TrapezoidProfile.State state;
@@ -57,6 +61,8 @@ public class PivotMotionProfiled extends Pivot {
     }
 
     public void setTarget(double positionRadians, double velocityRadiansPerSecond) {
+        if (positionRadians < Constants.MIN_POSITION) return;
+        if (positionRadians > Constants.MAX_POSITION) return;
         goalPositionWriter.write(positionRadians);
         goalVelocityWriter.write(velocityRadiansPerSecond);
         state = new TrapezoidProfile.State(getEncoderPosition(), getEncoderVelocity());
