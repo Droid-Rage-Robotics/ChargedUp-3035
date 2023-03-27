@@ -14,6 +14,7 @@ import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -31,6 +32,7 @@ public class RobotContainer {
     // fix lock wheels
     // limielite
     // detect when intake velocity error drops and light leds
+    // Rumble Driver 1 when element in claw
 
     //reset button for pivot; and make sure that it moves all of the limits
     
@@ -68,6 +70,8 @@ public class RobotContainer {
     }
 
     public void configureTeleOpBindings() {
+        DriverStation.silenceJoystickConnectionWarning(true);
+        
          /*
          * Driver Controls
          */
