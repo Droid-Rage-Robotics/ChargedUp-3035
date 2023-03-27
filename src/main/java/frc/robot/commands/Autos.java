@@ -66,6 +66,33 @@ public final class Autos {
         );
     }
 
+    public static CommandBase chargePlusPickUp(Drive drive, Arm arm, Intake intake) {
+        return Commands.sequence(
+            Commands.sequence(
+                arm.setPositionCommand(Position.AUTO_MID),
+                Commands.waitSeconds(1),
+                new DropCone(arm, intake),
+                Commands.waitSeconds(0.1)
+                ),
+            PathPlannerFollow.create(drive, "Charge+PickUp")
+                .setMaxVelocity(1.8)//Change to 1.8
+                .setAcceleration(1.8)
+                // .addMarker("wait", Commands.waitSeconds(1))
+                .addMarker("down", new SequentialCommandGroup(
+                    intake.runOnce(intake::open),
+                    arm.setPositionCommand(Position.INTAKE_LOW)
+                    ))
+                .addMarker("intake", new IntakeCube(arm, intake, 7))
+                .build(),
+            //Command for autobalance
+            new AutoBalance(drive),
+            // Commands.waitSeconds(0.5)^,
+            // new LockWheels(drive),
+            
+            drive.setOffsetCommand(180)
+        );
+    }
+
 
     public static CommandBase oneToCubeAndToDrop(Drive drive, Arm arm, Intake intake) {//Top Red/Bottom Blue
         return Commands.sequence(
