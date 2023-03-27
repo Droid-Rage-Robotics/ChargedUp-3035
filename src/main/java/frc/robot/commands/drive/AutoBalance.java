@@ -60,7 +60,7 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
   }
 
   public boolean isMatchTime(){//TODO:test
-    return DriverStation.getMatchTime()>13;
+    return DriverStation.getMatchTime()<2;
   }
 
 }
