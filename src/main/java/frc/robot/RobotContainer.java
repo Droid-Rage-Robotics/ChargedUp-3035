@@ -8,7 +8,6 @@ import frc.robot.commands.arm.ToggleIntake;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
-import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
@@ -43,6 +42,7 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
+    // private final Light light = new Light();
 
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
@@ -59,7 +59,7 @@ public class RobotContainer {
         autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
         autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
-
+        autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
