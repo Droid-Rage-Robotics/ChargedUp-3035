@@ -35,7 +35,7 @@ public class SwerveModule {
 
         // private static final double DRIVE_KA = 0.12; 
         private static final double DRIVE_KV = 2.6; // this value is multiplied by veloicty in meteres per second
-        private static final double DRIVE_KS = 0.5; //this value is the voltage that iwll be constantly applied
+        private static final double DRIVE_KS = 0.18966; //this value is the voltage that iwll be constantly applied
     }
 
     private final CANSparkMax driveMotor;
