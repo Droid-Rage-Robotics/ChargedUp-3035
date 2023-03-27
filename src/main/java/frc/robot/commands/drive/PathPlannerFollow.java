@@ -8,6 +8,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -63,8 +64,8 @@ public class PathPlannerFollow {
             drive::getPose, // Pose2d supplier
             drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
             Drive.DRIVE_KINEMATICS, // SwerveDriveKinematics
-            new PIDConstants(DriveConstants.Config.TRANSLATIONAL_KP.get(), 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-            new PIDConstants(DriveConstants.Config.THETA_KP.get(), 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+            new PIDConstants(DriveConstants.Config.TRANSLATIONAL_KP.get(), DriveConstants.Config.TRANSLATIONAL_KI.get(), DriveConstants.Config.TRANSLATIONAL_KD.get()), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(DriveConstants.Config.THETA_KP.get(), DriveConstants.Config.THETA_KI.get(), DriveConstants.Config.THETA_KD.get()), // PID constants to correct for rotation error (used to create the rotation controller)
             drive::setFeedforwardModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
