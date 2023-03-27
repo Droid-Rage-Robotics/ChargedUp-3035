@@ -6,7 +6,7 @@ import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 
 public class IntakeCube extends SequentialCommandGroup {
-    //TODO: Maybe make a position where the pivot iks downwards so cube doesn't roll away
+    //TODO: Maybe make a position where the pivot intakes downwards so cube doesn't roll away
     public IntakeCube(Arm arm, Intake intake, double wait) {
         addCommands(
             intake.runOnce(intake::open),
@@ -14,7 +14,7 @@ public class IntakeCube extends SequentialCommandGroup {
             arm.setPositionCommand(Position.HOLD)
         );
     }
-    public IntakeCube(Arm arm, Intake intake) {
-        this(arm, intake, 6.0);
-    }
+    // public IntakeCube(Arm arm, Intake intake) {
+    //     this(arm, intake, 6.0);
+    // }
 }
