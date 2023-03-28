@@ -7,7 +7,7 @@ import frc.robot.utility.ShuffleboardValue;
 public class PivotMotionProfiled extends Pivot {
     public static class Constants {
         public static double MIN_POSITION = Math.toRadians(20);
-        public static double MAX_POSITION = Math.toRadians(200);
+        public static double MAX_POSITION = Math.toRadians(230);
     }
     protected TrapezoidProfile profile;
     protected final TrapezoidProfile.Constraints constraints;

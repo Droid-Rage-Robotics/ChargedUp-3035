@@ -34,7 +34,7 @@ public class SwerveModule {
         public static final double PHYSICAL_MAX_SPEED_METERS_PER_SECOND = 4.47;
 
         // private static final double DRIVE_KA = 0.12; 
-        private static final double DRIVE_KV = 2.6; // this value is multiplied by veloicty in meteres per second
+        private static final double DRIVE_KV = 2.7; // this value is multiplied by veloicty in meteres per second
         private static final double DRIVE_KS = 0.18966; //this value is the voltage that iwll be constantly applied
     }
 

@@ -8,6 +8,7 @@ import frc.robot.commands.arm.ToggleIntake;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
+import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
@@ -55,8 +56,12 @@ public class RobotContainer {
 
     public RobotContainer() {
         autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, arm, intake));
-        autoChooser.addOption("Straight Test", Autos.straightTest(drive));
-        autoChooser.addOption("Straight Test BACK", Autos.straightTestBack(drive));
+
+        autoChooser.addOption("Forward Test", Autos.forwardTest(drive));
+        autoChooser.addOption("Backward Test", Autos.backTest(drive));
+        autoChooser.addOption("Spline Test", Autos.splineTest(drive));
+        autoChooser.addOption("LineToLinear Test", Autos.lineToLinearTest(drive));
+
         autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
@@ -139,38 +144,38 @@ public class RobotContainer {
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getRightX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
-        // operator.a()
-        //     .whileTrue( // while true to update positions when moving manually
-        //         arm.setPositionCommand(Position.LOW)
-        //     );
-        // operator.x()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.MID)
-        //     );
-        // operator.y()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.HIGH)
-        //     );
-        
-        // operator.povUp()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-        //     );
-        // operator.povRight()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-        //     );
-        // operator.povLeft()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.INTAKE_LOW)
-        //     );
-        // operator.povDown()
-        //     .whileTrue(
-
-        //         arm.setPositionCommand(Position.HOLD)
-        //     );
         operator.a()
-            .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
+            .whileTrue( // while true to update positions when moving manually
+                arm.setPositionCommand(Position.LOW)
+            );
+        operator.x()
+            .whileTrue(
+                arm.setPositionCommand(Position.MID)
+            );
+        operator.y()
+            .whileTrue(
+                arm.setPositionCommand(Position.HIGH)
+            );
+        
+        operator.povUp()
+            .whileTrue(
+                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
+            );
+        operator.povRight()
+            .whileTrue(
+                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
+            );
+        operator.povLeft()
+            .whileTrue(
+                arm.setPositionCommand(Position.INTAKE_LOW)
+            );
+        operator.povDown()
+            .whileTrue(
+                arm.setPositionCommand(Position.HOLD)
+            );
+
+        // operator.a()
+        //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
 
         operator.start()
             .onTrue(Commands.sequence(
@@ -180,8 +185,8 @@ public class RobotContainer {
       
       
       
-        operator.back()
-            .onTrue(pivot.runOnce(pivot::resetEncoder)); //Pivot is Absolute(not)
+        // operator.back()
+        //     .onTrue(pivot.runOnce(pivot::resetEncoder));
     }
 
     public void configureTestBindings(){}

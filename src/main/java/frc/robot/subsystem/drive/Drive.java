@@ -200,7 +200,7 @@ public class Drive extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(-pigeon2.getYaw(), 360);
+        return Math.IEEEremainder(pigeon2.getYaw(), 360);
     }
 
     public double getPitch() {
@@ -213,6 +213,7 @@ public class Drive extends SubsystemBase {
 
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());//TODO:Make
+
     }
 
     public Pose2d getPose() {

@@ -29,8 +29,8 @@ public class Intake extends SubsystemBase {
 
         // CONE(50),
         CONTINUOUS(50),
-        INTAKE(1500),
-        OUTTAKE(-500),
+        INTAKE(-3000),
+        OUTTAKE(4500),
         HOLD_CONE(100),
         HOLD_CUBE(100),
         STOP(0)
@@ -70,7 +70,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         motor = new SafeTalonFX(
             19,
-            ShuffleboardValue.create(false, "Is Enabled", Intake.class.getSimpleName())
+            ShuffleboardValue.create(true, "Is Enabled", Intake.class.getSimpleName())
                     .withWidget(BuiltInWidgets.kToggleSwitch)
                     .build(),
                 ShuffleboardValue.create(0.0, "Voltage", Intake.class.getSimpleName())
@@ -78,19 +78,18 @@ public class Intake extends SubsystemBase {
         );
 
         motor.setIdleMode(IdleMode.Brake);
-        motor.setInverted(false);
+        motor.setInverted(true);
 
         pneumaticHub = new PneumaticHub(10);
         intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
 
         
         controller = new PIDController(
-            0.002, 
+            0.0003,//0.0003 
             0,
             0);
         controller.setTolerance(5);
-        feedforward = new SimpleMotorFeedforward(0.2, 0.0022, 0);
-        motor.setInverted(false);
+        feedforward = new SimpleMotorFeedforward(0.64, 0.000515, 0);
         ComplexWidgetBuilder.create(controller, "PID Controller", Intake.class.getSimpleName());
         ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
         close();

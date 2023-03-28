@@ -61,7 +61,7 @@ public class SwerveDriveTeleop extends CommandBase {
             double modifiedXSpeed = xSpeed;
             double modifiedYSpeed = ySpeed;
 
-            Rotation2d heading = drive.getRotation2d();
+            Rotation2d heading = drive.getRotation2d().unaryMinus();
 
             modifiedXSpeed = xSpeed * heading.getCos() + ySpeed * heading.getSin();
             modifiedYSpeed = -xSpeed * heading.getSin() + ySpeed * heading.getCos();

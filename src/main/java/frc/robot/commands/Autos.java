@@ -13,20 +13,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public final class Autos {
 
-    public static CommandBase dropPlusPark(Drive drive, Arm arm, Intake intake) {
-        return Commands.sequence(
-            Commands.sequence(
-                arm.setPositionCommand(Position.AUTO_MID),
-                Commands.waitSeconds(3),
-                new DropCone(arm, intake),
-                Commands.waitSeconds(0.1)
-                ),
-            PathPlannerFollow.create(drive, "Drop+Park")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
-                .build()
-        );
-    }
+    // public static CommandBase dropPlusPark(Drive drive, Arm arm, Intake intake) {
+    //     return Commands.sequence(
+    //         Commands.sequence(
+    //             arm.setPositionCommand(Position.AUTO_MID),
+    //             Commands.waitSeconds(3),
+    //             new DropCone(arm, intake),
+    //             Commands.waitSeconds(0.1)
+    //             ),
+    //         PathPlannerFollow.create(drive, "Drop+Park")
+    //             .setMaxVelocity(1)
+    //             .setAcceleration(1)
+    //             .build()
+    //     );
+    // }
 
     public static CommandBase bottom(Drive drive, Arm arm, Intake intake) {
         return PathPlannerFollow.create(drive, "Bottom")
@@ -166,27 +166,43 @@ public final class Autos {
 
 
     //Auto Tests
-    public static CommandBase straightTest(Drive drive) {//Top Red/Bottom Blue
+    public static CommandBase forwardTest(Drive drive) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
-            PathPlannerFollow.create(drive, "StraightTest")
+            PathPlannerFollow.create(drive, "ForwardTest")
                 .setMaxVelocity(1)
-                .setAcceleration(1)
+                .setAcceleration(3)
                 .build()
         );
     }
-    public static CommandBase straightTestBack(Drive drive) {//Top Red/Bottom Blue
+    public static CommandBase backTest(Drive drive) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
-            PathPlannerFollow.create(drive, "StraightTestBack")
+            PathPlannerFollow.create(drive, "BackwardTest")
                 .setMaxVelocity(1)
-                .setAcceleration(1)
+                .setAcceleration(3)
                 .build()
         );
     }
     public static CommandBase turnTest(Drive drive) {
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "TurnTest")
-                .setMaxVelocity(0.3)
-                .setAcceleration(0.3)
+                .setMaxVelocity(0.2)
+                .setAcceleration(0.2)
+                .build()
+        );
+    }
+    public static CommandBase splineTest(Drive drive) {
+        return new SequentialCommandGroup(
+            PathPlannerFollow.create(drive, "SplineTest")
+                .setMaxVelocity(1)
+                .setAcceleration(1)
+                .build()
+        );
+    }
+    public static CommandBase lineToLinearTest(Drive drive) {
+        return new SequentialCommandGroup(
+            PathPlannerFollow.create(drive, "LineToTest")
+                .setMaxVelocity(0.2)
+                .setAcceleration(0.2)
                 .build()
         );
     }

@@ -18,11 +18,11 @@ public class DriveConstants {
         MAX_ACCELERATION_METERS_PER_SECOND_SQUARED(1),
         MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED(1), // 1 / 8 of a full rotation per second per second),
 
-        TRANSLATIONAL_KP(0.08361),//1.9-0.09
+        TRANSLATIONAL_KP(0.08361), //0.08361 //1.9-0.09
         TRANSLATIONAL_KI(0),
         TRANSLATIONAL_KD(0),
 
-        THETA_KP(0.01),//Changed to 1 from 0.2 (Lucky) =0.4 0.08
+        THETA_KP(0.7), //0.01 //Changed to 1 from 0.2 (Lucky) =0.4 0.08
         THETA_KI(0),
         THETA_KD(0),
 
