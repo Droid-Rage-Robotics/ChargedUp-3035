@@ -124,9 +124,11 @@ public class Drive extends SubsystemBase {
     private final ShuffleboardValue<Double> backRightTurnPositionWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName()).build();
     private final ShuffleboardValue<Double> backRightDriveDistanceWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName()).build();
 
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Drive Enabled", Drive.class.getSimpleName()) 
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Drive Enabled", Drive.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
+
+    private final ShuffleboardValue<Double> forwardVelocityWriter = ShuffleboardValue.create(0.0, "Forward Velocity Writer", Drive.class.getSimpleName()).build();
 
     private boolean isBreakMode = false;
 
@@ -176,6 +178,7 @@ public class Drive extends SubsystemBase {
         backRightTurnPositionWriter.set(backRight.getTurningPosition());
         backRightDriveDistanceWriter.set(backRight.getDrivePos());
 
+        forwardVelocityWriter.write(getForwardVelocity());
     }
 
     @Override
@@ -230,6 +233,10 @@ public class Drive extends SubsystemBase {
 
     public double getAngularSpeed() {
         return speed.getAngularSpeed();
+    }
+
+    public double getForwardVelocity() {
+        return (frontLeft.getDriveVelocity() + frontRight.getDriveVelocity()) / 2;
     }
 
     // public double getHeadingOffset() {
