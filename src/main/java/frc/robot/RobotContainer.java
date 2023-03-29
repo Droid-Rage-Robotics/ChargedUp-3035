@@ -48,8 +48,9 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
-    // private final Light light = new Light(intake);//Make sure it is after Intake
-private final XBoxControllerOwn thing = new XBoxControllerOwn();
+    private final Light light = new Light(intake);//Make sure it is after Intake
+
+    private final XBoxControllerOwn thing = new XBoxControllerOwn();
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
     private final CommandXboxController operator =

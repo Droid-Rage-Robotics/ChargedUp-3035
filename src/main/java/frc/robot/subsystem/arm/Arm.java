@@ -51,20 +51,21 @@ public class Arm {
     public enum Value {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0,0),
 
-        INTAKE_LOW_CONE(0,0, 215),
+        INTAKE_LOW_CONE(0,0, 210),//215
         INTAKE_LOW_CUBE(0,0, 215),
        
         LOW_CONE(0, 0, 200),
         LOW_CUBE(0,0, 200),
-        
+
         MID_CONE(13.2,11,LOW_CONE.getPivotDegrees()), // LOWCONE.pivotAngle.get() 
-        MID_CUBE(13.4,10.4, 190),
+        MID_CUBE(0,0, 145),
+        // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE!
 
         AUTO_MID_CONE(15.2, 11.5, LOW_CONE.getPivotDegrees()),// MIDCONE.pivotAngle.get() // up first then out
         AUTO_MID_CUBE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get() // up first then out
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGH_CONE(15.8,12.5, 130),
+        HIGH_CONE(15.8,11, 140),
         HIGH_CUBE(15.1,11, 31),
 
         INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14.9,0, 110),
