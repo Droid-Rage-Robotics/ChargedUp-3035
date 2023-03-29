@@ -8,32 +8,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystem.TrackedElement.Element;
 
 public class Light extends SubsystemBase {//TODO:Fix
+  private Intake intake;
     private final AddressableLED led;
     private final AddressableLEDBuffer buffer;
     private int m_rainbowFirstPixelHue = 0;
-    private final Color red, blue, green, yellow, purple;
-    public Light() {
+    private int LED_COUNT = 60;
+    private final Color red, blue, green, yellow, purple, setColor;
+    public Light(Intake intake) {
+        this.intake = intake;
         led = new AddressableLED(0);
-        buffer = new AddressableLEDBuffer(60);
+        buffer = new AddressableLEDBuffer(LED_COUNT);
 
         led.setLength(buffer.getLength());
         led.setData(buffer);
         led.start();
 
-
+//kDarkViolet
+//kGreen
+//
         red = Color.fromHSV(0,0,0);
         blue = Color.fromHSV(0,0,0);
         green = Color.fromHSV(0,0,0);
-        yellow = Color.fromHSV(0,0,0);
-        purple = Color.fromHSV(0,0,0);
+        yellow = Color.kBlack;
+        purple = new Color(40, 0, 125);
+        setColor = Color.fromHSV(0,0,0);
         // spark = new Spark(1);
     }
 
     @Override
     public void periodic() {
-        rainbow();
-        led.setData(buffer);
-
+      setColorType();
+      led.setData(buffer);
     }
   
     @Override
@@ -57,20 +62,35 @@ public class Light extends SubsystemBase {//TODO:Fix
       }
 
 
-    private void setColor(Color color) {
-        
-    }
       
-    public void setColorCargoType(Element element) {
-        switch (element) {
+    public void setColorType() {
+      if(intake.isElementIn()){
+        setColor(green);
+        return;
+      }
+      else{
+        switch (TrackedElement.get()) {
             case CONE:
                 setColor(yellow);
                 break;
             case CUBE:
                 setColor(purple);
                 break;
-            
         }
+      }
+        
     }
+
+    public void setColor(Color color) {
+        for (var i = 0; i < LED_COUNT; i++) {
+          buffer.setLED(i, color);
+        }
+      }
+  
+      public void setColor(int r, int g, int b) {
+        for (var i = 0; i < LED_COUNT; i++) {
+          buffer.setRGB(i, r, g, b);
+        }
+      }
 }
 
