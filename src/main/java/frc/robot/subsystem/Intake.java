@@ -209,5 +209,9 @@ public class Intake extends SubsystemBase {
             runOnce(this::stop)
         );
     }
+
+    public boolean isElementIn(){
+        return getEncoderVelocityError()>1200;
+    }
 }
 
