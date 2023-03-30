@@ -62,7 +62,7 @@ public final class Autos {
             // Commands.waitSeconds(0.5)^,
             // new LockWheels(drive),
             
-            drive.setOffsetCommand(180)
+            drive.setOffsetCommand(180)//Todo:Test
         );
     }
 
@@ -88,8 +88,7 @@ public final class Autos {
             new AutoBalance(drive),
             // Commands.waitSeconds(0.5)^,
             // new LockWheels(drive),
-            
-            drive.setOffsetCommand(180)
+            drive.setOffsetCommand(180)//Todo:Test
         );
     }
 
