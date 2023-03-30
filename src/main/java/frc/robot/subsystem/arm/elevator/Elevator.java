@@ -18,7 +18,7 @@ public abstract class Elevator extends SubsystemBase {
 
     protected abstract PIDController getController();
     protected abstract ElevatorFeedforward getFeedforward();
-    protected abstract SafeCanSparkMax getMotor();
+    protected abstract void setVoltage(double voltage);
     protected abstract ShuffleboardValue<Boolean> getIsMovingManually();
     public abstract void resetEncoder();
     public abstract double getEncoderPosition();
@@ -42,10 +42,6 @@ public abstract class Elevator extends SubsystemBase {
 
     public boolean isMovingManually() {
         return getIsMovingManually().get();
-    }
-
-    protected void setVoltage(double voltage) {
-        getMotor().setVoltage(voltage);
     }
 
     protected double calculateFeedforward(double targetVelocity) {
