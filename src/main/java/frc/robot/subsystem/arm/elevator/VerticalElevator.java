@@ -18,14 +18,13 @@ public class VerticalElevator extends Elevator {
         public static final double COUNTS_PER_PULSE = 1; // 2048 bc rev through bore
         public static final double ROT_TO_INCHES = (COUNTS_PER_PULSE * GEAR_RATIO) / (GEAR_DIAMETER_INCHES * Math.PI);
         public static final double MIN_POSITION = 0;
-        public static final double MAX_POSITION = 16;
+        public static final double MAX_POSITION = 17;
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
-    private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0, 0, 0, 0);
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(false, "Is Enabled", VerticalElevator.class.getSimpleName())
+    private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0.1, 0.2, 0, 0);
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
-        
     private final ShuffleboardValue<Double> voltage = ShuffleboardValue.create(0.0, "Voltage", VerticalElevator.class.getSimpleName())
         .build();
 
@@ -56,7 +55,7 @@ public class VerticalElevator extends Elevator {
         leftMotor.setIdleMode(IdleMode.Brake);
         rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);
-        rightMotor.follow(leftMotor, true);
+        rightMotor.setInverted(true);
 
         controller.setTolerance(0.1);
 
@@ -81,8 +80,9 @@ public class VerticalElevator extends Elevator {
     }
 
     @Override
-    protected SafeCanSparkMax getMotor() {
-        return leftMotor;
+    protected void setVoltage(double voltage) {
+        leftMotor.setVoltage(voltage);
+        rightMotor.setVoltage(voltage);
     }
 
     @Override

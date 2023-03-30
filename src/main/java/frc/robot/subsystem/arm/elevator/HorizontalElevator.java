@@ -18,10 +18,10 @@ public class HorizontalElevator extends Elevator {
         public static final double COUNTS_PER_PULSE = 1; // 2048 bc rev through bore
         public static final double ROT_TO_INCHES = (COUNTS_PER_PULSE * GEAR_RATIO) / (GEAR_DIAMETER_INCHES * Math.PI);
         public static final double MIN_POSITION = 0;
-        public static final double MAX_POSITION = 12.8;
+        public static final double MAX_POSITION = 13.1;
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
-    private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0, 0, 0, 0);
+    private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0.05, 0, 0, 0);
     private final SafeCanSparkMax motor = new SafeCanSparkMax(
         17, 
         MotorType.kBrushless,
@@ -68,8 +68,8 @@ public class HorizontalElevator extends Elevator {
     }
 
     @Override
-    protected SafeCanSparkMax getMotor() {
-        return motor;
+    protected void setVoltage(double voltage) {
+        motor.setVoltage(voltage);
     }
 
     @Override
