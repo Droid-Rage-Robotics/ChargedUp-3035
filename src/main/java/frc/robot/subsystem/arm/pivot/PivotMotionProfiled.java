@@ -24,12 +24,12 @@ public class PivotMotionProfiled extends Pivot {
         controller.setPID(5, 0, 0);
         controller.setTolerance(0.10);
 
-        feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.052763);
+        feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.07);
         // feedforward = new ArmFeedforward(0,0,0,0);
 
         constraints = new TrapezoidProfile.Constraints(
-            4, // radians per second // The theorical max velocity 0.104719755 rad/s
-            8 //radians per second per second
+            8, // radians per second
+            16 //radians per second per second
         );
 
         state = new TrapezoidProfile.State(0, 0);
