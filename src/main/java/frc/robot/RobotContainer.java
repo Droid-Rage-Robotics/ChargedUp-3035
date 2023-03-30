@@ -14,11 +14,7 @@ import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
-import frc.robot.utility.XBoxControllerOwn;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -50,7 +46,6 @@ public class RobotContainer {
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
     private final Light light = new Light(intake);//Make sure it is after Intake
 
-    private final XBoxControllerOwn thing = new XBoxControllerOwn();
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
     private final CommandXboxController operator =
@@ -84,7 +79,7 @@ public class RobotContainer {
          /*
          * Driver Controls
          */
-        thing.setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 1);
+        light.setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 1);//TODO:Test!
         drive.setDefaultCommand(
             new SwerveDriveTeleop(
                 drive, 
