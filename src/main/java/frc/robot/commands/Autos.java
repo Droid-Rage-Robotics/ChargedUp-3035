@@ -162,6 +162,15 @@ public final class Autos {
         );
     }
 
+    public static CommandBase dropAndPickupContinnuous(Drive drive, Arm arm, Intake intake) {
+        return Commands.sequence(
+            PathPlannerFollow.create(drive, "Drop+PickUp Continuous")
+                .setMaxVelocity(0.5)
+                .setAcceleration(0.5)
+                .build()
+        );
+    }
+
 
 
     //Auto Tests
