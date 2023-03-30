@@ -61,7 +61,7 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     private void yellow() {
       // For every pixel
-      for (var i = 0; i < buffer.getLength(); i++) {
+      for (int i = 0; i < buffer.getLength(); i++) {
         // final var hue = (m_rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
         // Set the value
         buffer.setHSV(i, 255,255,0);
