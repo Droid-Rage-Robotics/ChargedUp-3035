@@ -1,12 +1,14 @@
 package frc.robot.subsystem;
 
+import edu.wpi.first.hal.DriverStationJNI;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Light extends SubsystemBase {//TODO:Fix
-  private Intake intake;
+    private Intake intake;
     private final AddressableLED led;
     private final AddressableLEDBuffer buffer;
     private int m_rainbowFirstPixelHue = 0;
@@ -21,13 +23,10 @@ public class Light extends SubsystemBase {//TODO:Fix
         led.setData(buffer);
         led.start();
 
-//kDarkViolet
-//kGreen
-//
         red = Color.kRed;
         blue = Color.kBlue;
         green = Color.kGreen;
-        yellow = Color.fromHSV(255,255,0);;
+        yellow = new Color(255, 255, 0);
         purple = Color.kPurple;
         setColor = Color.fromHSV(0,0,0);
         // spark = new Spark(1);
@@ -35,8 +34,8 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     @Override
     public void periodic() {
-      rainbow();
-      // setColorType();
+      // rainbow();
+      setColorType();//TODO:Why did this stop working?
       led.setData(buffer);
     }
   
@@ -63,7 +62,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     private void yellow() {
       // For every pixel
       for (var i = 0; i < buffer.getLength(); i++) {
-        final var hue = (m_rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+        // final var hue = (m_rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
         // Set the value
         buffer.setHSV(i, 255,255,0);
       }
@@ -83,15 +82,14 @@ public class Light extends SubsystemBase {//TODO:Fix
         //         setColor(purple);
         //         return;
         // }
-      
-        
     }
 
     public void setColor(Color color) {
         for (var i = 0; i < LED_COUNT; i++) {
           // buffer.setLED(i, color);
           // rainbow();
-          buffer.setRGB(i, (int)color.red* 255, (int)color.blue* 255, (int)color.green* 255);
+          buffer.setHSV(i, 255,255,0);
+          // buffer.setRGB(i, (int)color.red* 255, (int)color.blue* 255, (int)color.green* 255);
         }
       }
   
@@ -99,6 +97,14 @@ public class Light extends SubsystemBase {//TODO:Fix
         for (var i = 0; i < LED_COUNT; i++) {
           buffer.setRGB(i, r, g, b);
         }
+      }
+    
+    public void setRumble(int port, double value) {
+      value = MathUtil.clamp(value, 0, 1);
+      short rumbleValue = (short) (value * 65535);
+      
+      DriverStationJNI.setJoystickOutputs(
+          (byte) port, 0, rumbleValue, rumbleValue);//Don't know what output does
       }
 }
 
