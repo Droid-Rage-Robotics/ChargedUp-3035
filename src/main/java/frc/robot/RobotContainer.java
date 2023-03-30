@@ -35,6 +35,7 @@ public class RobotContainer {
     // Rumble Driver 1 when element in claw
 
     //reset button for pivot; and make sure that it moves all of the limits
+    // make sure reset encoders commands runs when disabled
     
 
     private final Drive drive = new Drive();
@@ -66,6 +67,7 @@ public class RobotContainer {
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
         autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
+        autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
@@ -138,9 +140,9 @@ public class RobotContainer {
          * Operator Controls
          */
         // Trigger pivotManual = 
-        pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getLeftY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
-        verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getRightY, verticalElevator));
-        horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getRightX, horizontalElevator));
+        pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
+        verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
+        horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
         operator.a()
@@ -172,6 +174,7 @@ public class RobotContainer {
             .whileTrue(
                 arm.setPositionCommand(Position.HOLD)
             );
+        
 
         // operator.a()
         //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
