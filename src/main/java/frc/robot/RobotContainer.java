@@ -32,6 +32,7 @@ public class RobotContainer {
     // limielite
     // detect when intake velocity error drops and light leds
     // Rumble Driver 1 when element in claw
+    // see how slew rate limiter affects turning and movement. can it make motors stop faster without enabling brake mode?
     
 
     private final Drive drive = new Drive();
