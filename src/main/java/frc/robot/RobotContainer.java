@@ -43,11 +43,11 @@ public class RobotContainer {
     // private final VerticalElevator verticalElevator = new VerticalElevator();
     private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
     // private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    private final PivotAbsolute pivot = new PivotAbsolute();
-    private final Intake intake = new Intake();
+    // private final PivotAbsolute pivot = new PivotAbsolute();
+    // private final Intake intake = new Intake();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     // private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
-    private final Light light = new Light(intake, driver);//Make sure it is after Intake
+    // private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
     
 
@@ -81,7 +81,6 @@ public class RobotContainer {
          /*
          * Driver Controls
          */
-        light.setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 1);//TODO:Test!
         drive.setDefaultCommand(
             new SwerveDriveTeleop(
                 drive, 
@@ -104,13 +103,13 @@ public class RobotContainer {
         // driver.leftTrigger()
         //     .onTrue(intake.run(()->intake.setManualOutput(-0.1)))
         //     .onFalse(intake.run(()->intake.setManualOutput(0)));
-        driver.rightTrigger()
-            .onTrue(intake.run(intake::intake)) 
-            .onFalse(intake.run(intake::stop));
+        // driver.rightTrigger()
+        //     .onTrue(intake.run(intake::intake)) 
+        //     .onFalse(intake.run(intake::stop));
 
-        driver.leftTrigger()
-            .onTrue(intake.run(intake::outtake))
-            .onFalse(intake.run(intake::stop));
+        // driver.leftTrigger()
+        //     .onTrue(intake.run(intake::outtake))
+        //     .onFalse(intake.run(intake::stop));
 
         driver.a()
             .onTrue(drive.resetOffsetCommand());
@@ -140,7 +139,7 @@ public class RobotContainer {
          * Operator Controls
          */
         // Trigger pivotManual = 
-        pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
+        // pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
         // verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
         // horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
@@ -186,8 +185,9 @@ public class RobotContainer {
         //     ));
       
       
-        operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower()));
-        operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
+        operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(1)));
+        operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-1)));
+        operator.a().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
         // operator.back()
         //     .onTrue(pivot.runOnce(pivot::resetEncoder));
     }
