@@ -26,7 +26,7 @@ public class PivotAbsolute extends PivotMotionProfiled {
     @Override
     public double getEncoderPosition() {
         double position = (absoluteEncoder.getPosition() + Consants.OFFSET) % Consants.RADIANS_PER_ROTATION;
-        encoderPositionWriter.write(position);
+        encoderPositionWriter.write(Math.toDegrees(position));
         getRawEncoderPositions();
         return position;
     }
