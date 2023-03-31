@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import frc.robot.commands.DisabledCommand;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
@@ -66,7 +67,7 @@ public class VerticalElevator extends Elevator {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 2);
 
-        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Elevator Encoders", VerticalElevator.class.getSimpleName());
+        ComplexWidgetBuilder.create(DisabledCommand.create(runOnce(this::resetEncoder)), "Reset Encoder", VerticalElevator.class.getSimpleName());
     }
 
     @Override

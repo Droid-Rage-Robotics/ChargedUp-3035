@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.DisabledCommand;
 import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeTalonFX;
@@ -91,7 +92,7 @@ public class Intake extends SubsystemBase {
         controller.setTolerance(5);
         feedforward = new SimpleMotorFeedforward(0.64, 0.000515, 0);
         ComplexWidgetBuilder.create(controller, "PID Controller", Intake.class.getSimpleName());
-        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset Encoder", Intake.class.getSimpleName());
+        ComplexWidgetBuilder.create(DisabledCommand.create(runOnce(this::resetEncoder)), "Reset Encoder", Intake.class.getSimpleName());
         close();
     }
 

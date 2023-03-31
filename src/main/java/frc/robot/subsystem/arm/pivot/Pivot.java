@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.DisabledCommand;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
@@ -61,7 +62,7 @@ public class Pivot extends SubsystemBase {
             .withWidget(BuiltInWidgets.kPIDController)
             .withSize(2, 1);
 
-        ComplexWidgetBuilder.create(runOnce(this::resetEncoder), "Reset encoder", Pivot.class.getSimpleName());
+        ComplexWidgetBuilder.create(DisabledCommand.create(runOnce(this::resetEncoder)), "Reset encoder", Pivot.class.getSimpleName());
 
         motor.burnFlash();
     }
