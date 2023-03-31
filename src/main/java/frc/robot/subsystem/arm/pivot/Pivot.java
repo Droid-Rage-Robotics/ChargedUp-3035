@@ -53,7 +53,7 @@ public class Pivot extends SubsystemBase {
   
 
         controller = new PIDController(0.0, 0.0, 0.0);//0.024
-        controller.setTolerance(0.25);//How Much?
+        controller.setTolerance(Math.toRadians(1));//How Much?
 
         feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.052763);
         // feedforward = new ArmFeedforward(0, 0,0);
