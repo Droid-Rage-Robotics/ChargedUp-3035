@@ -5,13 +5,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.DroidRageConstants;
-import frc.robot.subsystem.drive.DriveConstants;
 
 public class Light extends SubsystemBase {//TODO:Fix
     private Intake intake;
@@ -19,8 +16,8 @@ public class Light extends SubsystemBase {//TODO:Fix
     private final AddressableLEDBuffer buffer;
     private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
-    private final Color green, yellow, purple;
-    private static Timer timer = new Timer();
+    public final Color green, yellow, purple;
+    public static Timer timer = new Timer();
     private final CommandXboxController driver;
     public Light(Intake intake, CommandXboxController driver) {//TODO:Move most of these things to a command instead of the subsystem (very important)
       //TODO: Add a timeout for when Intake is first pressed
@@ -43,7 +40,7 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     @Override
     public void periodic() {
-      setColorType();
+      // setColorType();
       led.setData(buffer);
     }
   
@@ -72,7 +69,7 @@ public class Light extends SubsystemBase {//TODO:Fix
       
     public void setColorType() {
       if (timer.get()<0.6){
-        setRumble(driver, 0);
+        setRumble(driver, 0.8);
         return;
       }
       else if(intake.isElementIn() && driver.getRightTriggerAxis()>0.8){
@@ -105,6 +102,23 @@ public class Light extends SubsystemBase {//TODO:Fix
     public void setColor(int r, int g, int b) {
       for (int i = 0; i < buffer.getLength(); i++) {
         buffer.setRGB(i, r, g, b);
+      }
+    }
+
+    public void elementIn() {
+      setColor(green);
+      timer.reset();
+      timer.start();
+    }
+
+    public void trackElementLight() {
+      switch (TrackedElement.get()) {
+        case CONE:
+            setColor(yellow);
+            return;
+        case CUBE:
+            setColor(purple);
+            return;
       }
     }
     
