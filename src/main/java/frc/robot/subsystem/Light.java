@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,7 +18,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     private final AddressableLED led;
     private final AddressableLEDBuffer buffer;
     private int m_rainbowFirstPixelHue = 0;
-    private int LED_COUNT = 59;
+    private int LED_COUNT = 47;
     private final Color green, yellow, purple;
     private static Timer timer = new Timer();
     private final CommandXboxController driver;
@@ -42,7 +43,7 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     @Override
     public void periodic() {
-      setColorType(); //TODO:Why did this stop working?
+      setColorType();
       led.setData(buffer);
     }
   
@@ -71,17 +72,18 @@ public class Light extends SubsystemBase {//TODO:Fix
       
     public void setColorType() {
       if (timer.get()<0.6){
+        setRumble(driver, 0);
         return;
       }
       else if(intake.isElementIn() && driver.getRightTriggerAxis()>0.8){
         setColor(green);
-        setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 0.8);
+        setRumble(driver, 0.8);
         timer.reset();
         timer.start();
         return;
       }
       else{
-        setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 0);
+        setRumble(driver, 0);
         switch (TrackedElement.get()) {
           case CONE:
               setColor(yellow);
@@ -106,12 +108,15 @@ public class Light extends SubsystemBase {//TODO:Fix
       }
     }
     
-    public void setRumble(int port, double value) {
+    public void setRumble(CommandXboxController driver, double value) {
       value = MathUtil.clamp(value, 0, 1);
       short rumbleValue = (short) (value * 65535);
+
+      CommandXboxController a = driver;
+      a.getHID().setRumble(RumbleType.kBothRumble, rumbleValue);
       
-      DriverStationJNI.setJoystickOutputs(
-          (byte) port, 0, rumbleValue, rumbleValue);//Don't know what output does
+      // DriverStationJNI.setJoystickOutputs(
+      //     (byte) port, 0, rumbleValue, rumbleValue);//Don't know what output does
     }
 }
 
