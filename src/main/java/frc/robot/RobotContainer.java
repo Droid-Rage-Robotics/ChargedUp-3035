@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.arm.IntakeCommand;
 import frc.robot.commands.arm.ManualHorizontalElevator;
 import frc.robot.commands.arm.ManualMotionProfiledPivot;
 import frc.robot.commands.arm.ManualVerticalElevator;
@@ -42,12 +43,11 @@ public class RobotContainer {
     private final Drive drive = new Drive();
     // private final VerticalElevator verticalElevator = new VerticalElevator();
     private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    // private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    // private final PivotAbsolute pivot = new PivotAbsolute();
-    // private final Intake intake = new Intake();
-    // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
-    // private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
-    // private final Light light = new Light(intake, driver);//Make sure it is after Intake
+    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
+    private final PivotAbsolute pivot = new PivotAbsolute();
+    private final Intake intake = new Intake();
+    // private final Arm arm = new Arm(verticalElevato r, horizontalElevator, pivot);
+    private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
     
 
@@ -77,6 +77,7 @@ public class RobotContainer {
 
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
+        light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
         
          /*
          * Driver Controls
