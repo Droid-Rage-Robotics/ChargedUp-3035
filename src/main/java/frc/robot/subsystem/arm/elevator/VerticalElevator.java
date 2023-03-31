@@ -26,6 +26,9 @@ public class VerticalElevator extends Elevator {
     private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
+    private final ShuffleboardValue<Boolean> isEnabled2 = ShuffleboardValue.create(false, "Is Enabled 2", VerticalElevator.class.getSimpleName())
+        .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
     private final ShuffleboardValue<Double> voltage = ShuffleboardValue.create(0.0, "Voltage", VerticalElevator.class.getSimpleName())
         .build();
 
@@ -36,12 +39,12 @@ public class VerticalElevator extends Elevator {
         voltage
     );
 
-    private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
-        15, 
-        MotorType.kBrushless,
-        isEnabled,
-        voltage
-    );
+    // private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
+    //     15, 
+    //     MotorType.kBrushless,
+    //     isEnabled2,
+    //     voltage
+    // );
 
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", VerticalElevator.class.getSimpleName())
         .withSize(1, 3)
@@ -54,9 +57,9 @@ public class VerticalElevator extends Elevator {
 
     public VerticalElevator() {
         leftMotor.setIdleMode(IdleMode.Brake);
-        rightMotor.setIdleMode(IdleMode.Brake);
+        // rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);
-        rightMotor.setInverted(true);
+        // rightMotor.setInverted(true);
 
         controller.setTolerance(0.1);
 
@@ -83,7 +86,7 @@ public class VerticalElevator extends Elevator {
     @Override
     protected void setVoltage(double voltage) {
         leftMotor.setVoltage(voltage);
-        rightMotor.setVoltage(voltage);
+        // rightMotor.setVoltage(voltage);
     }
 
     @Override

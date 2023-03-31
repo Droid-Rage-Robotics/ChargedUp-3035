@@ -39,7 +39,7 @@ public class Pivot extends SubsystemBase {
         motor = new SafeCanSparkMax(
             18, 
             MotorType.kBrushless,
-            ShuffleboardValue.create(true, "Is Enabled", Pivot.class.getSimpleName())
+            ShuffleboardValue.create(false, "Is Enabled", Pivot.class.getSimpleName())
                 .withWidget(BuiltInWidgets.kToggleSwitch)
                 .build(),
             ShuffleboardValue.create(0.0, "Voltage", Pivot.class.getSimpleName())
@@ -53,7 +53,7 @@ public class Pivot extends SubsystemBase {
   
 
         controller = new PIDController(0.0, 0.0, 0.0);//0.024
-        // controller.setTolerance(0.0);
+        controller.setTolerance(0.25);//How Much?
 
         feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.052763);
         // feedforward = new ArmFeedforward(0, 0,0);
