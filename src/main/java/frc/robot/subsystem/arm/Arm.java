@@ -143,7 +143,7 @@ public class Arm {
     }
 
     public CommandBase setPositionCommand(Position targetPosition) {
-        return new SuppliedCommand(() -> Commands.sequence(
+        return SuppliedCommand.create(() -> Commands.sequence(
             Commands.runOnce(() -> logPosition(targetPosition)),
             switch (targetPosition) {
                 case AUTO_MID -> Commands.sequence(

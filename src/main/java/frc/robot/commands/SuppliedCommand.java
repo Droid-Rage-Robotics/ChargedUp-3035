@@ -9,12 +9,15 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 
 public class SuppliedCommand extends CommandBase {
-
     private final Supplier<Command> commandSupplier;
     private Command command = Commands.none();
 
-    public SuppliedCommand(Supplier<Command> commandSupplier) {
+    private SuppliedCommand(Supplier<Command> commandSupplier) {
         this.commandSupplier = commandSupplier;
+    }
+
+    public static SuppliedCommand create(Supplier<Command> commandSupplier) {
+        return new SuppliedCommand(commandSupplier);
     }
 
     @Override
