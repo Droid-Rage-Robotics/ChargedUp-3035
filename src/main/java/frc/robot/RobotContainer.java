@@ -26,16 +26,12 @@ public class RobotContainer {
     // override button for when sensors fail
     // find out how to make a field graph with robot pose on it and preferably a visual for path following
     // custom shuffleboard droid rage theme
-    // auto align 
-    // add Physical and digital limit switch
+    // auto align
     // fix auto balace
     // fix lock wheels
     // limielite
     // detect when intake velocity error drops and light leds
     // Rumble Driver 1 when element in claw
-
-    //reset button for pivot; and make sure that it moves all of the limits
-    // make sure reset encoders commands runs when disabled
     
 
     private final Drive drive = new Drive();
