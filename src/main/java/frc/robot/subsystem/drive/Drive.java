@@ -41,10 +41,10 @@ public class Drive extends SubsystemBase {
     }
 
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-        new Translation2d(-Config.WHEEL_BASE.get() / 2, Config.TRACK_WIDTH.get() / 2),  // Front Left --
-        new Translation2d(-Config.WHEEL_BASE.get() / 2, -Config.TRACK_WIDTH.get() / 2),   // Front Right +-
-        new Translation2d(Config.WHEEL_BASE.get() / 2, Config.TRACK_WIDTH.get() / 2), // Back Left -+
-        new Translation2d(Config.WHEEL_BASE.get() / 2, -Config.TRACK_WIDTH.get() / 2)   // Back Right ++
+        new Translation2d(Config.WHEEL_BASE.get() / 2, Config.TRACK_WIDTH.get() / 2),  // Front Left --
+        new Translation2d(Config.WHEEL_BASE.get() / 2, -Config.TRACK_WIDTH.get() / 2),   // Front Right +-
+        new Translation2d(-Config.WHEEL_BASE.get() / 2, Config.TRACK_WIDTH.get() / 2), // Back Left -+
+        new Translation2d(-Config.WHEEL_BASE.get() / 2, -Config.TRACK_WIDTH.get() / 2)   // Back Right ++
     );
 
     private final SwerveModule frontLeft = new SwerveModule(
@@ -52,44 +52,44 @@ public class Drive extends SubsystemBase {
         1,
 
         false, 
-        false,
+        true,
 
         11, 
         Config.FRONT_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
-        true
+        false
     );
     private final SwerveModule frontRight = new SwerveModule(
         4,
         3,
 
         false, 
-        false,
+        true,
 
         12, 
         Config.FRONT_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
-        true
+        false
     );
     private final SwerveModule backLeft = new SwerveModule(
         8,
         7,
 
         false, 
-        false,
+        true,
 
         14, 
         Config.BACK_LEFT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
-        true
+        false
     );
     private final SwerveModule backRight = new SwerveModule(
         5,
         6,
 
         false, 
-        false,
+        true,
 
         13, 
         Config.BACK_RIGHT_ABSOLUTE_ENCODER_OFFSET_RADIANS::get,
-        true
+        false
     );
     private final SwerveModule[] swerveModules = { frontLeft, frontRight, backLeft, backRight };
 

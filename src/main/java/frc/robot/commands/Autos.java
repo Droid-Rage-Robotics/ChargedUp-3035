@@ -28,6 +28,13 @@ public final class Autos {
     //     );
     // }
 
+    public static CommandBase forwardThenTurnTest(Drive drive) {
+        return PathPlannerFollow.create(drive, "ForwardThenTurnTest")
+            .setMaxVelocity(1)
+            .setAcceleration(1)
+            .build();
+    }
+
     public static CommandBase bottom(Drive drive, Arm arm, Intake intake) {
         return PathPlannerFollow.create(drive, "Bottom")
             .setMaxVelocity(1.)

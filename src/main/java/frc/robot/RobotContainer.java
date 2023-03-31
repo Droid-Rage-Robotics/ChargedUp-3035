@@ -62,6 +62,7 @@ public class RobotContainer {
         autoChooser.addOption("Spline Test", Autos.splineTest(drive));
         autoChooser.addOption("LineToLinear Test", Autos.lineToLinearTest(drive));
 
+        autoChooser.addOption("ForwardThenTurnTest", Autos.forwardThenTurnTest(drive));
         autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
