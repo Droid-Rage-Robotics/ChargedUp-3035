@@ -33,7 +33,10 @@ public class RobotContainer {
     // detect when intake velocity error drops and light leds
     // Rumble Driver 1 when element in claw
     // see how slew rate limiter affects turning and movement. can it make motors stop faster without enabling brake mode?
-    
+    private final CommandXboxController driver =
+        new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
+    private final CommandXboxController operator =
+        new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     private final Drive drive = new Drive();
     private final VerticalElevator verticalElevator = new VerticalElevator();
@@ -42,12 +45,9 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
-    private final Light light = new Light(intake);//Make sure it is after Intake
+    private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
-    private final CommandXboxController driver =
-        new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
-    private final CommandXboxController operator =
-        new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
+    
 
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
 

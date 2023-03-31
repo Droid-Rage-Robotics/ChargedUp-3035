@@ -212,9 +212,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isElementIn(){
-        // return true;
-        // return false;
-        return getEncoderVelocityError()<-1200;
+        return getEncoderVelocityError()<-2500;
     }
 }
 

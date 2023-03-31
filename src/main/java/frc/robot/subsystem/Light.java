@@ -5,8 +5,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.DroidRageConstants;
 import frc.robot.subsystem.drive.DriveConstants;
 
@@ -18,7 +20,9 @@ public class Light extends SubsystemBase {//TODO:Fix
     private int LED_COUNT = 59;
     private final Color green, yellow, purple;
     private static Timer timer = new Timer();
-    public Light(Intake intake) {
+    private final CommandXboxController driver;
+    public Light(Intake intake, CommandXboxController driver) {//TODO:Move most of these things to a command instead of the subsystem (very important)
+      //TODO: Add a timeout for when Intake is first pressed
         this.intake = intake;
         led = new AddressableLED(0);
         buffer = new AddressableLEDBuffer(LED_COUNT);
@@ -32,6 +36,7 @@ public class Light extends SubsystemBase {//TODO:Fix
         yellow = new Color(255, 255, 0);
         purple = Color.kPurple;
         timer.start();
+        this.driver = driver;
         // spark = new Spark(1);
     }
 
@@ -65,12 +70,12 @@ public class Light extends SubsystemBase {//TODO:Fix
 
       
     public void setColorType() {
-      if (timer.get()<3){
+      if (timer.get()<0.6){
         return;
       }
-      else if(intake.isElementIn()){
+      else if(intake.isElementIn() && driver.getRightTriggerAxis()>0.8){
         setColor(green);
-        setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 1);
+        setRumble(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT, 0.8);
         timer.reset();
         timer.start();
         return;
