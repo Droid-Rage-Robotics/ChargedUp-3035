@@ -11,6 +11,7 @@ import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
+import frc.robot.subsystem.arm.elevator.VerticalElevatorSetPower;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
@@ -39,12 +40,13 @@ public class RobotContainer {
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     private final Drive drive = new Drive();
-    private final VerticalElevator verticalElevator = new VerticalElevator();
-    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
+    // private final VerticalElevator verticalElevator = new VerticalElevator();
+    private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
+    // private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     private final PivotAbsolute pivot = new PivotAbsolute();
     private final Intake intake = new Intake();
     // private final IntakeWithPIDTalon intake = new IntakeWithPIDTalon();
-    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
+    // private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
     private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
     
@@ -52,7 +54,7 @@ public class RobotContainer {
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
 
     public RobotContainer() {
-        autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, arm, intake));
+        // autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, arm, intake));
 
         autoChooser.addOption("Forward Test", Autos.forwardTest(drive));
         autoChooser.addOption("Backward Test", Autos.backTest(drive));
@@ -60,12 +62,12 @@ public class RobotContainer {
         autoChooser.addOption("LineToLinear Test", Autos.lineToLinearTest(drive));
 
         autoChooser.addOption("ForwardThenTurnTest", Autos.forwardThenTurnTest(drive));
-        autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
-        autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
+        // autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
+        // autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
-        autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
-        autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
-        autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
+        // autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
+        // autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
+        // autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
@@ -113,15 +115,15 @@ public class RobotContainer {
         driver.a()
             .onTrue(drive.resetOffsetCommand());
 
-        driver.b()
-            .onTrue(
-                // new MoveToPosition(elevator, pivot, intake)
-                // Commands.sequence(
-                    // intake.toggleCommand()
-                    new ToggleIntake(arm, intake)
+        // driver.b()
+        //     .onTrue(
+        //         // new MoveToPosition(elevator, pivot, intake)
+        //         // Commands.sequence(
+        //             // intake.toggleCommand()
+        //             new ToggleIntake(arm, intake)
                     
-                // )
-            ); 
+        //         // )
+        //     ); 
 
         driver.back()
             .onTrue(drive.toggleFieldOriented()
@@ -139,52 +141,53 @@ public class RobotContainer {
          */
         // Trigger pivotManual = 
         pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
-        verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
-        horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
+        // verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
+        // horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
-        operator.a()
-            .whileTrue( // while true to update positions when moving manually
-                arm.setPositionCommand(Position.LOW)
-            );
-        operator.x()
-            .whileTrue(
-                arm.setPositionCommand(Position.MID)
-            );
-        operator.y()
-            .whileTrue(
-                arm.setPositionCommand(Position.HIGH)
-            );
-        
-        operator.povUp()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-            );
-        operator.povRight()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-            );
-        operator.povLeft()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_LOW)
-            );
-        operator.povDown()
-            .whileTrue(
-                arm.setPositionCommand(Position.HOLD)
-            );
-        
-
         // operator.a()
-        //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
+        //     .whileTrue( // while true to update positions when moving manually
+        //         arm.setPositionCommand(Position.LOW)
+        //     );
+        // operator.x()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.MID)
+        //     );
+        // operator.y()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.HIGH)
+        //     );
+        
+        // operator.povUp()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
+        //     );
+        // operator.povRight()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
+        //     );
+        // operator.povLeft()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_LOW)
+        //     );
+        // operator.povDown()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.HOLD)
+        //     );
+        
 
-        operator.start()
-            .onTrue(Commands.sequence(
-                verticalElevator.runOnce(verticalElevator::resetEncoder),
-                horizontalElevator.runOnce(horizontalElevator::resetEncoder)
-            ));
+        // // operator.a()
+        // //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
+
+        // operator.start()
+        //     .onTrue(Commands.sequence(
+        //         verticalElevator.runOnce(verticalElevator::resetEncoder),
+        //         horizontalElevator.runOnce(horizontalElevator::resetEncoder)
+        //     ));
       
       
-      
+        operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower()));
+        operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
         // operator.back()
         //     .onTrue(pivot.runOnce(pivot::resetEncoder));
     }
