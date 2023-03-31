@@ -20,18 +20,19 @@ import frc.robot.utility.SafeMotor.IdleMode;
 
 public class Intake extends SubsystemBase {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
-        SHOOT_CUBE_LOW(500),
-        SHOOT_CUBE_MID(500),
-        SHOOT_CUBE_HIGH(500),
+        // SHOOT_CUBE_LOW(500),
+        SHOOT_CUBE_MID(2000),
+        // SHOOT_CUBE_HIGH(500),
 
-        SHOOT_CONE_LOW(500),
-        SHOOT_CONE_MID(500),
-        SHOOT_CONE_HIGH(500),
+        // SHOOT_CONE_LOW(500),
+        // SHOOT_CONE_MID(500),
+        SHOOT_CONE_HIGH(2800),
 
+        //3000for pivot 140
         // CONE(50),
         CONTINUOUS(50),
         INTAKE(-3000),
-        OUTTAKE(2550),//4500
+        OUTTAKE(2000),//4500
         HOLD_CONE(100),
         HOLD_CUBE(100),
         STOP(0)
@@ -158,13 +159,13 @@ public class Intake extends SubsystemBase {
     public void intake() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> Velocity.INTAKE;
-            case CUBE -> Velocity.INTAKE;
+            case CUBE -> Velocity.SHOOT_CUBE_MID;
         });
     }
 
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
-            case CONE -> Velocity.OUTTAKE;
+            case CONE -> Velocity.SHOOT_CONE_HIGH;
             case CUBE -> Velocity.OUTTAKE;
         });
     }
@@ -176,17 +177,17 @@ public class Intake extends SubsystemBase {
         });
     }
 
-    public void shootHighCube() { 
-        setTargetVelocity(Velocity.SHOOT_CUBE_HIGH);
-    }
+    // public void shootHighCube() { 
+    //     setTargetVelocity(Velocity.SHOOT_CUBE_HIGH);
+    // }
     
-    public void shootMidCube() { 
-        setTargetVelocity(Velocity.SHOOT_CUBE_MID);
-    }
+    // public void shootMidCube() { 
+    //     setTargetVelocity(Velocity.SHOOT_CUBE_MID);
+    // }
 
-    public void shootLowCube() { 
-        setTargetVelocity(Velocity.SHOOT_CUBE_LOW);
-    }
+    // public void shootLowCube() { 
+    //     setTargetVelocity(Velocity.SHOOT_CUBE_LOW);
+    // }
 
     public void resetEncoder() {
         motor.setPosition(0);
