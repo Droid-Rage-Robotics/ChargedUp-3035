@@ -68,6 +68,9 @@ public class Intake extends SubsystemBase {
     protected final ShuffleboardValue<Double> encoderVelocityErrorWriter = ShuffleboardValue.create(0.0, "Encoder Velocity Error", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> forwardPressureWriter = ShuffleboardValue.create(0.0, "Forward Pressure", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> backwardPressureWriter = ShuffleboardValue.create(0.0, "Backward Pressure", Intake.class.getSimpleName()).build();
+    private final ShuffleboardValue<Boolean> isElementInWriter = ShuffleboardValue.create(false, "Is Element In", Intake.class.getSimpleName())
+        // .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
     protected final PIDController controller;
     protected final SimpleMotorFeedforward feedforward;
         
@@ -104,6 +107,7 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
         setVoltage(calculatePID(getTargetVelocity()) + calculateFeedforward(getTargetVelocity()));
+        isElementInWriter.set(isElementIn());
         // forwardPressureWriter.set(pneumaticHub.getPressure(9));//TODO:Test:
         // backwardPressureWriter.set(pneumaticHub.getPressure(11));//Can only be between 0-2
     }
