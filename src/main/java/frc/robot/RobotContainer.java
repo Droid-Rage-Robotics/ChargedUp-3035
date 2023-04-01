@@ -6,6 +6,7 @@ import frc.robot.commands.arm.*;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
+import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
@@ -98,13 +99,14 @@ public class RobotContainer {
         // driver.leftTrigger()
         //     .onTrue(intake.run(()->intake.setManualOutput(-0.1)))
         //     .onFalse(intake.run(()->intake.setManualOutput(0)));
-        // driver.rightTrigger()
-        //     .onTrue(intake.run(intake::intake)) 
-        //     .onFalse(intake.run(intake::stop));
+        
+        driver.rightTrigger()
+            .onTrue(intake.run(intake::intake)) 
+            .onFalse(intake.run(intake::stop));
 
-        // driver.leftTrigger()
-        //     .onTrue(intake.run(intake::outtake))
-        //     .onFalse(intake.run(intake::stop));
+        driver.leftTrigger()
+            .onTrue(intake.run(intake::outtake))
+            .onFalse(intake.run(intake::stop));
 
         driver.a()
             .onTrue(drive.resetOffsetCommand());
@@ -134,40 +136,40 @@ public class RobotContainer {
          * Operator Controls
          */
         // Trigger pivotManual = 
-        // pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
-        // verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
-        // horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
+        pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
+        verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
+        horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
         // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
 
-        // operator.a()
-        //     .whileTrue( // while true to update positions when moving manually
-        //         arm.setPositionCommand(Position.LOW)
-        //     );
-        // operator.x()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.MID)
-        //     );
-        // operator.y()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.HIGH)
-        //     );
+        operator.a()
+            .whileTrue( // while true to update positions when moving manually
+                arm.setPositionCommand(Position.LOW)
+            );
+        operator.x()
+            .whileTrue(
+                arm.setPositionCommand(Position.MID)
+            );
+        operator.y()
+            .whileTrue(
+                arm.setPositionCommand(Position.HIGH)
+            );
         
-        // operator.povUp()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-        //     );
-        // operator.povRight()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-        //     );
-        // operator.povLeft()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.INTAKE_LOW)
-        //     );
-        // operator.povDown()
-        //     .whileTrue(
-        //         arm.setPositionCommand(Position.HOLD)
-        //     );
+        operator.povUp()
+            .whileTrue(
+                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
+            );
+        operator.povRight()
+            .whileTrue(
+                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
+            );
+        operator.povLeft()
+            .whileTrue(
+                arm.setPositionCommand(Position.INTAKE_LOW)
+            );
+        operator.povDown()
+            .whileTrue(
+                arm.setPositionCommand(Position.HOLD)
+            );
         
 
         // // operator.a()
