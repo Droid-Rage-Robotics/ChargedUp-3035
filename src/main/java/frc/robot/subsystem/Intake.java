@@ -104,8 +104,8 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
         setVoltage(calculatePID(getTargetVelocity()) + calculateFeedforward(getTargetVelocity()));
-        forwardPressureWriter.set(pneumaticHub.getPressure(9));//TODO:Test:
-        backwardPressureWriter.set(pneumaticHub.getPressure(11));
+        // forwardPressureWriter.set(pneumaticHub.getPressure(9));//TODO:Test:
+        // backwardPressureWriter.set(pneumaticHub.getPressure(11));
     }
   
     public void close() {
