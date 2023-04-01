@@ -17,7 +17,7 @@ public class VerticalElevatorSetPower extends SubsystemBase{
     .build();
 
     private final SafeCanSparkMax leftMotor = new SafeCanSparkMax(
-        15, 
+        16, 
         MotorType.kBrushless,
         isEnabled,
         voltage

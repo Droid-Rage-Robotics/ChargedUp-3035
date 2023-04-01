@@ -39,12 +39,12 @@ public class VerticalElevator extends Elevator {
         voltage
     );
 
-    // private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
-    //     15, 
-    //     MotorType.kBrushless,
-    //     isEnabled2,
-    //     voltage
-    // );
+    private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
+        15, 
+        MotorType.kBrushless,
+        isEnabled,
+        voltage
+    );
 
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", VerticalElevator.class.getSimpleName())
         .withSize(1, 3)
@@ -57,9 +57,9 @@ public class VerticalElevator extends Elevator {
 
     public VerticalElevator() {
         leftMotor.setIdleMode(IdleMode.Brake);
-        // rightMotor.setIdleMode(IdleMode.Brake);
+        rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);
-        // rightMotor.setInverted(true);
+        rightMotor.setInverted(true);
 
         controller.setTolerance(0.1);
 
