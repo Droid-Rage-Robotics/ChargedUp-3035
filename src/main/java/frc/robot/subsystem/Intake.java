@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.DisabledCommand;
 import frc.robot.subsystem.TrackedElement.Element;
+import frc.robot.subsystem.arm.Arm;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeTalonFX;
 import frc.robot.utility.ShuffleboardValue;
@@ -20,8 +21,8 @@ import frc.robot.utility.SafeMotor.IdleMode;
 
 public class Intake extends SubsystemBase {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
-        // SHOOT_CUBE_LOW(500),
-        SHOOT_CUBE_MID(2000),
+        SHOOT_CUBE_LOW(3000),
+        SHOOT_CUBE_MID(3000),
         // SHOOT_CUBE_HIGH(500),
 
         // SHOOT_CONE_LOW(500),
@@ -65,6 +66,8 @@ public class Intake extends SubsystemBase {
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityWriter = ShuffleboardValue.create(0.0, "Encoder Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityErrorWriter = ShuffleboardValue.create(0.0, "Encoder Velocity Error", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> forwardPressureWriter = ShuffleboardValue.create(0.0, "Forward Pressure", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> backwardPressureWriter = ShuffleboardValue.create(0.0, "Backward Pressure", Intake.class.getSimpleName()).build();
     protected final PIDController controller;
     protected final SimpleMotorFeedforward feedforward;
         
@@ -101,6 +104,8 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
         setVoltage(calculatePID(getTargetVelocity()) + calculateFeedforward(getTargetVelocity()));
+        forwardPressureWriter.set(pneumaticHub.getPressure(9));//TODO:Test:
+        backwardPressureWriter.set(pneumaticHub.getPressure(11));
     }
   
     public void close() {
@@ -158,15 +163,35 @@ public class Intake extends SubsystemBase {
 
     public void intake() {
         setTargetVelocity(switch(TrackedElement.get()) {
-            case CONE -> Velocity.INTAKE;
-            case CUBE -> Velocity.SHOOT_CUBE_MID;
+            case CONE -> switch(Arm.getPosition()){
+                case LOW ->Velocity.INTAKE;
+                case MID ->Velocity.INTAKE;
+                case HIGH ->Velocity.INTAKE;
+                default -> Velocity.INTAKE;
+            };
+            case CUBE -> switch(Arm.getPosition()){
+                case LOW ->Velocity.INTAKE;
+                case MID ->Velocity.INTAKE;
+                case HIGH ->Velocity.INTAKE;
+                default -> Velocity.INTAKE;
+            };
         });
     }
 
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
-            case CONE -> Velocity.SHOOT_CONE_HIGH;
-            case CUBE -> Velocity.OUTTAKE;
+            case CONE -> switch(Arm.getPosition()){
+                case LOW ->Velocity.OUTTAKE;
+                case MID ->Velocity.OUTTAKE;
+                case HIGH ->Velocity.SHOOT_CONE_HIGH;
+                default -> Velocity.OUTTAKE;
+            };
+            case CUBE -> switch(Arm.getPosition()){
+                case LOW ->Velocity.SHOOT_CUBE_LOW;
+                case MID ->Velocity.SHOOT_CUBE_MID;
+                case HIGH ->Velocity.OUTTAKE;
+                default -> Velocity.OUTTAKE;
+            };
         });
     }
 
