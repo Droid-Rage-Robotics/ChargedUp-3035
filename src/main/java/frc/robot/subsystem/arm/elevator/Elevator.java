@@ -2,7 +2,6 @@ package frc.robot.subsystem.arm.elevator;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utility.SafeCanSparkMax;
 import frc.robot.utility.ShuffleboardValue;
 
 public abstract class Elevator extends SubsystemBase {

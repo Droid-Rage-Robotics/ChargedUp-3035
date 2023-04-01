@@ -2,17 +2,12 @@ package frc.robot;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.arm.IntakeCommand;
-import frc.robot.commands.arm.ManualHorizontalElevator;
-import frc.robot.commands.arm.ManualMotionProfiledPivot;
-import frc.robot.commands.arm.ManualVerticalElevator;
-import frc.robot.commands.arm.ToggleIntake;
+import frc.robot.commands.arm.*;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
-import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
-import frc.robot.subsystem.arm.elevator.VerticalElevatorSetPower;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
@@ -20,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {

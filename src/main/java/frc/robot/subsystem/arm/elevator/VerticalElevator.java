@@ -26,9 +26,9 @@ public class VerticalElevator extends Elevator {
     private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
-    private final ShuffleboardValue<Boolean> isEnabled2 = ShuffleboardValue.create(false, "Is Enabled 2", VerticalElevator.class.getSimpleName())
-        .withWidget(BuiltInWidgets.kToggleSwitch)
-        .build();
+    // private final ShuffleboardValue<Boolean> isEnabled2 = ShuffleboardValue.create(false, "Is Enabled 2", VerticalElevator.class.getSimpleName())
+    //     .withWidget(BuiltInWidgets.kToggleSwitch)
+    //     .build();
     private final ShuffleboardValue<Double> voltage = ShuffleboardValue.create(0.0, "Voltage", VerticalElevator.class.getSimpleName())
         .build();
 
