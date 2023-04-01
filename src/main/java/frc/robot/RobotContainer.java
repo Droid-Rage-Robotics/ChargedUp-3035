@@ -9,6 +9,7 @@ import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
+import frc.robot.subsystem.arm.elevator.VerticalElevatorSetPower;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
@@ -36,12 +37,12 @@ public class RobotContainer {
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     private final Drive drive = new Drive();
-    private final VerticalElevator verticalElevator = new VerticalElevator();
-    // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    private final PivotAbsolute pivot = new PivotAbsolute();
+    // private final VerticalElevator verticalElevator = new VerticalElevator();
+    private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
+    // private final HorizontalElevator horizontalElevator = new HorizontalElevator();
+    // private final PivotAbsolute pivot = new PivotAbsolute();
     private final Intake intake = new Intake();
-    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
+    // private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
     private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
     
@@ -72,7 +73,7 @@ public class RobotContainer {
 
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
-        light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
+        // light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
         
          /*
          * Driver Controls
@@ -99,7 +100,7 @@ public class RobotContainer {
         // driver.leftTrigger()
         //     .onTrue(intake.run(()->intake.setManualOutput(-0.1)))
         //     .onFalse(intake.run(()->intake.setManualOutput(0)));
-        
+
         driver.rightTrigger()
             .onTrue(intake.run(intake::intake)) 
             .onFalse(intake.run(intake::stop));
@@ -136,40 +137,39 @@ public class RobotContainer {
          * Operator Controls
          */
         // Trigger pivotManual = 
-        pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
-        verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
-        horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
-        // elevator.setDefaultCommand(new ManualElevator(operator::getRightX, operator::getRightY, elevator));
+        // pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
+        // verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
+        // horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
 
-        operator.a()
-            .whileTrue( // while true to update positions when moving manually
-                arm.setPositionCommand(Position.LOW)
-            );
-        operator.x()
-            .whileTrue(
-                arm.setPositionCommand(Position.MID)
-            );
-        operator.y()
-            .whileTrue(
-                arm.setPositionCommand(Position.HIGH)
-            );
+        // operator.a()
+        //     .whileTrue( // while true to update positions when moving manually
+        //         arm.setPositionCommand(Position.LOW)
+        //     );
+        // operator.x()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.MID)
+        //     );
+        // operator.y()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.HIGH)
+        //     );
         
-        operator.povUp()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-            );
-        operator.povRight()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-            );
-        operator.povLeft()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_LOW)
-            );
-        operator.povDown()
-            .whileTrue(
-                arm.setPositionCommand(Position.HOLD)
-            );
+        // operator.povUp()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
+        //     );
+        // operator.povRight()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
+        //     );
+        // operator.povLeft()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.INTAKE_LOW)
+        //     );
+        // operator.povDown()
+        //     .whileTrue(
+        //         arm.setPositionCommand(Position.HOLD)
+        //     );
         
 
         // // operator.a()
@@ -183,9 +183,10 @@ public class RobotContainer {
       
       
         
-        // operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(1)));
-        // operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-1)));
-        // operator.a().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
+        operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(0.2)))
+                                .onFalse(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
+        operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-0.2)))
+                                .onFalse(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
         
         // operator.back()
         //     .onTrue(pivot.runOnce(pivot::resetEncoder)); // In absolute mode
