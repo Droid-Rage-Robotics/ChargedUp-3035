@@ -122,7 +122,7 @@ public class Arm {
     private final VerticalElevator verticalElevator;
     private final HorizontalElevator horizontalElevator;
     private final Pivot pivot;
-    private Position position = Position.START;
+    private static Position position = Position.START;
     private final ShuffleboardValue<String> positionWriter = ShuffleboardValue.create(position.name(), "Current Arm Position", "Misc")
         .withSize(1, 3)
         .build();
@@ -138,7 +138,7 @@ public class Arm {
         positionWriter.write(targetPosition.name());
     }
 
-    public Position getPosition() {
+    public static Position getPosition() {
         return position;
     }
 
