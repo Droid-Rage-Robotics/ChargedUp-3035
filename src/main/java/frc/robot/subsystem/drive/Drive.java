@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,7 +21,6 @@ import frc.robot.subsystem.drive.DriveConstants.Speed;
 import frc.robot.subsystem.drive.DriveConstants.TeleOpOptions;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.ShuffleboardValue;
-import frc.robot.utility.ShuffleboardValueEnum;
 
 //Set Voltage instead of set Power
 //Set them to 90 to 100%
