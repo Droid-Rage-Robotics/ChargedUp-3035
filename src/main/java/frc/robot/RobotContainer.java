@@ -41,12 +41,12 @@ public class RobotContainer {
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
     private final Drive drive = new Drive();
-    // private final VerticalElevator verticalElevator = new VerticalElevator();
-    private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
+    private final VerticalElevator verticalElevator = new VerticalElevator();
+    // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
     private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     private final PivotAbsolute pivot = new PivotAbsolute();
     private final Intake intake = new Intake();
-    // private final Arm arm = new Arm(verticalElevato r, horizontalElevator, pivot);
+    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
     private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
     
@@ -186,11 +186,13 @@ public class RobotContainer {
         //     ));
       
       
-        operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(1)));
-        operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-1)));
-        operator.a().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
+        
+        // operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(1)));
+        // operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-1)));
+        // operator.a().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
+        
         // operator.back()
-        //     .onTrue(pivot.runOnce(pivot::resetEncoder));
+        //     .onTrue(pivot.runOnce(pivot::resetEncoder)); // In absolute mode
     }
 
     public void configureTestBindings(){}
