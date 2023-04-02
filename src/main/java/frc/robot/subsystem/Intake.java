@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.DisabledCommand;
+import frc.robot.commands.arm.IntakeCommand;
+import frc.robot.commands.arm.IntakeCommand.IntakeState;
 import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.utility.ComplexWidgetBuilder;
@@ -57,6 +59,7 @@ public class Intake extends SubsystemBase {
     protected final SafeTalonFX motor;
     protected final DoubleSolenoid intakeSolenoid;
     protected PneumaticHub pneumaticHub;
+    private final IntakeCommand.IntakeState intakeState = IntakeState.TRACK_ELEMENT;
     protected static final boolean isOpenDefault = TrackedElement.get() == Element.CUBE ? true : false;
     protected final ShuffleboardValue<Boolean> isOpen = ShuffleboardValue.create(isOpenDefault, "Is Open", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Boolean> compressorEnabledWriter = ShuffleboardValue.create(true, "Compressor Enabled", Intake.class.getSimpleName())
@@ -70,6 +73,8 @@ public class Intake extends SubsystemBase {
     protected final ShuffleboardValue<Double> backwardPressureWriter = ShuffleboardValue.create(0.0, "Backward Pressure", Intake.class.getSimpleName()).build();
     private final ShuffleboardValue<Boolean> isElementInWriter = ShuffleboardValue.create(false, "Is Element In", Intake.class.getSimpleName())
         // .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
+    protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
         .build();
     protected final PIDController controller;
     protected final SimpleMotorFeedforward feedforward;
@@ -115,13 +120,13 @@ public class Intake extends SubsystemBase {
     public void close() {
         intakeSolenoid.set(Value.kForward);//TODO:change
         isOpen.set(false);
-        // TrackedElement.set(Element.CONE); 
+        TrackedElement.set(Element.CONE); 
     }
 
     public void open() {
         intakeSolenoid.set(Value.kReverse);//TODO:change
         isOpen.set(true);
-        // TrackedElement.set(Element.CUBE);
+        TrackedElement.set(Element.CUBE);
     }
 
     public void toggle() {
@@ -188,13 +193,13 @@ public class Intake extends SubsystemBase {
                 case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
                 case MID ->Velocity.SHOOT_CUBE_MID;
                 case HIGH ->Velocity.SHOOT_CONE_HIGH;
-                default -> Velocity.SHOOT_CUBE_LOW;
+                default -> Velocity.OUTTAKE;
             };
             case CUBE -> switch(Arm.getPosition()){
                 case LOW ->Velocity.SHOOT_CUBE_LOW;
                 case MID ->Velocity.SHOOT_CUBE_MID;
                 case HIGH ->Velocity.OUTTAKE;
-                default -> Velocity.SHOOT_CUBE_LOW;
+                default -> Velocity.OUTTAKE;
             };
         });
     }
@@ -242,7 +247,12 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isElementIn(){
-        return getEncoderVelocityError()<-2500;
+        return getEncoderVelocityError()<-2000;
     }
+    
+    public void setIntakeState(IntakeState state){
+        intakeStateWriter.set(state.name());
+      }
+
 }
 
