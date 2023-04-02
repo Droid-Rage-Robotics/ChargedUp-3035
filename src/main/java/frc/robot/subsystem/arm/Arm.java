@@ -52,21 +52,21 @@ public class Arm {
         START(0,0,0),
 
         INTAKE_LOW_CONE(0,0, 208),//215 or 219 (shoot COnes)
-        INTAKE_LOW_CUBE(0,0, 216),
+        INTAKE_LOW_CUBE(0,0, 200),
        
         LOW_CONE(0, 0, 200),
-        LOW_CUBE(0,0, 200),
+        LOW_CUBE(0,0, 145),
 
         MID_CONE(13.2,11,LOW_CONE.getPivotDegrees()), // LOWCONE.pivotAngle.get() 
-        MID_CUBE(0,0, 145),
+        MID_CUBE(0,0, 125),
         // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE!
 
         AUTO_MID_CONE(15.2, 11.5, LOW_CONE.getPivotDegrees()),// MIDCONE.pivotAngle.get() // up first then out
         AUTO_MID_CUBE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get() // up first then out
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGH_CONE(16.8,12, 145.5),
-        HIGH_CUBE(15.1,12, 131),
+        HIGH_CONE(16.8,12.5, 145.5),
+        HIGH_CUBE(15.1,12.5, 131),
 
         INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14.9,0, 110),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(14.9,0, 120),
