@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Light;
-import frc.robot.utility.ShuffleboardValue;
 
 public class IntakeCommand extends CommandBase {
     public enum IntakeState {
@@ -20,6 +19,7 @@ public class IntakeCommand extends CommandBase {
     Intake intake;
     Light light;
     CommandXboxController driver;
+    private double intakeTime;
 
 
     public IntakeCommand(Intake intake, Light light, CommandXboxController driver) {
@@ -27,32 +27,32 @@ public class IntakeCommand extends CommandBase {
         this.light=light;
         this.driver=driver;
         addRequirements(light);
+        intakeTime = 0;
     }
 
     @Override
     public void initialize() {
+        intakeTimer.start();
         
     }
 
     @Override
     public void execute() {
-        if (intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get() > 1){
-            
+        if (intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get()>intakeTime){
             intakeState=IntakeState.ElEMENT_IN;
         } else if(driver.getRightTriggerAxis()>0.5){
             intakeState=IntakeState.INTAKE;
         }
         else intakeState=IntakeState.TRACK_ELEMENT;
 
-        switch(intakeState){
+        switch(intakeState){//Implement another timer to keep green on
             case ElEMENT_IN:
                 // intake.runOnce(intake::intake);//Would you want to intake no matter what? 
-                driver.getHID().setRumble(RumbleType.kBothRumble, 0.8);
+                driver.getHID().setRumble(RumbleType.kBothRumble, 1);
                 light.elementIn();
                 break;
             case INTAKE:
-            
-                    intakeTimer.reset();intakeTimer.start();
+                    intakeTime = intakeTimer.get();
                     intake.runOnce(intake::intake);
                 // break;//Wanting for it to fall through
             case TRACK_ELEMENT:
@@ -61,7 +61,7 @@ public class IntakeCommand extends CommandBase {
                 break;
         }
         
-        light.setIntakeState(intakeState);
+        intake.setIntakeState(intakeState);
     }
 
     @Override
