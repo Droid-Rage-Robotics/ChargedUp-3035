@@ -23,7 +23,7 @@ public class VerticalElevator extends Elevator {
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0.1, 0.2, 0, 0);
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(false, "Is Enabled", VerticalElevator.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
     // private final ShuffleboardValue<Boolean> isEnabled2 = ShuffleboardValue.create(false, "Is Enabled 2", VerticalElevator.class.getSimpleName())
@@ -60,6 +60,7 @@ public class VerticalElevator extends Elevator {
         rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);
+        
         // rightMotor.setInverted(true);
 
         controller.setTolerance(0.1);
