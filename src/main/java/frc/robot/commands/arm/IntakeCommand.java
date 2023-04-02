@@ -7,9 +7,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Light;
+import frc.robot.utility.ShuffleboardValue;
 
 public class IntakeCommand extends CommandBase {
-    private enum IntakeState {
+    public enum IntakeState {
         INTAKE,
         ElEMENT_IN,
         TRACK_ELEMENT,
@@ -30,32 +31,37 @@ public class IntakeCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        intakeTimer.start();
+        
     }
 
     @Override
     public void execute() {
-        if (intake.isElementIn() && driver.getRightTriggerAxis()>0.8 && intakeTimer.get() > 2){
+        if (intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get() > 1){
+            
             intakeState=IntakeState.ElEMENT_IN;
-        } else if(driver.getRightTriggerAxis()>0.6){
+        } else if(driver.getRightTriggerAxis()>0.5){
             intakeState=IntakeState.INTAKE;
         }
         else intakeState=IntakeState.TRACK_ELEMENT;
 
         switch(intakeState){
             case ElEMENT_IN:
+                // intake.runOnce(intake::intake);//Would you want to intake no matter what? 
                 driver.getHID().setRumble(RumbleType.kBothRumble, 0.8);
                 light.elementIn();
                 break;
             case INTAKE:
-                    intakeTimer.reset();
+            
+                    intakeTimer.reset();intakeTimer.start();
                     intake.runOnce(intake::intake);
-                break;
+                // break;//Wanting for it to fall through
             case TRACK_ELEMENT:
                 driver.getHID().setRumble(RumbleType.kBothRumble, 0);
                 light.trackElementLight();
                 break;
         }
+        
+        light.setIntakeState(intakeState);
     }
 
     @Override
@@ -65,6 +71,6 @@ public class IntakeCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
