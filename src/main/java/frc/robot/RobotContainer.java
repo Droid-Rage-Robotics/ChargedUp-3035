@@ -1,7 +1,6 @@
 package frc.robot;
 
 import frc.robot.commands.Autos;
-import frc.robot.commands.arm.IntakeCommand;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
@@ -17,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -47,7 +47,7 @@ public class RobotContainer {
     private final PivotAbsolute pivot = new PivotAbsolute();
     private final Intake intake = new Intake();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
-    private final Light light = new Light(intake);//Make sure it is after Intake
+    private final Light light = new Light(intake, driver);//Make sure it is after Intake
 
     
 
@@ -77,7 +77,8 @@ public class RobotContainer {
 
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
-        light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
+        // TrackedElement.set();
+        // light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
         
          /*
          * Driver Controls
@@ -116,15 +117,15 @@ public class RobotContainer {
         driver.a()
             .onTrue(drive.resetOffsetCommand());
 
-        // driver.b()
-        //     .onTrue(
-        //         // new MoveToPosition(elevator, pivot, intake)
-        //         // Commands.sequence(
-        //             // intake.toggleCommand()
-        //             new ToggleIntake(arm, intake)
+        driver.b()
+            .onTrue(
+                // new MoveToPosition(elevator, pivot, intake)
+                // Commands.sequence(
+                    // intake.toggleCommand()
+                    new ToggleIntake(arm, intake)
                     
-        //         // )
-        //     ); 
+                // )
+            ); 
 
         driver.back()
             .onTrue(drive.toggleFieldOriented()
@@ -133,8 +134,8 @@ public class RobotContainer {
         driver.y()
             .onTrue(drive.toggleBreakMode());
 
-        // driver.x()
-        //     .onTrue(new LockWheels(drive));
+        driver.x()
+            .onTrue(new ToggleElement());
 
 
         /*

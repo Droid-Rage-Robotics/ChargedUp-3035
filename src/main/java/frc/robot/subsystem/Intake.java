@@ -115,13 +115,13 @@ public class Intake extends SubsystemBase {
     public void close() {
         intakeSolenoid.set(Value.kForward);//TODO:change
         isOpen.set(false);
-        TrackedElement.set(Element.CONE); 
+        // TrackedElement.set(Element.CONE); 
     }
 
     public void open() {
         intakeSolenoid.set(Value.kReverse);//TODO:change
         isOpen.set(true);
-        TrackedElement.set(Element.CUBE);
+        // TrackedElement.set(Element.CUBE);
     }
 
     public void toggle() {

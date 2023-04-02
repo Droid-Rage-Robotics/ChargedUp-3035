@@ -21,11 +21,11 @@ public class Light extends SubsystemBase {//TODO:Fix
     private int LED_COUNT = 47;
     public final Color green, yellow, purple;
     public static Timer timer = new Timer();
-    // private final CommandXboxController driver;
+    private final CommandXboxController driver;
     private final IntakeCommand.IntakeState intakeState = IntakeState.TRACK_ELEMENT;
     protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
         .build();
-    public Light(Intake intake) {//TODO:Move most of these things to a command instead of the subsystem (very important)
+    public Light(Intake intake, CommandXboxController driver) {//TODO:Move most of these things to a command instead of the subsystem (very important)
       //TODO: Add a timeout for when Intake is first pressed
         this.intake = intake;
         led = new AddressableLED(0);
@@ -40,12 +40,14 @@ public class Light extends SubsystemBase {//TODO:Fix
         yellow = new Color(255, 255, 0);
         purple = Color.kPurple;
         timer.start();
+        this.driver = driver;
         
     }
 
     @Override
     public void periodic() {
-      // setColorType();
+      setColorType();
+      // rainbow();
       led.setData(buffer);
     }
   
@@ -72,31 +74,31 @@ public class Light extends SubsystemBase {//TODO:Fix
     
 
       
-    // public void setColorType() {
-    //   if (timer.get()<0.6){
-    //     setRumble(driver, 0.8);
-    //     return;
-    //   }
-    //   else if(intake.isElementIn() && driver.getRightTriggerAxis()>0.8){
-    //     setColor(green);
-    //     setRumble(driver, 0.8);
-    //     timer.reset();
-    //     timer.start();
-    //     return;
-    //   }
-    //   else{
-    //     setRumble(driver, 0);
-    //     switch (TrackedElement.get()) {
-    //       case CONE:
-    //           setColor(yellow);
-    //           return;
-    //       case CUBE:
-    //           setColor(purple);
-    //           return;
-    //     }
-    //   }
+    public void setColorType() {
+      if (timer.get()<0.6){
+        setRumble(driver, 0.8);
+        return;
+      }
+      else if(intake.isElementIn() && driver.getRightTriggerAxis()>0.8){
+        setColor(green);
+        setRumble(driver, 0.8);
+        timer.reset();
+        timer.start();
+        return;
+      }
+      else{
+        setRumble(driver, 0);
+        switch (TrackedElement.get()) {
+          case CONE:
+              setColor(yellow);
+              return;
+          case CUBE:
+              setColor(purple);
+              return;
+        }
+      }
       
-    // }
+    }
 
     public void setColor(Color color) {
       for (int i = 0; i < buffer.getLength(); i++) {

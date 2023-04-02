@@ -19,9 +19,15 @@ public abstract class TrackedElement {
         return TrackedElement.element;
     }
 
-    private static boolean isCube() {
+    public static boolean isCube() {
         return element == Element.CUBE;
     }
+
+    public void toggleElement() {
+        if(element==Element.CUBE) set(Element.CONE);
+            else set(Element.CUBE);
+    }
+    
 
     public static synchronized void set(Element element) {
         elementWriter.write(element.name());
