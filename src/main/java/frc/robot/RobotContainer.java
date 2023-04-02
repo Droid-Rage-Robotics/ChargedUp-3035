@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.LightCommand;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
@@ -80,7 +81,7 @@ public class RobotContainer {
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
         // TrackedElement.set();
-        light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
+        light.setDefaultCommand(new LightCommand(intake, light, driver));//TODO:Test
         
          /*
          * Driver Controls

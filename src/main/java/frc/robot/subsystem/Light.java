@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.arm.IntakeCommand;
-import frc.robot.commands.arm.IntakeCommand.IntakeState;
+import frc.robot.commands.LightCommand;
+import frc.robot.commands.LightCommand.IntakeState;
 
 public class Light extends SubsystemBase {//TODO:Fix
     // private Intake intake;
@@ -16,7 +16,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
     public final Color red, yellow, purple;
-    public static Timer timer = new Timer();
+    // public static Timer timer = new Timer();
   
     // protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
     //     .build();
@@ -32,9 +32,10 @@ public class Light extends SubsystemBase {//TODO:Fix
 
         
         red = Color.kRed;
-        yellow = new Color(255, 255, 0);
+        yellow = Color.kYellow;
+        // yellow = new Color(255, 255, 0);
         purple = Color.kPurple;
-        timer.start();
+        // timer.start();
         // this.intake = intake;
         // this.driver = driver;
         
@@ -107,8 +108,8 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     public void elementIn() {
       setColor(red);
-      timer.reset();
-      timer.start();
+      // timer.reset();
+      // timer.start();
     }
 
     public void trackElementLight() {

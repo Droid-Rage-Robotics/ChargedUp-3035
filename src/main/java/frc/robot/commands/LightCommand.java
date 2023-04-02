@@ -1,4 +1,4 @@
-package frc.robot.commands.arm;
+package frc.robot.commands;
 
 
 import edu.wpi.first.wpilibj.Timer;
@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Light;
 
-public class IntakeCommand extends CommandBase {
+public class LightCommand extends CommandBase {
     public enum IntakeState {
         INTAKE,
         ElEMENT_IN,
@@ -16,13 +16,14 @@ public class IntakeCommand extends CommandBase {
     }
     IntakeState intakeState = IntakeState.TRACK_ELEMENT;
     Timer intakeTimer = new Timer(); 
+    Timer elementInTimer = new Timer();
     Intake intake;
     Light light;
     CommandXboxController driver;
     private double intakeTime;
 
 
-    public IntakeCommand(Intake intake, Light light, CommandXboxController driver) {
+    public LightCommand(Intake intake, Light light, CommandXboxController driver) {
         this.intake = intake;
         this.light=light;
         this.driver=driver;
@@ -33,12 +34,13 @@ public class IntakeCommand extends CommandBase {
     @Override
     public void initialize() {
         intakeTimer.start();
+        elementInTimer.start();
         
     }
 
     @Override
     public void execute() {
-        if (intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get()>intakeTime){
+        if ((intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get()>intakeTime)||elementInTimer.get()<1){
             intakeState=IntakeState.ElEMENT_IN;
         } else if(driver.getRightTriggerAxis()>0.5){
             intakeState=IntakeState.INTAKE;
@@ -52,6 +54,8 @@ public class IntakeCommand extends CommandBase {
                 light.elementIn();
                 break;
             case INTAKE:
+                    elementInTimer.reset();
+                    elementInTimer.start();
                     intakeTime = intakeTimer.get();
                     intake.runOnce(intake::intake);
                 // break;//Wanting for it to fall through
