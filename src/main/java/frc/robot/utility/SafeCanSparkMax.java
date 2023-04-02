@@ -53,7 +53,7 @@ public class SafeCanSparkMax extends SafeMotor {
     }
     
     public void follow(SafeCanSparkMax leader, boolean invert) {
-        motor.follow(leader.getSparkMax(), false);
+        motor.follow(leader.getSparkMax(), invert);
     }
 
     public void burnFlash() {
