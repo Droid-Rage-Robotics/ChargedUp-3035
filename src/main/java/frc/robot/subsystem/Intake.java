@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
 
         // SHOOT_CONE_LOW(500),
         // SHOOT_CONE_MID(500),
-        SHOOT_CONE_HIGH(2800),
+        SHOOT_CONE_HIGH(2500),
 
         //3000for pivot 140
         // CONE(50),
