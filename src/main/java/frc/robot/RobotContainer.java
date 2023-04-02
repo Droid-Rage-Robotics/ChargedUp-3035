@@ -47,7 +47,7 @@ public class RobotContainer {
     private final PivotAbsolute pivot = new PivotAbsolute();
     private final Intake intake = new Intake();
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
-    private final Light light = new Light(intake, driver);//Make sure it is after Intake
+    private final Light light = new Light();//Make sure it is after Intake
 
     
 
@@ -60,6 +60,8 @@ public class RobotContainer {
         autoChooser.addOption("Backward Test", Autos.backTest(drive));
         autoChooser.addOption("Spline Test", Autos.splineTest(drive));
         autoChooser.addOption("LineToLinear Test", Autos.lineToLinearTest(drive));
+        autoChooser.addOption("StrafeRightTest", Autos.strafeRight(drive));
+        autoChooser.addOption("StrafeLeftTest", Autos.strafeLeft(drive));
 
         autoChooser.addOption("ForwardThenTurnTest", Autos.forwardThenTurnTest(drive));
         // autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
@@ -78,7 +80,7 @@ public class RobotContainer {
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
         // TrackedElement.set();
-        // light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
+        light.setDefaultCommand(new IntakeCommand(intake, light, driver));//TODO:Test
         
          /*
          * Driver Controls
