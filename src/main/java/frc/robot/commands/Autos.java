@@ -221,6 +221,22 @@ public final class Autos {
                 .build()
         );
     }
+    public static CommandBase strafeRight(Drive drive) {
+        return new SequentialCommandGroup(
+            PathPlannerFollow.create(drive, "StrafeRightTest")
+                .setMaxVelocity(0.2)
+                .setAcceleration(0.2)
+                .build()
+        );
+    }
+    public static CommandBase strafeLeft(Drive drive) {
+        return new SequentialCommandGroup(
+            PathPlannerFollow.create(drive, "StrafeLeftTest")
+                .setMaxVelocity(0.2)
+                .setAcceleration(0.2)
+                .build()
+        );
+    }
 
 
     private Autos() {}
