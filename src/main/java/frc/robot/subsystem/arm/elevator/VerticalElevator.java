@@ -23,7 +23,7 @@ public class VerticalElevator extends Elevator {
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0.1, 0.2, 0, 0);
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(false, "Is Enabled", VerticalElevator.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
     // private final ShuffleboardValue<Boolean> isEnabled2 = ShuffleboardValue.create(false, "Is Enabled 2", VerticalElevator.class.getSimpleName())
@@ -39,12 +39,12 @@ public class VerticalElevator extends Elevator {
         voltage
     );
 
-    // private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
-    //     15, 
-    //     MotorType.kBrushless,
-    //     isEnabled,
-    //     voltage
-    // );
+    private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
+        15, 
+        MotorType.kBrushless,
+        isEnabled,
+        voltage
+    );
 
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", VerticalElevator.class.getSimpleName())
         .withSize(1, 3)
@@ -57,13 +57,15 @@ public class VerticalElevator extends Elevator {
 
     public VerticalElevator() {
         leftMotor.setIdleMode(IdleMode.Brake);
-        // rightMotor.setIdleMode(IdleMode.Brake);
+        rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);
+        rightMotor.follow(leftMotor, true);
         // rightMotor.setInverted(true);
 
         controller.setTolerance(0.1);
 
         encoder = leftMotor.getEncoder();
+        // encoder = rightMotor.getEncoder();
         encoder.setPositionConversionFactor(Constants.ROT_TO_INCHES);
 
         ComplexWidgetBuilder.create(getController(), " PID Controller", VerticalElevator.class.getSimpleName())
