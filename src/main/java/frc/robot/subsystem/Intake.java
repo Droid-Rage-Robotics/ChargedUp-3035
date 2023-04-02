@@ -21,8 +21,8 @@ import frc.robot.utility.SafeMotor.IdleMode;
 
 public class Intake extends SubsystemBase {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
-        SHOOT_CUBE_LOW(3000),
-        SHOOT_CUBE_MID(3000),
+        SHOOT_CUBE_LOW(15000),
+        SHOOT_CUBE_MID(3200),
         // SHOOT_CUBE_HIGH(500),
 
         // SHOOT_CONE_LOW(500),
@@ -185,16 +185,16 @@ public class Intake extends SubsystemBase {
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> switch(Arm.getPosition()){
-                case LOW ->Velocity.OUTTAKE;
-                case MID ->Velocity.OUTTAKE;
+                case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
+                case MID ->Velocity.SHOOT_CUBE_MID;
                 case HIGH ->Velocity.SHOOT_CONE_HIGH;
-                default -> Velocity.OUTTAKE;
+                default -> Velocity.SHOOT_CUBE_LOW;
             };
             case CUBE -> switch(Arm.getPosition()){
                 case LOW ->Velocity.SHOOT_CUBE_LOW;
                 case MID ->Velocity.SHOOT_CUBE_MID;
                 case HIGH ->Velocity.OUTTAKE;
-                default -> Velocity.OUTTAKE;
+                default -> Velocity.SHOOT_CUBE_LOW;
             };
         });
     }
