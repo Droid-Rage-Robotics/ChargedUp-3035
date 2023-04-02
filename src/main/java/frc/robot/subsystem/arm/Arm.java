@@ -65,8 +65,8 @@ public class Arm {
         AUTO_MID_CUBE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get() // up first then out
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGH_CONE(16.8,11, 145),
-        HIGH_CUBE(15.1,11, 131),
+        HIGH_CONE(16.8,12, 145.5),
+        HIGH_CUBE(15.1,12, 131),
 
         INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14.9,0, 110),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(14.9,0, 120),
