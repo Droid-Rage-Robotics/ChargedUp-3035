@@ -48,7 +48,7 @@ public class RobotContainer {
     private final HorizontalElevator horizontalElevator = new HorizontalElevator();
     private final PivotAbsolute pivot = new PivotAbsolute();
     private final Intake intake = new Intake();
-    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot);
+    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
     private final Light light = new Light();//Make sure it is after Intake
 
     

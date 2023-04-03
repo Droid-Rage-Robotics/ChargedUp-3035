@@ -3,6 +3,7 @@ package frc.robot.subsystem.arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.SuppliedCommand;
+import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.TrackedElement;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
@@ -122,15 +123,17 @@ public class Arm {
     private final VerticalElevator verticalElevator;
     private final HorizontalElevator horizontalElevator;
     private final Pivot pivot;
+    private final Intake intake;
     private static Position position = Position.START;
     private final ShuffleboardValue<String> positionWriter = ShuffleboardValue.create(position.name(), "Current Arm Position", "Misc")
         .withSize(1, 3)
         .build();
 
-    public Arm(VerticalElevator verticalElevator, HorizontalElevator horizontalElevator, Pivot pivot) {
+    public Arm(VerticalElevator verticalElevator, HorizontalElevator horizontalElevator, Pivot pivot, Intake intake) {
         this.verticalElevator = verticalElevator;
         this.horizontalElevator = horizontalElevator;
         this.pivot = pivot;
+        this.intake = intake;
     }
 
     private void logPosition(Position targetPosition) {
@@ -151,7 +154,28 @@ public class Arm {
                     horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
                     Commands.waitSeconds(1.4),
                     pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
-                ); 
+                );
+
+                case INTAKE_HIGH_DOUBLE_SUBSTATION -> Commands.sequence(
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                );
+                case INTAKE_HIGH_SINGLE_SUBSTATION -> Commands.sequence(
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                );
+                case INTAKE_LOW -> Commands.sequence(
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                );
+                case START -> Commands.sequence(
+                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                );
                 
                 default -> Commands.sequence(
                     // Commands.run(() -> { // todo fix this please
@@ -168,7 +192,8 @@ public class Arm {
                     // }),
                     verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                     horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees()))),
+                    intake.runOnce(()->intake.close(false))
                 );
             }
         ));
