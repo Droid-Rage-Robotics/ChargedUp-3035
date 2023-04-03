@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.DisabledCommand;
+import frc.robot.commands.LightCommand;
+import frc.robot.commands.LightCommand.IntakeState;
 import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.utility.ComplexWidgetBuilder;
@@ -57,6 +59,7 @@ public class Intake extends SubsystemBase {
     protected final SafeTalonFX motor;
     protected final DoubleSolenoid intakeSolenoid;
     protected PneumaticHub pneumaticHub;
+    private final LightCommand.IntakeState intakeState = IntakeState.TRACK_ELEMENT;
     protected static final boolean isOpenDefault = TrackedElement.get() == Element.CUBE ? true : false;
     protected final ShuffleboardValue<Boolean> isOpen = ShuffleboardValue.create(isOpenDefault, "Is Open", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Boolean> compressorEnabledWriter = ShuffleboardValue.create(true, "Compressor Enabled", Intake.class.getSimpleName())
@@ -66,10 +69,12 @@ public class Intake extends SubsystemBase {
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityWriter = ShuffleboardValue.create(0.0, "Encoder Velocity", Intake.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> encoderVelocityErrorWriter = ShuffleboardValue.create(0.0, "Encoder Velocity Error", Intake.class.getSimpleName()).build();
-    protected final ShuffleboardValue<Double> forwardPressureWriter = ShuffleboardValue.create(0.0, "Forward Pressure", Intake.class.getSimpleName()).build();
-    protected final ShuffleboardValue<Double> backwardPressureWriter = ShuffleboardValue.create(0.0, "Backward Pressure", Intake.class.getSimpleName()).build();
+    protected final ShuffleboardValue<Double> pressureWriter = ShuffleboardValue.create(0.0, "Forward Pressure", Intake.class.getSimpleName()).build();
+    // protected final ShuffleboardValue<Double> backwardPressureWriter = ShuffleboardValue.create(0.0, "Backward Pressure", Intake.class.getSimpleName()).build();
     private final ShuffleboardValue<Boolean> isElementInWriter = ShuffleboardValue.create(false, "Is Element In", Intake.class.getSimpleName())
         // .withWidget(BuiltInWidgets.kToggleSwitch)
+        .build();
+    protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
         .build();
     protected final PIDController controller;
     protected final SimpleMotorFeedforward feedforward;
@@ -108,8 +113,7 @@ public class Intake extends SubsystemBase {
         if (!compressorEnabledWriter.get()) pneumaticHub.disableCompressor();
         setVoltage(calculatePID(getTargetVelocity()) + calculateFeedforward(getTargetVelocity()));
         isElementInWriter.set(isElementIn());
-        // forwardPressureWriter.set(pneumaticHub.getPressure(9));//TODO:Test:
-        // backwardPressureWriter.set(pneumaticHub.getPressure(11));//Can only be between 0-2
+        pressureWriter.set(pneumaticHub.getPressure(1));//TODO:Test://Can only be between 0-2
     }
   
     public void close(boolean changeElement) {
@@ -193,13 +197,13 @@ public class Intake extends SubsystemBase {
                 case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
                 case MID ->Velocity.SHOOT_CUBE_MID;
                 case HIGH ->Velocity.SHOOT_CONE_HIGH;
-                default -> Velocity.SHOOT_CUBE_LOW;
+                default -> Velocity.OUTTAKE;
             };
             case CUBE -> switch(Arm.getPosition()){
                 case LOW ->Velocity.SHOOT_CUBE_LOW;
                 case MID ->Velocity.SHOOT_CUBE_MID;
                 case HIGH ->Velocity.OUTTAKE;
-                default -> Velocity.SHOOT_CUBE_LOW;
+                default -> Velocity.OUTTAKE;
             };
         });
     }
@@ -247,7 +251,12 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isElementIn(){
-        return getEncoderVelocityError()<-2500;
+        return getEncoderVelocityError()<-2000;
     }
+    
+    public void setIntakeState(IntakeState state){
+        intakeStateWriter.set(state.name());
+      }
+
 }
 
