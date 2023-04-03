@@ -4,17 +4,60 @@
 
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
-import frc.robot.subsystem.arm.Arm.Position;
 public class DropCube extends SequentialCommandGroup {
     public DropCube(Arm arm, Intake intake) {
-        addCommands(
-            intake.runOuttakeFor(1),
-            Commands.waitSeconds(1),
-            arm.setPositionCommand(Position.HOLD)
-        );
+        switch(Arm.getPosition()){
+            case AUTO_MID:
+                addCommands(
+                    intake.runOnce(()->intake.close(false)),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
+                );
+                break;
+            case LOW:
+                addCommands(
+                        intake.runOnce(()->intake.close(false)),
+                        intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_LOW))
+                );
+                break;
+            case MID:
+                addCommands(
+                    intake.runOnce(()->intake.close(false)),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
+                );
+                break;
+            case HIGH:
+                addCommands(
+                    intake.runOnce(()->intake.close(false)),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE))
+                );
+                break;
+            default:
+                addCommands(
+                    intake.runOnce(()->intake.outtake())
+                );
+                break;
+            
+        }
+        // SuppliedCommand.create(() -> Commands.sequence(
+        //     Commands.runOnce(() -> logPosition(targetPosition)),
+        //     switch (targetPosition) {
+        //         case AUTO_MID -> Commands.sequence(
+        //             verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+        //             horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+        //             Commands.waitSeconds(1.4),
+        //             pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+        //         ); 
+                
+        //         default -> Commands.sequence(
+        //             verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+        //             horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+        //             pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+        //         );
+        // )
+        //     }}
     }
 }
