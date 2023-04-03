@@ -1,8 +1,8 @@
-package frc.robot.commands.arm.IntakeAndOuttake;
+package frc.robot.commands.intakeAndOuttake;
 
 import frc.robot.commands.SuppliedCommand;
-import frc.robot.commands.arm.IntakeAndOuttake.teleopDrop.DropTeleopCone;
-import frc.robot.commands.arm.IntakeAndOuttake.teleopDrop.DropTeleopCube;
+import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCone;
+import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCube;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.TrackedElement;
 import frc.robot.subsystem.arm.Arm;

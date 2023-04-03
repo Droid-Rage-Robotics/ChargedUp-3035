@@ -1,4 +1,4 @@
-package frc.robot.commands.arm.IntakeAndOuttake.autoDrop;
+package frc.robot.commands.intakeAndOuttake.autoDrop;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
