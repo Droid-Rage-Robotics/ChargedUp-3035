@@ -20,7 +20,7 @@ public class AutoOuttake extends SequentialCommandGroup {
             SuppliedCommand.create(
                 () -> switch(TrackedElement.get()) {
                     case CONE -> intake.runOnce(()->intake.close(true));
-                    case CUBE -> intake.runOnce(()->intake.close(true));
+                    case CUBE -> intake.runOnce(()->intake.open(true));
                 }
             )
         );
