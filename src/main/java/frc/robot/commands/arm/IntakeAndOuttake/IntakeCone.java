@@ -7,10 +7,10 @@ import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 
 public class IntakeCone extends SequentialCommandGroup {
-    public IntakeCone(Arm arm, Intake intake) {
+    public IntakeCone(Arm arm, Intake intake, int wait) {
         addCommands(
             intake.runOnce(()->intake.close(true)),
-            intake.runIntakeFor(3),
+            intake.runIntakeFor(wait),
             Commands.waitSeconds(1),
             arm.setPositionCommand(Position.HOLD)
         );
