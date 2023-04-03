@@ -1,8 +1,8 @@
 package frc.robot.commands;
 
 import frc.robot.commands.arm.*;
-import frc.robot.commands.arm.IntakeAndOuttake.DropCone;
 import frc.robot.commands.arm.IntakeAndOuttake.IntakeCube;
+import frc.robot.commands.arm.IntakeAndOuttake.autoDrop.DropAutoCone;
 import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.subsystem.Intake;
@@ -44,7 +44,7 @@ public final class Autos {
             .addMarker("preloadDrop", Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
                 Commands.waitSeconds(1),
-                new DropCone(arm, intake)
+                new DropAutoCone(arm, intake)
             ))
             .addMarker("pickUp", new SequentialCommandGroup(
                 arm.setPositionCommand(Position.INTAKE_LOW),
@@ -58,7 +58,7 @@ public final class Autos {
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
                 Commands.waitSeconds(1),
-                new DropCone(arm, intake),
+                new DropAutoCone(arm, intake),
                 Commands.waitSeconds(0.1)
                 ),
             PathPlannerFollow.create(drive, "Charge")
@@ -80,7 +80,7 @@ public final class Autos {
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
                 Commands.waitSeconds(1),
-                new DropCone(arm, intake),
+                new DropAutoCone(arm, intake),
                 Commands.waitSeconds(0.1)
                 ),
             PathPlannerFollow.create(drive, "Charge+PickUp")
@@ -106,7 +106,7 @@ public final class Autos {
         return Commands.sequence(
             arm.setPositionCommand(Position.AUTO_MID),
             Commands.waitSeconds(1),
-            new DropCone(arm, intake),
+            new DropAutoCone(arm, intake),
             Commands.waitSeconds(0.3),
             PathPlannerFollow.create(drive, "ToCube1")
                 .setMaxVelocity(1)
@@ -122,7 +122,7 @@ public final class Autos {
         return Commands.sequence(
             arm.setPositionCommand(Position.AUTO_MID),
             Commands.waitSeconds(0.6),
-            new DropCone(arm, intake),
+            new DropAutoCone(arm, intake),
             Commands.waitSeconds(0.3),
             PathPlannerFollow.create(drive, "ToCube3")
                 .setMaxVelocity(1)
@@ -144,7 +144,7 @@ public final class Autos {
         return Commands.sequence(
             arm.setPositionCommand(Position.AUTO_MID),
             Commands.waitSeconds(0.3),
-            new DropCone(arm, intake),
+            new DropAutoCone(arm, intake),
             Commands.waitSeconds(0.1),
             PathPlannerFollow.create(drive, "PreloadPlusPark")
                 .setMaxVelocity(1)
@@ -154,7 +154,7 @@ public final class Autos {
     }
     public static CommandBase testShoot(Drive drive, Arm arm, Intake intake) {//Top Red/Bottom Blue
         return new SequentialCommandGroup(
-            new DropCone(arm, intake),//Shoot Cube High
+            new DropAutoCone(arm, intake),//Shoot Cube High
             PathPlannerFollow.create(drive, "TestShoot")
                 .setMaxVelocity(1)
                 .setAcceleration(1)
