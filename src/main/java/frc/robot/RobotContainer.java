@@ -132,16 +132,26 @@ public class RobotContainer {
                     
                 // )
             ); 
-
-        driver.back()
-            .onTrue(drive.toggleFieldOriented()
-            );
-        
         driver.y()
             .onTrue(drive.toggleBreakMode());
 
         // driver.x()
         //     .onTrue(new ToggleElement());
+
+        driver.povUp()  //Have the robot reset in any 90 degree angle - TODO:Test!
+            .onTrue(drive.setOffsetCommand(0));
+        driver.povRight()
+            .onTrue(drive.setOffsetCommand(-90));
+        driver.povDown()
+            .onTrue(drive.setOffsetCommand(180));
+        driver.povLeft()
+            .onTrue(drive.setOffsetCommand(90));
+        
+        driver.back()
+            .onTrue(drive.toggleFieldOriented()
+            );
+        
+        
 
 
         /*
