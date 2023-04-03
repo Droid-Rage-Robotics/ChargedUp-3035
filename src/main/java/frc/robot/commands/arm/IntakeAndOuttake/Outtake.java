@@ -1,4 +1,4 @@
-package frc.robot.commands.arm;
+package frc.robot.commands.arm.IntakeAndOuttake;
 
 import frc.robot.commands.SuppliedCommand;
 import frc.robot.subsystem.Intake;

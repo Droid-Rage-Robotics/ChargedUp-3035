@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.IntakeAndOuttake.ToggleIntake;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
