@@ -142,7 +142,7 @@ public class Arm {
         return position;
     }
 
-    public CommandBase setPositionCommand(Position targetPosition) {
+    public CommandBase setPositionCommand(Position targetPosition) {// TODO: Fix position to include the intake close
         return SuppliedCommand.create(() -> Commands.sequence(
             Commands.runOnce(() -> logPosition(targetPosition)),
             switch (targetPosition) {
