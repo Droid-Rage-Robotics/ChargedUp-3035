@@ -59,10 +59,10 @@ public class Arm {
 
         MID_CONE(13.2,11,LOW_CONE.getPivotDegrees()), // LOWCONE.pivotAngle.get() 
         MID_CUBE(0,0, 125),
-        // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE!
+        // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE! - Old Mid Cube
 
-        AUTO_MID_CONE(15.2, 11.5, LOW_CONE.getPivotDegrees()),// MIDCONE.pivotAngle.get() // up first then out
-        AUTO_MID_CUBE(15.2, 11.5, 31.4),// MIDCONE.pivotAngle.get() // up first then out
+        AUTO_MID_CONE(15.2, 11.5, LOW_CONE.getPivotDegrees()),
+        AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
         HIGH_CONE(16.8,12.5, 145.5),
