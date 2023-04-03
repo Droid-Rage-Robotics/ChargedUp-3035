@@ -57,7 +57,7 @@ public class Arm {
         LOW_CONE(0, 0, 200),
         LOW_CUBE(0,0, 145),
 
-        MID_CONE(13.2,11,LOW_CONE.getPivotDegrees()), // LOWCONE.pivotAngle.get() 
+        MID_CONE(13.2,11.3,LOW_CONE.getPivotDegrees()), // LOWCONE.pivotAngle.get() 
         MID_CUBE(0,0, 125),
         // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE! - Old Mid Cube
 
