@@ -12,6 +12,7 @@ import frc.robot.subsystem.arm.Arm.Position;
 public class DropAutoCube extends SequentialCommandGroup {
     public DropAutoCube(Arm arm, Intake intake) {
         addCommands(
+            intake.runOnce(()->intake.close(false)),
             intake.runOuttakeFor(1),
             Commands.waitSeconds(1),
             arm.setPositionCommand(Position.HOLD)
