@@ -250,6 +250,14 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    public CommandBase runFor(Velocity velocity, double waitSeconds) {
+        return Commands.sequence(
+            runOnce(()-> setTargetVelocity(velocity)),
+            Commands.waitSeconds(waitSeconds),
+            runOnce(this::stop)
+        );
+    }
+
     public boolean isElementIn(){
         return getEncoderVelocityError()<-2000;
     }
