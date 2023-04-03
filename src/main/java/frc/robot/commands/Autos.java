@@ -86,7 +86,7 @@ public final class Autos {
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
                 .addMarker("down", new SequentialCommandGroup(
-                    intake.runOnce(intake::open),
+                    intake.runOnce(()->intake.open(true)),
                     arm.setPositionCommand(Position.INTAKE_LOW)
                     ))
                 .addMarker("intake", new IntakeCube(arm, intake, 7))

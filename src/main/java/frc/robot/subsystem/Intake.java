@@ -100,7 +100,7 @@ public class Intake extends SubsystemBase {
         feedforward = new SimpleMotorFeedforward(0.64, 0.000515, 0);
         ComplexWidgetBuilder.create(controller, "PID Controller", Intake.class.getSimpleName());
         ComplexWidgetBuilder.create(DisabledCommand.create(runOnce(this::resetEncoder)), "Reset Encoder", Intake.class.getSimpleName());
-        close();
+        close(true);
     }
 
     @Override
@@ -112,21 +112,26 @@ public class Intake extends SubsystemBase {
         // backwardPressureWriter.set(pneumaticHub.getPressure(11));//Can only be between 0-2
     }
   
-    public void close() {
+    public void close(boolean changeElement) {
         intakeSolenoid.set(Value.kForward);//TODO:change
         isOpen.set(false);
-        // TrackedElement.set(Element.CONE); 
+        if (changeElement){
+            TrackedElement.set(Element.CONE);
+        }
     }
 
-    public void open() {
+    public void open(boolean changeElement) {
         intakeSolenoid.set(Value.kReverse);//TODO:change
         isOpen.set(true);
-        // TrackedElement.set(Element.CUBE);
+        if (changeElement){
+            TrackedElement.set(Element.CUBE);
+        }
+        
     }
 
-    public void toggle() {
-        if(isOpen.get()) close();
-            else open();
+    public void toggle(boolean changeElement) {
+        if(isOpen.get()) close(changeElement);
+            else open(changeElement);
     }
 
     public double getEncoderVelocity() {

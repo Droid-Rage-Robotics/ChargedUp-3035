@@ -9,8 +9,8 @@ import frc.robot.subsystem.arm.Arm;
 public class ToggleIntake extends SequentialCommandGroup {
     public ToggleIntake(Arm arm, Intake intake) {
         addCommands(
-            intake.runOnce(intake::toggle),
-            arm.setPositionCommand(arm.getPosition())
+            intake.runOnce(()->intake.toggle(true)),
+            arm.setPositionCommand(Arm.getPosition())
         );
     }
 }
