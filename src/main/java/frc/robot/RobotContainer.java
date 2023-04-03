@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.IntakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.arm.IntakeAndOuttake.ToggleIntake;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.subsystem.*;
@@ -115,7 +116,8 @@ public class RobotContainer {
             .onFalse(intake.run(intake::stop));
 
         driver.leftTrigger()
-            .onTrue(intake.run(intake::outtake))
+            .onTrue(new TeleopOuttake(arm, intake))
+            // .onTrue(intake.run(intake::outtake))
             .onFalse(intake.run(intake::stop));
 
         driver.a()
