@@ -204,15 +204,18 @@ public final class Autos {
             PathPlannerFollow.create(drive, "TurnTest")
                 .setMaxVelocity(0.2)
                 .setAcceleration(0.2)
-                .build()
+                .build(),
+            drive.setOffsetCommand(180)//TODO:Test
         );
+
     }
     public static CommandBase splineTest(Drive drive) {
         return new SequentialCommandGroup(
             PathPlannerFollow.create(drive, "SplineTest")
                 .setMaxVelocity(1)
                 .setAcceleration(1)
-                .build()
+                .build(),
+            drive.setOffsetCommand(180)
         );
     }
     public static CommandBase lineToLinearTest(Drive drive) {
