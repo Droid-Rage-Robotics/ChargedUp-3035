@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import frc.robot.commands.arm.*;
+import frc.robot.commands.arm.IntakeAndOuttake.IntakeCube;
+import frc.robot.commands.arm.IntakeAndOuttake.autoDrop.DropAutoCone;
 import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.IntakeCube;
@@ -48,7 +50,7 @@ public final class Autos {
             ))
             .addMarker("pickUp", new SequentialCommandGroup(
                 arm.setPositionCommand(Position.INTAKE_LOW),
-                new IntakeCube(arm, intake,6)
+                new AutoIntakeCube(arm, intake,6)
             ))
             .build();
     }
@@ -91,7 +93,7 @@ public final class Autos {
                     intake.runOnce(()->intake.open(true)),
                     arm.setPositionCommand(Position.INTAKE_LOW)
                     ))
-                .addMarker("intake", new IntakeCube(arm, intake, 7))
+                .addMarker("intake", new AutoIntakeCube(arm, intake, 7))
                 .build(),
             //Command for autobalance
             new AutoBalance(drive),
@@ -134,7 +136,7 @@ public final class Autos {
              PathPlannerFollow.create(drive, "ToCube1Forward")
                 .setMaxVelocity(0.8)
                 .setAcceleration(0.8) 
-                .addMarker("intake",new SequentialCommandGroup(new IntakeCube(arm, intake, 6)))
+                .addMarker("intake",new SequentialCommandGroup(new AutoIntakeCube(arm, intake, 6)))
                 .build()
 
         );
