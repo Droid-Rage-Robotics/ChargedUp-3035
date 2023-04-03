@@ -26,7 +26,7 @@ public class HorizontalElevator extends Elevator {
     private final SafeCanSparkMax motor = new SafeCanSparkMax(
         17, 
         MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", HorizontalElevator.class.getSimpleName())
+        ShuffleboardValue.create(false, "Is Enabled", HorizontalElevator.class.getSimpleName())
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .build(),
         ShuffleboardValue.create(0.0, "Voltage", HorizontalElevator.class.getSimpleName())
