@@ -34,6 +34,8 @@ public class RobotContainer {
     // detect when intake velocity error drops and light leds
     // Rumble Driver 1 when element in claw
     // see how slew rate limiter affects turning and movement. can it make motors stop faster without enabling brake mode?
+    //Idea: Make a button that automatically aligns to 180 degrees with a press of a button - 
+    //      only when held - still leave control of drive to driver except for turning
 
 
 
