@@ -6,15 +6,19 @@ import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
 import frc.robot.commands.intakeAndOuttake.intakeAuto.AutoIntakeCube;
 import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.drive.Drive;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
 
@@ -176,10 +180,37 @@ public final class Autos {
 
     public static CommandBase dropAndPickupContinnuous(Drive drive, Arm arm, Intake intake) {
         return Commands.sequence(
-            PathPlannerFollow.create(drive, "Drop+PickUp Continuous")
-                .setMaxVelocity(0.5)
-                .setAcceleration(0.5)
-                .build()
+            arm.setPositionCommand(Position.HIGH),
+            new WaitCommand(1.05),//HAS TO BE 1
+            new DropAutoCone(arm, intake),
+            // new WaitCommand(0.5),
+            PathPlannerFollow.create(drive, "Drop+PickUp")
+                .setMaxVelocity(4)
+                .setAcceleration(2)
+                .addMarker("intake2", new ParallelCommandGroup(
+                    new AutoIntakeCube(arm, intake, 0))
+                )
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    // intake.runFor(Velocity.INTAKE,  2)
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE)),
+                    new WaitCommand(0.6),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.AUTO_MID)
+                    // new WaitCommand(1),
+                    // arm.setPositionCommand(Position.HOLD)
+                    // intake.runOnce(()->intake.stop()^
+                    )
+                )
+                .addMarker("shoot", new SequentialCommandGroup(
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID)),
+                    // new WaitCommand(0.6),
+                    intake.runOnce(intake::stop),
+                    // intake.runOnce(()->intake.runFor(Velocity.SHOOT_AUTO_CUBE_MID, 2)), 
+                    // new WaitCommand(1), 
+                    arm.setPositionCommand(Position.HOLD))
+                )
+                .build(),
+                drive.setOffsetCommand(drive.getRotation2d().rotateBy(Rotation2d.fromDegrees(0)).getDegrees())
         );
     }
 
@@ -208,7 +239,7 @@ public final class Autos {
                 .setMaxVelocity(0.2)
                 .setAcceleration(0.2)
                 .build(),
-            drive.setOffsetCommand(180)//TODO:Test
+            drive.setOffsetCommand(drive.getRotation2d().rotateBy(Rotation2d.fromDegrees(180)).getDegrees())//Works
         );
 
     }
@@ -217,8 +248,7 @@ public final class Autos {
             PathPlannerFollow.create(drive, "SplineTest")
                 .setMaxVelocity(1)
                 .setAcceleration(1)
-                .build(),
-            drive.setOffsetCommand(180)
+                .build()
         );
     }
     public static CommandBase lineToLinearTest(Drive drive) {
