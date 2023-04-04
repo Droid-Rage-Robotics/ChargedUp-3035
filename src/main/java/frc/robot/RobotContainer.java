@@ -7,6 +7,7 @@ import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.intakeAndOuttake.ToggleIntake;
 import frc.robot.subsystem.*;
+import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
@@ -74,7 +75,7 @@ public class RobotContainer {
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
         // autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
         // autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
-        // autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
+        autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
@@ -118,7 +119,9 @@ public class RobotContainer {
             .onFalse(intake.run(intake::stop));
 
         driver.leftTrigger()
-            .onTrue(new TeleopOuttake(arm, intake))
+        .onTrue(intake.run(intake::outtake))
+        // .onTrue(intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)))
+            // .onTrue(new TeleopOuttake(arm, intake))
             // .onTrue(intake.run(intake::outtake))
             .onFalse(intake.run(intake::stop));
 
