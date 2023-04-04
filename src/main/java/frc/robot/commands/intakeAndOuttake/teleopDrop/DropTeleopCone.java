@@ -44,11 +44,12 @@ public class DropTeleopCone extends SequentialCommandGroup {
                 break;
             default:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    arm.lowerElevatorCommand(),
-                    Commands.waitSeconds(0.2),
-                    intake.runOnce(()->intake.open(true)),
-                    arm.setPositionCommand(Position.HOLD)
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
+                    // intake.runOnce(()->intake.close(false)),
+                    // arm.lowerElevatorCommand(),
+                    // Commands.waitSeconds(0.2),
+                    // intake.runOnce(()->intake.open(true)),
+                    // arm.setPositionCommand(Position.HOLD)
                 );
                 break;
             
