@@ -64,7 +64,7 @@ public final class Autos {
                 new DropAutoCone(arm, intake),
                 Commands.waitSeconds(0.1)
                 ),
-            PathPlannerFollow.create(drive, "Charge")
+            PathPlannerFollow.create(drive, "Just Charge")
                 .setMaxVelocity(1.8)
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
