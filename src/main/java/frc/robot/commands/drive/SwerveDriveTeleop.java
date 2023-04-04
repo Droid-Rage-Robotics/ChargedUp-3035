@@ -63,15 +63,15 @@ public class SwerveDriveTeleop extends CommandBase {
             
             Rotation2d heading = drive.getRotation2d();
 
-            heading.rotateBy(
-                Rotation2d.fromDegrees(
-                    switch (DriverStation.getAlliance()) {
-                        case Blue->00;
-                        case Red->180;
-                        case Invalid->0;
-                    }
-                )
-            );
+            // heading.rotateBy(
+            //     Rotation2d.fromDegrees(
+            //         switch (DriverStation.getAlliance()) {
+            //             case Blue->00;
+            //             case Red->180;
+            //             case Invalid->0;
+            //         }
+            //     )
+            // );
 
             modifiedXSpeed = xSpeed * heading.getCos() + ySpeed * heading.getSin();
             modifiedYSpeed = -xSpeed * heading.getSin() + ySpeed * heading.getCos();
