@@ -7,7 +7,6 @@ import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.intakeAndOuttake.ToggleIntake;
 import frc.robot.subsystem.*;
-import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
@@ -20,7 +19,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -56,7 +54,7 @@ public class RobotContainer {
     // private final Light light = new Light();
     private final Drive drive;
     private final VerticalElevator verticalElevator;
-    // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
+    // private final VerticalElevatorSetPower verticalElevatorSetPower;
     private final HorizontalElevator horizontalElevator;
     private final PivotAbsolute pivot;
     private final Intake intake;
