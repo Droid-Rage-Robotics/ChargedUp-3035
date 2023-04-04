@@ -9,7 +9,7 @@ import frc.robot.utility.ShuffleboardValue;
 import frc.robot.utility.SafeMotor.IdleMode;
 
 public class VerticalElevatorSetPower extends SubsystemBase{
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(false, "Is Enabled", VerticalElevator.class.getSimpleName())
     .withWidget(BuiltInWidgets.kToggleSwitch)
     .build();
 

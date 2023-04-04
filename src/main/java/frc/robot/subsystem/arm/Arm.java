@@ -2,6 +2,7 @@ package frc.robot.subsystem.arm;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.SuppliedCommand;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.TrackedElement;
@@ -53,7 +54,7 @@ public class Arm {
         START(0,0,0),
 
         INTAKE_LOW_CONE(0,0, 208),//215 or 219 (shoot COnes)
-        INTAKE_LOW_CUBE(0,0, 200),
+        INTAKE_LOW_CUBE(0,0, 210),
        
         LOW_CONE(0, 0, 200),
         LOW_CUBE(0,0, 145),
@@ -63,7 +64,8 @@ public class Arm {
         // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE! - Old Mid Cube
 
         AUTO_MID_CONE(15.2, 11.5, LOW_CONE.getPivotDegrees()),
-        AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
+        AUTO_MID_CUBE(13,1, 135),
+        // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
         HIGH_CONE(16.2,12.5, 145.5),
@@ -146,15 +148,19 @@ public class Arm {
     }
 
     public CommandBase setPositionCommand(Position targetPosition) {// TODO: Fix position to include the intake close
+        //TODO: Put in parallel COMAND!!!!!
         return SuppliedCommand.create(() -> Commands.sequence(
             Commands.runOnce(() -> logPosition(targetPosition)),
             switch (targetPosition) {
-                case AUTO_MID -> Commands.sequence(
-                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    Commands.waitSeconds(1.4),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
-                );
+                case AUTO_MID -> //Commands.sequence(
+                    new ParallelCommandGroup(//TODO:ONl mve pivot fgor the cube not cone
+                        // verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        // horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        // Commands.waitSeconds(1.4),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                        );
+                    
+               // );
 
                 case INTAKE_HIGH_DOUBLE_SUBSTATION -> Commands.sequence(
                     verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
@@ -192,8 +198,8 @@ public class Arm {
                     // }),
                     verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                     horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees()))),
-                    intake.runOnce(()->intake.close(false))
+                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                    // intake.runOnce(()->intake.close(false))//TODO: FIXXXXXX
                 );
             }
         ));

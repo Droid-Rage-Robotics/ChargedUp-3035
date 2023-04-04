@@ -1,8 +1,8 @@
-package frc.robot.commands.arm.IntakeAndOuttake;
+package frc.robot.commands.intakeAndOuttake;
 
 import frc.robot.commands.SuppliedCommand;
-import frc.robot.commands.arm.IntakeAndOuttake.autoDrop.DropAutoCone;
-import frc.robot.commands.arm.IntakeAndOuttake.autoDrop.DropAutoCube;
+import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
+import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCube;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.TrackedElement;
 import frc.robot.subsystem.arm.Arm;
@@ -20,7 +20,7 @@ public class AutoOuttake extends SequentialCommandGroup {
             SuppliedCommand.create(
                 () -> switch(TrackedElement.get()) {
                     case CONE -> intake.runOnce(()->intake.close(true));
-                    case CUBE -> intake.runOnce(()->intake.close(true));
+                    case CUBE -> intake.runOnce(()->intake.open(true));
                 }
             )
         );

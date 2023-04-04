@@ -25,6 +25,7 @@ public class Intake extends SubsystemBase {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
         SHOOT_CUBE_LOW(15000),
         SHOOT_CUBE_MID(3200),
+        SHOOT_AUTO_CUBE_MID(22000),
         // SHOOT_CUBE_HIGH(500),
 
         SHOOT_CONE_LOW(SHOOT_CUBE_LOW.get()),
@@ -194,15 +195,15 @@ public class Intake extends SubsystemBase {
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> switch(Arm.getPosition()){
-                // case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
-                // case MID ->Velocity.SHOOT_CUBE_MID;
-                // case HIGH ->Velocity.SHOOT_CONE_HIGH;
+                case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
+                case MID ->Velocity.SHOOT_CUBE_MID;
+                case HIGH ->Velocity.SHOOT_CONE_HIGH;
                 default -> Velocity.OUTTAKE;
             };
             case CUBE -> switch(Arm.getPosition()){
-                // case LOW ->Velocity.SHOOT_CONE_LOW;
-                // case MID ->Velocity.SHOOT_CUBE_MID;
-                // case HIGH ->Velocity.OUTTAKE;
+                case LOW ->Velocity.SHOOT_CONE_LOW;
+                case MID ->Velocity.SHOOT_CUBE_MID;
+                case HIGH ->Velocity.OUTTAKE;
                 default -> Velocity.OUTTAKE;
             };
         });
@@ -250,7 +251,7 @@ public class Intake extends SubsystemBase {
         );
     }
 
-    public CommandBase runFor(Velocity velocity, double waitSeconds) {
+    public CommandBase runFor(Velocity velocity, double waitSeconds) {//Doesn't Work
         return Commands.sequence(
             runOnce(()-> setTargetVelocity(velocity)),
             Commands.waitSeconds(waitSeconds),

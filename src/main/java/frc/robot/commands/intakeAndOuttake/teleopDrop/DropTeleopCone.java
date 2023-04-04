@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.arm.IntakeAndOuttake.teleopDrop;
+package frc.robot.commands.intakeAndOuttake.teleopDrop;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -44,11 +44,12 @@ public class DropTeleopCone extends SequentialCommandGroup {
                 break;
             default:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    arm.lowerElevatorCommand(),
-                    Commands.waitSeconds(0.2),
-                    intake.runOnce(()->intake.open(true)),
-                    arm.setPositionCommand(Position.HOLD)
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
+                    // intake.runOnce(()->intake.close(false)),
+                    // arm.lowerElevatorCommand(),
+                    // Commands.waitSeconds(0.2),
+                    // intake.runOnce(()->intake.open(true)),
+                    // arm.setPositionCommand(Position.HOLD)
                 );
                 break;
             
