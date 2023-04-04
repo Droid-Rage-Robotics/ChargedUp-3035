@@ -5,13 +5,14 @@ import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 
-public class AutoIntakeCube extends SequentialCommandGroup {
+public class AutoIntakeCube extends SequentialCommandGroup {//TODO:FIX - The commands don't finish if the bot keeps driving
     //TODO: Maybe make a position where the pivot intakes downwards so cube doesn't roll away
     public AutoIntakeCube(Arm arm, Intake intake, double wait) {
         addCommands(
-            intake.runOnce(()->intake.open(true)),
-            intake.runIntakeFor(wait),
-            arm.setPositionCommand(Position.HOLD)
+            arm.setPositionCommand(Position.INTAKE_LOW),
+            intake.runOnce(()->intake.open(true))
+            // intake.runIntakeFor(wait),
+            // arm.setPositionCommand(Position.HOLD)
         );
     }
     // public IntakeCube(Arm arm, Intake intake) {
