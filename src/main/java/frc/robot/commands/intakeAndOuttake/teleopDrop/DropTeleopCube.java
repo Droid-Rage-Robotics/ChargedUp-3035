@@ -5,7 +5,6 @@
 package frc.robot.commands.intakeAndOuttake.teleopDrop;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
@@ -14,21 +13,25 @@ public class DropTeleopCube extends SequentialCommandGroup {
         switch(Arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
+                    intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
                 );
                 break;
             case LOW:
                 addCommands(
-                        intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_LOW))
+                    intake.runOnce(()->intake.close(false)),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_LOW))
                 );
                 break;
             case MID:
                 addCommands(
+                    intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
                 );
                 break;
             case HIGH:
                 addCommands(
+                    intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE))
                 );
                 break;

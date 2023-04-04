@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class AutoOuttake extends SequentialCommandGroup {
     public AutoOuttake(Arm arm, Intake intake) {
     	addCommands(
+            intake.runOnce(()->intake.close(false)),
             SuppliedCommand.create(
                 () -> switch(TrackedElement.get()) {
                     case CONE -> new DropAutoCone(arm, intake);
