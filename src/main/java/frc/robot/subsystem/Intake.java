@@ -195,15 +195,15 @@ public class Intake extends SubsystemBase {
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
             case CONE -> switch(Arm.getPosition()){
-                case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
-                case MID ->Velocity.SHOOT_CUBE_MID;
-                case HIGH ->Velocity.SHOOT_CONE_HIGH;
+                // case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
+                // case MID ->Velocity.SHOOT_CUBE_MID;
+                // case HIGH ->Velocity.SHOOT_CONE_HIGH;
                 default -> Velocity.OUTTAKE;
             };
             case CUBE -> switch(Arm.getPosition()){
-                case LOW ->Velocity.SHOOT_CONE_LOW;
-                case MID ->Velocity.SHOOT_CUBE_MID;
-                case HIGH ->Velocity.OUTTAKE;
+                // case LOW ->Velocity.SHOOT_CONE_LOW;
+                // case MID ->Velocity.SHOOT_CUBE_MID;
+                // case HIGH ->Velocity.OUTTAKE;
                 default -> Velocity.OUTTAKE;
             };
         });
