@@ -15,7 +15,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     private final AddressableLEDBuffer buffer;
     private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
-    public final Color red, yellow, purple;
+    public final Color red, yellow, purple, orange, blue;
     // public static Timer timer = new Timer();
   
     // protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
@@ -35,6 +35,8 @@ public class Light extends SubsystemBase {//TODO:Fix
         yellow = Color.kYellow;
         // yellow = new Color(255, 255, 0);
         purple = Color.kPurple;
+        orange = Color.kOrange;
+        blue = Color.kBlue;
         // timer.start();
         // this.intake = intake;
         // this.driver = driver;
@@ -53,7 +55,7 @@ public class Light extends SubsystemBase {//TODO:Fix
         periodic();
     }
   
-    private void rainbow() {
+    public void rainbow() {
         // For every pixel
         for (int i = 0; i < buffer.getLength(); i++) {
           // Calculate the hue - hue is easier for rainbows because the color
@@ -68,6 +70,22 @@ public class Light extends SubsystemBase {//TODO:Fix
         m_rainbowFirstPixelHue %= 180;
     }
 
+    public void orangeAndBlue() {
+      // For every pixel
+      for (int i = 0; i < buffer.getLength(); i++) {
+        if(i%2==0) {
+          buffer.setLED(i, orange);
+
+        } else{
+          buffer.setLED(i, blue);
+        }
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final var hue = (m_rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+        // Set the value
+        buffer.setHSV(i, hue, 255, 128);
+      }
+  }
     
     // public void setColorType() {
     //   if (timer.get()<0.6){

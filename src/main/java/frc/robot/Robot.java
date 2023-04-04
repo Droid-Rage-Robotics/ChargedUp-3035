@@ -5,6 +5,13 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.Light;
+import frc.robot.subsystem.arm.Arm;
+import frc.robot.subsystem.arm.elevator.HorizontalElevator;
+import frc.robot.subsystem.arm.elevator.VerticalElevator;
+import frc.robot.subsystem.arm.pivot.PivotAbsolute;
+import frc.robot.subsystem.drive.Drive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,6 +23,15 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     
     private RobotContainer robotContainer;
+
+    private final Drive drive = new Drive();
+    private final VerticalElevator verticalElevator = new VerticalElevator();
+    // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
+    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
+    private final PivotAbsolute pivot = new PivotAbsolute();
+    private final Intake intake = new Intake();
+    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
+    private final Light light = new Light();
     
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -26,7 +42,7 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         PathPlannerServer.startServer(5811); // To Be able to see the Path of the robot on PathPlanner
-        robotContainer = new RobotContainer();
+        robotContainer = new RobotContainer(drive, verticalElevator, horizontalElevator, pivot, intake, arm, light);
     }
     
     /**
@@ -46,10 +62,14 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+
+    }
     
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        light.rainbow();
+    }
 
     @Override
     public void autonomousInit() {

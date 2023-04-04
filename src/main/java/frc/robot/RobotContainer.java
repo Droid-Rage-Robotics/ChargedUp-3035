@@ -46,22 +46,38 @@ public class RobotContainer {
     private final CommandXboxController operator =
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
-    private final Drive drive = new Drive();
-    private final VerticalElevator verticalElevator = new VerticalElevator();
+    // private final Drive drive = new Drive();
+    // private final VerticalElevator verticalElevator = new VerticalElevator();
+    // // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
+    // private final HorizontalElevator horizontalElevator = new HorizontalElevator();
+    // private final PivotAbsolute pivot = new PivotAbsolute();
+    // private final Intake intake = new Intake();
+    // private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
+    // private final Light light = new Light();
+    private final Drive drive;
+    private final VerticalElevator verticalElevator;
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    private final PivotAbsolute pivot = new PivotAbsolute();
-    private final Intake intake = new Intake();
-    private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
-    private final Light light = new Light();//Make sure it is after Intake
+    private final HorizontalElevator horizontalElevator;
+    private final PivotAbsolute pivot;
+    private final Intake intake;
+    private final Arm arm;
+    private final Light light;
 
     
 
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
 
-    public RobotContainer() {
-        // autoChooser.addOption("PreloadPlusPark", Autos.preloadPlusPark(drive, arm, intake));
-
+    public RobotContainer(Drive drive, VerticalElevator verticalElevator, 
+                            HorizontalElevator horizontalElevator, PivotAbsolute pivot, 
+                            Intake intake, Arm arm, Light light) {
+        this.drive = drive;
+        this.verticalElevator = verticalElevator;
+        this.horizontalElevator = horizontalElevator;
+        this.pivot = pivot;
+        this.intake = intake;
+        this.arm = arm;
+        this.light = light;
+        
         autoChooser.addOption("Forward Test", Autos.forwardTest(drive));
         autoChooser.addOption("Backward Test", Autos.backTest(drive));
         autoChooser.addOption("Spline Test", Autos.splineTest(drive));
@@ -121,9 +137,9 @@ public class RobotContainer {
             .onFalse(intake.run(intake::stop));
 
         driver.leftTrigger()
-        .onTrue(intake.run(intake::outtake))
+        // .onTrue(intake.run(intake::outtake))
         // .onTrue(intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)))
-            // .onTrue(new TeleopOuttake(arm, intake))
+            .onTrue(new TeleopOuttake(arm, intake))//TODO:Test!
             // .onTrue(intake.run(intake::outtake))
             .onFalse(intake.run(intake::stop));
 
