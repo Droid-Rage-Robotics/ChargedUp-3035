@@ -55,8 +55,8 @@ public class DriveConstants {
 
     public enum Speed {
         TURBO(1, 1),
-        NORMAL(1, 1),
-        SLOW(0.15, 0.15),
+        NORMAL(2, 2),
+        SLOW(0.2, 0.2),
         SUPER_SLOW(0.05, 0.05),
         ;
         private final ShuffleboardValue<Double> shuffleboardTranslationalValue;
