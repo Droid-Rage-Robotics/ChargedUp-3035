@@ -16,43 +16,37 @@ public class DropTeleopCone extends SequentialCommandGroup {
         switch(Arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    new WaitCommand(0.5),
-                    intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE))
+                    arm.lowerElevatorCommand(),
+                    Commands.waitSeconds(0.2),
+                    intake.runOnce(()->intake.open(true)),
+                    arm.setPositionCommand(Position.HOLD)
                 );
                 break;
             case LOW:
                 addCommands(
-                        intake.runOnce(()->intake.close(false)),
-                        new WaitCommand(0.5),
                         intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_LOW))
                 );
                 break;
             case MID:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    new WaitCommand(0.5),
-                    intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE))
+                    arm.lowerElevatorCommand(),
+                    Commands.waitSeconds(0.2),
+                    intake.runOnce(()->intake.open(true)),
+                    arm.setPositionCommand(Position.HOLD)
                 );
                 break;
             case HIGH:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    new WaitCommand(0.5),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
                 );
                 break;
             default:
                 addCommands(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
-                    // intake.runOnce(()->intake.close(false)),
-                    // arm.lowerElevatorCommand(),
-                    // Commands.waitSeconds(0.2),
-                    // intake.runOnce(()->intake.open(true)),
-                    // arm.setPositionCommand(Position.HOLD)
+                    //Doesn't hurt, since the only time
+                    // outtake is used in high shot
                 );
                 break;
-            
         }
     }
 }

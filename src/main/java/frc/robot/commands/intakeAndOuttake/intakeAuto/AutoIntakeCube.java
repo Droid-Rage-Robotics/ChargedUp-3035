@@ -11,11 +11,7 @@ public class AutoIntakeCube extends SequentialCommandGroup {//TODO:FIX - The com
         addCommands(
             arm.setPositionCommand(Position.INTAKE_LOW),
             intake.runOnce(()->intake.open(true))
-            // intake.runIntakeFor(wait),
-            // arm.setPositionCommand(Position.HOLD)
         );
     }
-    // public IntakeCube(Arm arm, Intake intake) {
-    //     this(arm, intake, 6.0);
-    // }
 }
+

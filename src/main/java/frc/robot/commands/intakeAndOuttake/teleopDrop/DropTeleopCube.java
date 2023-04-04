@@ -14,29 +14,21 @@ public class DropTeleopCube extends SequentialCommandGroup {
         switch(Arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    new WaitCommand(0.5),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
                 );
                 break;
             case LOW:
                 addCommands(
-                        intake.runOnce(()->intake.close(false)),
-                        new WaitCommand(0.5),
                         intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_LOW))
                 );
                 break;
             case MID:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    new WaitCommand(0.5),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
                 );
                 break;
             case HIGH:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
-                    new WaitCommand(0.5),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE))
                 );
                 break;
