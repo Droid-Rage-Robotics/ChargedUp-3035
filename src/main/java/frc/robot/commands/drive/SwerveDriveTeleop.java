@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.DroidRageConstants;
@@ -15,6 +16,7 @@ import frc.robot.subsystem.drive.SwerveModule;
 public class SwerveDriveTeleop extends CommandBase {
     private final Drive drive;
     private final Supplier<Double> x, y, turn;
+    private int offset = 0;
     // private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
     // private static final PIDController autoBalanceY = new PIDController(0.006, 0, 0.0005);
 
@@ -40,6 +42,12 @@ public class SwerveDriveTeleop extends CommandBase {
 
     @Override
     public void initialize() {
+        //  offset = switch (DriverStation.getAlliance()) {
+        //     case Blue->00;
+        //     case Red->180;
+        //     case Invalid->0;
+        // };
+
 
     }
 
@@ -61,7 +69,18 @@ public class SwerveDriveTeleop extends CommandBase {
             double modifiedXSpeed = xSpeed;
             double modifiedYSpeed = ySpeed;
 
+            
             Rotation2d heading = drive.getRotation2d();
+
+            heading.rotateBy(
+                Rotation2d.fromDegrees(
+                    switch (DriverStation.getAlliance()) {
+                        case Blue->00;
+                        case Red->180;
+                        case Invalid->0;
+                    }
+                )
+            );
 
             modifiedXSpeed = xSpeed * heading.getCos() + ySpeed * heading.getSin();
             modifiedYSpeed = -xSpeed * heading.getSin() + ySpeed * heading.getCos();
