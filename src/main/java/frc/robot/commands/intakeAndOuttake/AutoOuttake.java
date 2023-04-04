@@ -16,13 +16,13 @@ public class AutoOuttake extends SequentialCommandGroup {
                     case CONE -> new DropAutoCone(arm, intake);
                     case CUBE -> new DropAutoCube(arm, intake);
                 }
-            ),
-            SuppliedCommand.create(
-                () -> switch(TrackedElement.get()) {
-                    case CONE -> intake.runOnce(()->intake.close(true));
-                    case CUBE -> intake.runOnce(()->intake.open(true));
-                }
             )
+            // SuppliedCommand.create(
+            //     () -> switch(TrackedElement.get()) {
+            //         case CONE -> intake.runOnce(()->intake.close(true));
+            //         case CUBE -> intake.runOnce(()->intake.open(true));
+            //     }
+            // )
         );
     }
 }

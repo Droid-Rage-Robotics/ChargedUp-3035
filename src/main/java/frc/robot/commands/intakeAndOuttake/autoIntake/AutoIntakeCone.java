@@ -1,4 +1,4 @@
-package frc.robot.commands.intakeAndOuttake.intakeAuto;
+package frc.robot.commands.intakeAndOuttake.autoIntake;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

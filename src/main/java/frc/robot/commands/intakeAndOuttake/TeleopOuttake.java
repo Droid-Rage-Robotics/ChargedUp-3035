@@ -16,13 +16,13 @@ public class TeleopOuttake extends SequentialCommandGroup {
                     case CONE -> new DropTeleopCone(arm, intake);
                     case CUBE -> new DropTeleopCube(arm, intake);
                 }
-            ),
-            SuppliedCommand.create(
-                () -> switch(TrackedElement.get()) {
-                    case CONE -> intake.runOnce(()->intake.close(true));
-                    case CUBE -> intake.runOnce(()->intake.open(true));
-                }
             )
+            // SuppliedCommand.create(
+            //     () -> switch(TrackedElement.get()) {
+            //         case CONE -> intake.runOnce(()->intake.close(true));
+            //         case CUBE -> intake.runOnce(()->intake.open(true));
+            //     }
+            // )
         );
     }
 }

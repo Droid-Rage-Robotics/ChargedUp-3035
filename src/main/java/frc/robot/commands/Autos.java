@@ -4,7 +4,7 @@ import frc.robot.commands.arm.*;
 import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
-import frc.robot.commands.intakeAndOuttake.intakeAuto.AutoIntakeCube;
+import frc.robot.commands.intakeAndOuttake.autoIntake.AutoIntakeCube;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
