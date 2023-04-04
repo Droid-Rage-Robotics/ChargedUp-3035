@@ -101,6 +101,8 @@ public class RobotContainer {
             );
 
         driver.rightBumper()
+            // .and(null) - allows you to make 
+            //one buttn different by having to press 2 buttons
             .onTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
 
