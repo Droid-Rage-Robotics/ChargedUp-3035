@@ -8,9 +8,9 @@ import frc.robot.subsystem.arm.Arm.Position;
 
 public class AutoIntakeCube extends SequentialCommandGroup {//TODO:FIX - The commands don't finish if the bot keeps driving
     public AutoIntakeCube(Arm arm, Intake intake, double wait) {
-        addCommands(
+        addCommands(//OPen the intake earlier
             arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
-            intake.runOnce(()->intake.open(true)),
+            // intake.runOnce(()->intake.open(true)),
             intake.runIntakeFor(wait),
             new WaitCommand(0.2),
             arm.setPositionCommand(Position.HOLD)

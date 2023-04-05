@@ -17,7 +17,7 @@ public class DropAutoCone extends SequentialCommandGroup {
         //     intake.runOnce(()->intake.open(true)),
         //     arm.setPositionCommand(Position.HOLD)
         // );
-        switch(Arm.getPosition()){
+        switch(arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
                     arm.lowerElevatorCommand(),

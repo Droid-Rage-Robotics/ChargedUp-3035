@@ -10,28 +10,28 @@ import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 public class DropTeleopCube extends SequentialCommandGroup {
     public DropTeleopCube(Arm arm, Intake intake) {
-        switch(Arm.getPosition()){
+        switch(arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
+                    // intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
                 );
                 break;
             case LOW:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
+                    // intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_LOW))
                 );
                 break;
             case MID:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
+                    // intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
                 );
                 break;
             case HIGH:
                 addCommands(
-                    intake.runOnce(()->intake.close(false)),
+                    // intake.runOnce(()->intake.close(false)),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE))
                 );
                 break;

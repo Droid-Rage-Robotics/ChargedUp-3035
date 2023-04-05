@@ -12,7 +12,7 @@ import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 public class DropAutoCube extends SequentialCommandGroup {
     public DropAutoCube(Arm arm, Intake intake) {
-        switch(Arm.getPosition()){
+        switch(arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),

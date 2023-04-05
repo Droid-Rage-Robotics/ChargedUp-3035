@@ -12,7 +12,7 @@ import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 public class DropTeleopCone extends SequentialCommandGroup {
     public DropTeleopCone(Arm arm, Intake intake) {
-        switch(Arm.getPosition()){
+        switch(arm.getPosition()){
             case AUTO_MID: // Should never be needed in Teleop
                 addCommands(
                     arm.lowerElevatorCommand(),
@@ -41,6 +41,7 @@ public class DropTeleopCone extends SequentialCommandGroup {
                 break;
             default:
                 addCommands(
+                    // intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID))
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
                     //Doesn't hurt, since the only time
                     // outtake is used in high shot
