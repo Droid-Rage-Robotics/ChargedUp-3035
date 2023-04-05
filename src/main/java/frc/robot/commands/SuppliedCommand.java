@@ -28,6 +28,7 @@ public class SuppliedCommand extends CommandBase {
     
     @Override
     public void initialize() {
+        command = commandSupplier.get();//TODO:Test
         command.initialize();
     }
 
