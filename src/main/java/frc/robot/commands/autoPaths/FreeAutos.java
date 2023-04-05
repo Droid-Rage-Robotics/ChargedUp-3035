@@ -44,7 +44,8 @@ public final class FreeAutos {
                 )
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.stop())
+                intake.runOnce(()->intake.stop()),
+                drive.driveAutoReset()
                 
         );
     }
@@ -80,7 +81,8 @@ public final class FreeAutos {
                 )
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.stop())
+                intake.runOnce(()->intake.stop()),
+                drive.driveAutoReset()
                 
         );
     }
@@ -117,7 +119,8 @@ public final class FreeAutos {
                 )
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.stop())
+                intake.runOnce(()->intake.stop()),
+                drive.driveAutoReset()
                 
         );
     }
