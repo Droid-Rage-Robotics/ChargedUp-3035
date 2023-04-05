@@ -41,7 +41,9 @@ public class DropAutoCone extends SequentialCommandGroup {
                 break;
             case HIGH:
                 addCommands(
-                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),
+                    Commands.waitSeconds(0.3),
+                    arm.setPositionCommand(Position.HOLD)
                 );
                 break;
             default:

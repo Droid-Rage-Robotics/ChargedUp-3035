@@ -2,7 +2,9 @@ package frc.robot;
 
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.arm.*;
-import frc.robot.commands.autoPaths.Autos;
+import frc.robot.commands.autoPaths.BumpAutos;
+import frc.robot.commands.autoPaths.ChargeAutos;
+import frc.robot.commands.autoPaths.FreeAutos;
 import frc.robot.commands.autoPaths.OldAutos;
 import frc.robot.commands.autoPaths.TuningAutos;
 import frc.robot.commands.drive.SwerveDriveTeleop;
@@ -88,10 +90,18 @@ public class RobotContainer {
         autoChooser.addOption("Turn Test", TuningAutos.turnTest(drive));
         autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
-        autoChooser.addOption("1+1 Bump", Autos.onePlusOneBump(drive, arm,intake));
-        autoChooser.addOption("1+1 Free", Autos.onePlusOneFree(drive, arm,intake));
-        autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
-        autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
+        autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
+        autoChooser.addOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
+
+        autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
+        autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
+        autoChooser.addOption("1+1 Free (Mid_Mid)", FreeAutos.onePlusOneFreeMid_Mid(drive, arm,intake));
+
+        autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake));
+        autoChooser.addOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
+        autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake));
+        autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake));
+
 
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
         // autoChooser.addOption("three: CUbe + drop", OldAutos.threeToCubeAndToDrop(drive, arm, intake));
