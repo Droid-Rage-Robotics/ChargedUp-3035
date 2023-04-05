@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.subsystem.drive.DriveConstants;
 
@@ -50,6 +51,10 @@ public class PathPlannerFollow {
         eventMap.put(name, toRun);
         return new PathPlannerFollow(drive, pathName, maxVelocity, acceleration, eventMap);
     }
+    // public PathPlannerFollow addMarker(String name, ParallelCommandGroup toRun) {
+    //     eventMap.put(name, toRun);
+    //     return new PathPlannerFollow(drive, pathName, maxVelocity, acceleration, eventMap);
+    // }
 
     public CommandBase build() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
@@ -67,7 +72,7 @@ public class PathPlannerFollow {
             new PIDConstants(DriveConstants.Config.THETA_KP.get(), DriveConstants.Config.THETA_KI.get(), DriveConstants.Config.THETA_KD.get()), // PID constants to correct for rotation error (used to create the rotation controller)
             drive::setFeedforwardModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
-            false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             drive // The drive subsystem. Used to properly set the requirements of path following commands
         );
         
