@@ -26,7 +26,7 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
             0.042, 
             0,
             0.0005,
-            new TrapezoidProfile.Constraints(1, 1)),
+            new TrapezoidProfile.Constraints(1.5, 1)),
         drive::getPitch,
         0,
         (output, setpoint) -> {
