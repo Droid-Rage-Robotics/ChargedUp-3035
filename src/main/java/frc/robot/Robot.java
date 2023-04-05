@@ -69,7 +69,8 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         //TODO: Add lights to have the robot tell us any errors with can, etc.
-        light.rainbow();
+        // light.rainbow();
+        light.orangeAndBlue();
     }
 
     @Override
