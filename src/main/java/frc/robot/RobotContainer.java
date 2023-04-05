@@ -1,8 +1,10 @@
 package frc.robot;
 
-import frc.robot.commands.Autos;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.arm.*;
+import frc.robot.commands.autoPaths.Autos;
+import frc.robot.commands.autoPaths.OldAutos;
+import frc.robot.commands.autoPaths.TuningAutos;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.intakeAndOuttake.ToggleIntake;
@@ -77,22 +79,23 @@ public class RobotContainer {
         this.arm = arm;
         this.light = light;
         
-        autoChooser.addOption("Forward Test", Autos.forwardTest(drive));
-        autoChooser.addOption("Backward Test", Autos.backTest(drive));
-        autoChooser.addOption("Spline Test", Autos.splineTest(drive));
-        autoChooser.addOption("LineToLinear Test", Autos.lineToLinearTest(drive));
-        autoChooser.addOption("StrafeRightTest", Autos.strafeRight(drive));
-        autoChooser.addOption("StrafeLeftTest", Autos.strafeLeft(drive));
+        autoChooser.addOption("Forward Test", TuningAutos.forwardTest(drive));
+        autoChooser.addOption("Backward Test", TuningAutos.backTest(drive));
+        autoChooser.addOption("Spline Test", TuningAutos.splineTest(drive));
+        autoChooser.addOption("LineToLinear Test", TuningAutos.lineToLinearTest(drive));
+        autoChooser.addOption("StrafeRight Test", TuningAutos.strafeRight(drive));
+        autoChooser.addOption("StrafeLeft Test", TuningAutos.strafeLeft(drive));
+        autoChooser.addOption("Turn Test", TuningAutos.turnTest(drive));
+        autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
         autoChooser.addOption("1+1 Bump", Autos.onePlusOneBump(drive, arm,intake));
         autoChooser.addOption("1+1 Free", Autos.onePlusOneFree(drive, arm,intake));
-        autoChooser.addOption("ForwardThenTurnTest", Autos.forwardThenTurnTest(drive));
-        // autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
-        // autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
-        autoChooser.addOption("Turn Test", Autos.turnTest(drive));
-        // autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
-        // autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
-        // autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
+        autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
+        autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
+
+        // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
+        // autoChooser.addOption("three: CUbe + drop", OldAutos.threeToCubeAndToDrop(drive, arm, intake));
+        // autoChooser.addOption("dropAndPickupContinnuous", OldAutos.dropAndPickupContinnuous(drive, arm, intake));
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
