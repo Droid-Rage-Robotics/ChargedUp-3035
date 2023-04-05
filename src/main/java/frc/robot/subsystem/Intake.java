@@ -32,11 +32,11 @@ public class Intake extends SubsystemBase {
         // SHOOT_CONE_MID(500),
         SHOOT_CONE_HIGH(2500),
 
-        //3000for pivot 140
+        //3000 for pivot 140
         // CONE(50),
         CONTINUOUS(50),
         INTAKE(-3000),
-        OUTTAKE(2000),//4500
+        OUTTAKE(2100),//4500
         HOLD_CONE(100),
         HOLD_CUBE(100),
         STOP(0)
@@ -177,43 +177,49 @@ public class Intake extends SubsystemBase {
 
     public void intake() {
         setTargetVelocity(switch(TrackedElement.get()) {
-            case CONE -> switch(Arm.getPosition()){
-                case LOW ->Velocity.INTAKE;
-                case MID ->Velocity.INTAKE;
-                case HIGH ->Velocity.INTAKE;
-                default -> Velocity.INTAKE;
-            };
-            case CUBE -> switch(Arm.getPosition()){
-                case LOW ->Velocity.INTAKE;
-                case MID ->Velocity.INTAKE;
-                case HIGH ->Velocity.INTAKE;
-                default -> Velocity.INTAKE;
-            };
+            case CONE -> Velocity.INTAKE;
+            // switch(Arm.getPosition()){
+            //     case LOW ->Velocity.INTAKE;
+            //     case MID ->Velocity.INTAKE;
+            //     case HIGH ->Velocity.INTAKE;
+            //     default -> Velocity.INTAKE;
+            // };
+            case CUBE -> Velocity.INTAKE;
+            // switch(Arm.getPosition()){
+            //     case LOW ->Velocity.INTAKE;
+            //     case MID ->Velocity.INTAKE;
+            //     case HIGH ->Velocity.INTAKE;
+            //     default -> Velocity.INTAKE;
+            // };
         });
     }
 
     public void outtake() {
         setTargetVelocity(switch(TrackedElement.get()) {
-            case CONE -> switch(Arm.getPosition()){
-                // case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
-                // case MID ->Velocity.SHOOT_CUBE_MID;
-                // case HIGH ->Velocity.SHOOT_CONE_HIGH;
-                default -> Velocity.OUTTAKE;
-            };
-            case CUBE -> switch(Arm.getPosition()){
-                // case LOW ->Velocity.SHOOT_CONE_LOW;
-                // case MID ->Velocity.SHOOT_CUBE_MID;
-                // case HIGH ->Velocity.OUTTAKE;
-                default -> Velocity.OUTTAKE;
-            };
+            case CONE -> Velocity.OUTTAKE;
+            // switch(Arm.getPosition()){
+            //     case LOW ->Velocity.SHOOT_CUBE_LOW;//Supposed to be like this
+            //     case MID ->Velocity.SHOOT_CUBE_MID;
+            //     case HIGH ->Velocity.SHOOT_CONE_HIGH;
+            //     default -> Velocity.OUTTAKE;
+            // };
+            case CUBE -> Velocity.OUTTAKE;
+            // switch(Arm.getPosition()){
+            //     // case LOW ->Velocity.SHOOT_CONE_LOW;
+            //     // case MID ->Velocity.SHOOT_CUBE_MID;
+            //     // case HIGH ->Velocity.OUTTAKE;
+            //     default -> Velocity.OUTTAKE;
+            // };
         });
     }
 
     public void hold() {
-        setTargetVelocity(switch(TrackedElement.get()) {
+        setTargetVelocity(
+            switch(TrackedElement.get()) {
             case CONE -> Velocity.HOLD_CONE;
             case CUBE -> Velocity.HOLD_CUBE;
-        });
+            }
+        );
     }
 
     // public void shootHighCube() { 
