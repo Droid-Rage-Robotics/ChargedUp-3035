@@ -39,8 +39,8 @@ public class LightCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        if ((intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get()>intakeTime)||elementInTimer.get()<1){
+    public void execute() {//TODO:Need to fix eventually
+        if ((intake.isElementIn() && driver.getRightTriggerAxis()>0.5 && intakeTimer.get()>intakeTime)){//||elementInTimer.get()<1){
             intakeState=IntakeState.ElEMENT_IN;
         } else if(driver.getRightTriggerAxis()>0.5){
             intakeState=IntakeState.INTAKE;
