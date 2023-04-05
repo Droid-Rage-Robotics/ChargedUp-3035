@@ -30,8 +30,9 @@ public abstract class TrackedElement {
     
 
     public static synchronized void set(Element element) {
+        
+        TrackedElement.element = element;
         elementWriter.write(element.name());
         isCubeWriter.write(isCube());
-        TrackedElement.element = element;
     }
 }
