@@ -135,7 +135,7 @@ public class Drive extends SubsystemBase {
     public Drive() {
         //TODO: Make sure IMU RESETS
         for (SwerveModule swerveModule: swerveModules) {
-            swerveModule.coastMode();
+            swerveModule.brakeMode();
         }
 
         pigeon2.configMountPose(AxisDirection.NegativeX, AxisDirection.PositiveZ);
@@ -359,7 +359,7 @@ public class Drive extends SubsystemBase {
 
     private void breakMode() {
         for (SwerveModule swerveModule: swerveModules) {
-            swerveModule.breakMode();
+            swerveModule.brakeMode();
         }
     }
 
