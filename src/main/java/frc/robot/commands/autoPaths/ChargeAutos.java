@@ -1,14 +1,18 @@
 package frc.robot.commands.autoPaths;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.SuppliedCommand;
 import frc.robot.commands.drive.AutoBalance;
+import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
 import frc.robot.commands.intakeAndOuttake.autoIntake.AutoIntakeCube;
 import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.drive.Drive;
@@ -28,12 +32,12 @@ public final class ChargeAutos {
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
-            //Command for autobalance
-            new AutoBalance(drive),
-            // Commands.waitSeconds(0.5)^,
-            // new LockWheels(drive),
-            
-            drive.setOffsetCommand(180)//Todo:Test
+                new AutoBalance(drive),
+                new LockWheels(drive),
+                drive.driveAutoReset(),
+
+                arm.setPositionCommand(Position.MID),
+                intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
         );
     }
 
@@ -47,12 +51,12 @@ public final class ChargeAutos {
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
                 .build(),
-            //Command for autobalance
-            new AutoBalance(drive),
-            // Commands.waitSeconds(0.5)^,
-            // new LockWheels(drive),
-            
-            drive.setOffsetCommand(180)//Todo:Test
+                new AutoBalance(drive),
+                new LockWheels(drive),
+                drive.driveAutoReset(),
+
+                arm.setPositionCommand(Position.MID),
+                intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
         );
     }
 
@@ -70,15 +74,22 @@ public final class ChargeAutos {
                 // .addMarker("wait", Commands.waitSeconds(1))
                 .addMarker("down", new SequentialCommandGroup(
                     intake.runOnce(()->intake.open(true)),
-                    arm.setPositionCommand(Position.INTAKE_LOW)
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
                     ))
-                .addMarker("intake", new AutoIntakeCube(arm, intake, 7))
-                .build(),
-            //Command for autobalance
+                .addMarker("intake", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                )
+            )
+            .build(),
             new AutoBalance(drive),
-            // Commands.waitSeconds(0.5)^,
-            // new LockWheels(drive),
-            drive.setOffsetCommand(180)//Todo:Test
+            new LockWheels(drive),
+            drive.driveAutoReset(),
+            
+            arm.setPositionCommand(Position.MID),
+            intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
         );
     }
 
@@ -93,15 +104,63 @@ public final class ChargeAutos {
                 // .addMarker("wait", Commands.waitSeconds(1))
                 .addMarker("down", new SequentialCommandGroup(
                     intake.runOnce(()->intake.open(true)),
-                    arm.setPositionCommand(Position.INTAKE_LOW)
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
                     ))
-                .addMarker("intake", new AutoIntakeCube(arm, intake, 7))
+                .addMarker("intake", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                ))
                 .build(),
-            //Command for autobalance
+                new AutoBalance(drive),
+                new LockWheels(drive),
+                drive.driveAutoReset(),
+
+                arm.setPositionCommand(Position.MID),
+                intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
+        );
+    }
+
+    public static CommandBase chargePlusPickUpPartsHigh(Drive drive, Arm arm, Intake intake) {
+        return Commands.sequence(
+            arm.setPositionCommand(Position.HIGH),
+            new WaitCommand(1.05),//HAS TO BE 1
+            new DropAutoCone(arm, intake),
+            PathPlannerFollow.create(drive, "Charge+PickUp One")
+                .setMaxVelocity(1.8)
+                .setAcceleration(1.8)
+                .addMarker("intake", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                )
+            )
+            .build(),
+            
+            //Try to use gyro to figure out when the bot is level to continue the path, or just go backwards to balance
+            
+            intake.runOnce(()->intake.open(true)),
+            arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+            intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE)),
+
+            PathPlannerFollow.create(drive, "Charge+PickUp Two")
+                .setMaxVelocity(1.8)
+                .setAcceleration(1.8)
+                .addMarker("intake", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                )
+            )
+            .build(),
+
             new AutoBalance(drive),
-            // Commands.waitSeconds(0.5)^,
-            // new LockWheels(drive),
-            drive.setOffsetCommand(180)//Todo:Test
+            new LockWheels(drive),
+            drive.driveAutoReset(),
+
+            arm.setPositionCommand(Position.MID),
+            intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
         );
     }
 
