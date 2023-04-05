@@ -6,6 +6,7 @@ import frc.robot.commands.arm.*;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.intakeAndOuttake.ToggleIntake;
+import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCone;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     //TODO: Ideas
@@ -82,13 +84,15 @@ public class RobotContainer {
         autoChooser.addOption("StrafeRightTest", Autos.strafeRight(drive));
         autoChooser.addOption("StrafeLeftTest", Autos.strafeLeft(drive));
 
+        autoChooser.addOption("1+1 Bump", Autos.onePlusOneBump(drive, arm,intake));
+        autoChooser.addOption("1+1 Free", Autos.onePlusOneFree(drive, arm,intake));
         autoChooser.addOption("ForwardThenTurnTest", Autos.forwardThenTurnTest(drive));
         // autoChooser.addOption("One: CUbe + drop", Autos.oneToCubeAndToDrop(drive, arm, intake));
         // autoChooser.addOption("three: CUbe + drop", Autos.threeToCubeAndToDrop(drive, arm, intake));
         autoChooser.addOption("Turn Test", Autos.turnTest(drive));
         // autoChooser.addOption("Charge", Autos.charge(drive, arm, intake));
         // autoChooser.addOption("Charge Plus Pickup", Autos.chargePlusPickUp(drive, arm, intake));
-        autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
+        // autoChooser.addOption("dropAndPickupContinnuous", Autos.dropAndPickupContinnuous(drive, arm, intake));
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
@@ -99,7 +103,7 @@ public class RobotContainer {
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
         // TrackedElement.set();
-        light.setDefaultCommand(new LightCommand(intake, light, driver));//TODO:Test
+        light.setDefaultCommand(new LightCommand(intake, light, driver));
         
          /*
          * Driver Controls
@@ -131,7 +135,7 @@ public class RobotContainer {
 
         driver.rightTrigger()
             .onTrue(intake.run(intake::intake)) 
-            .onFalse(intake.run(intake::stop));
+            .onFalse(intake.run(intake::hold));
 
         driver.leftTrigger()
         // .onTrue(intake.run(intake::outtake))
@@ -211,8 +215,15 @@ public class RobotContainer {
             .whileTrue(
                 arm.setPositionCommand(Position.HOLD)
             );
-        
+        // operator.rightTrigger()
+        //     .whileTrue(
+        //         new TeleopOuttake(arm, intake)
+        //     ).whileFalse(intake.runOnce(()->intake.stop()));
 
+        // operator.leftTrigger()
+        //     .whileTrue(
+        //         new DropTeleopCone(arm, intake)
+        //     ).whileFalse(intake.runOnce(()->intake.stop()));
         // operator.a()
         //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
 
