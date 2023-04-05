@@ -25,11 +25,6 @@ import frc.robot.utility.ShuffleboardValue;
 //Set Voltage instead of set Power
 //Set them to 90 to 100%
 public class Drive extends SubsystemBase {
-    
-    
-
-    
-
     public enum TippingState {
         NO_TIP_CORRECTION,
         ANTI_TIP,
@@ -423,5 +418,9 @@ public class Drive extends SubsystemBase {
         return new TrapezoidProfile.Constraints(
             Config.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND.get(),
             Config.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED.get());
+    }
+
+    public CommandBase driveAutoReset(){
+        return this.runOnce(()->this.setOffsetCommand(this.getRotation2d().rotateBy(Rotation2d.fromDegrees(0)).getDegrees()));
     }
 }
