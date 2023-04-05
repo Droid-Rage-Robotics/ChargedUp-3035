@@ -174,39 +174,127 @@ public final class Autos {
         );
     }
 
-    public static CommandBase dropAndPickupContinnuous(Drive drive, Arm arm, Intake intake) {
-        return Commands.sequence(
+    // public static CommandBase dropAndPickupContinnuous(Drive drive, Arm arm, Intake intake) {
+    //     return Commands.sequence(
+    //         arm.setPositionCommand(Position.HIGH),
+    //         new WaitCommand(1.05),//HAS TO BE 1
+    //         new DropAutoCone(arm, intake),
+    //         // new WaitCommand(0.5),
+    //         PathPlannerFollow.create(drive, "Drop+PickUp")
+    //             .setMaxVelocity(4)
+    //             .setAcceleration(2)
+    //             .addMarker("intake2", new ParallelCommandGroup(
+    //                 new AutoIntakeCube(arm, intake, 0))
+    //             )
+    //             .addMarker("pickUp", new SequentialCommandGroup(
+    //                 // intake.runFor(Velocity.INTAKE,  2)
+    //                 intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE)),
+    //                 new WaitCommand(0.6),
+    //                 intake.runOnce(intake::stop),
+    //                 arm.setPositionCommand(Position.AUTO_MID)
+    //                 // new WaitCommand(1),
+    //                 // arm.setPositionCommand(Position.HOLD)
+    //                 // intake.runOnce(()->intake.stop()^
+    //                 )
+    //             )
+    //             .addMarker("shoot", new SequentialCommandGroup(
+    //                 intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID)),
+    //                 // new WaitCommand(0.6),
+    //                 intake.runOnce(intake::stop),
+    //                 // intake.runOnce(()->intake.runFor(Velocity.SHOOT_AUTO_CUBE_MID, 2)), 
+    //                 // new WaitCommand(1), 
+    //                 arm.setPositionCommand(Position.HOLD))
+    //             )
+    //             .build(),
+    //             drive.setOffsetCommand(drive.getRotation2d().rotateBy(Rotation2d.fromDegrees(0)).getDegrees())
+    //     );
+    // }
+
+    public static CommandBase onePlusOneBump(Drive drive, Arm arm, Intake intake) {
+        return new SequentialCommandGroup(
             arm.setPositionCommand(Position.HIGH),
             new WaitCommand(1.05),//HAS TO BE 1
             new DropAutoCone(arm, intake),
-            // new WaitCommand(0.5),
-            PathPlannerFollow.create(drive, "Drop+PickUp")
-                .setMaxVelocity(4)
-                .setAcceleration(2)
-                .addMarker("intake2", new ParallelCommandGroup(
-                    new AutoIntakeCube(arm, intake, 0))
-                )
+            new WaitCommand(0.5),
+            arm.setPositionCommand(Position.HOLD),
+
+            PathPlannerFollow.create(drive, "1+1 Bump")
+                .setMaxVelocity(3)
+                .setAcceleration(1)
+                .addMarker("open", new SequentialCommandGroup(
+                    intake.runOnce(()->intake.open(true))
+                ))
+                .addMarker("intake", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                ))
                 .addMarker("pickUp", new SequentialCommandGroup(
-                    // intake.runFor(Velocity.INTAKE,  2)
-                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE)),
-                    new WaitCommand(0.6),
+                    new WaitCommand(0.4),
                     intake.runOnce(intake::stop),
-                    arm.setPositionCommand(Position.AUTO_MID)
-                    // new WaitCommand(1),
-                    // arm.setPositionCommand(Position.HOLD)
-                    // intake.runOnce(()->intake.stop()^
+                    arm.setPositionCommand(Position.HOLD)
                     )
                 )
                 .addMarker("shoot", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.AUTO_MID),
+                    new WaitCommand(0.8),
                     intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID)),
-                    // new WaitCommand(0.6),
+                    new WaitCommand(0.3),
                     intake.runOnce(intake::stop),
-                    // intake.runOnce(()->intake.runFor(Velocity.SHOOT_AUTO_CUBE_MID, 2)), 
-                    // new WaitCommand(1), 
-                    arm.setPositionCommand(Position.HOLD))
-                )
+                    arm.setPositionCommand(Position.INTAKE_LOW),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
+                ))
                 .build(),
-                drive.setOffsetCommand(drive.getRotation2d().rotateBy(Rotation2d.fromDegrees(0)).getDegrees())
+                new WaitCommand(1),
+                intake.runOnce(()->intake.stop())    
+        );
+    }
+
+    public static CommandBase onePlusOneFree(Drive drive, Arm arm, Intake intake) {
+        return new SequentialCommandGroup(
+            arm.setPositionCommand(Position.HIGH),
+            new WaitCommand(1.05),//HAS TO BE 1
+            new DropAutoCone(arm, intake),
+            new WaitCommand(0.5),
+            arm.setPositionCommand(Position.HOLD),
+
+            PathPlannerFollow.create(drive, "1+1 Free")
+                .setMaxVelocity(9)
+                .setAcceleration(2)
+                .addMarker("open", new SequentialCommandGroup(
+                    intake.runOnce(()->intake.open(true))
+                ))
+                .addMarker("intake", new SequentialCommandGroup(//Make the robot go forward 
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                ))
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                    )
+                )
+                .addMarker("drop", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.HIGH),
+                    new WaitCommand(1.),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE)),
+                    new WaitCommand(1),
+                    intake.runOnce(()->intake.hold()),
+                    arm.setPositionCommand(Position.HOLD)
+                    )
+                )
+                // .addMarker("shoot", new SequentialCommandGroup(
+                //     arm.setPositionCommand(Position.AUTO_MID),
+                //     new WaitCommand(0.8),
+                //     intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID)),
+                //     new WaitCommand(0.3),
+                //     intake.runOnce(intake::stop),
+                //     arm.setPositionCommand(Position.INTAKE_LOW),
+                //     intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
+                // ))
+                .build(),
+                new WaitCommand(1),
+                intake.runOnce(()->intake.stop())
+                
         );
     }
 
