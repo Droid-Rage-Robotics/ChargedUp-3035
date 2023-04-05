@@ -7,7 +7,6 @@ import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.drive.Drive;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;

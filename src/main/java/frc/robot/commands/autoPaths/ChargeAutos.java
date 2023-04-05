@@ -1,16 +1,13 @@
 package frc.robot.commands.autoPaths;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.SuppliedCommand;
 import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
-import frc.robot.commands.intakeAndOuttake.autoIntake.AutoIntakeCube;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;

@@ -5,12 +5,10 @@ import frc.robot.commands.arm.*;
 import frc.robot.commands.autoPaths.BumpAutos;
 import frc.robot.commands.autoPaths.ChargeAutos;
 import frc.robot.commands.autoPaths.FreeAutos;
-import frc.robot.commands.autoPaths.OldAutos;
 import frc.robot.commands.autoPaths.TuningAutos;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.intakeAndOuttake.ToggleIntake;
-import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCone;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
@@ -24,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     //TODO: Ideas

@@ -3,9 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.intakeAndOuttake;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.SuppliedCommand;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.arm.Arm;
 public class ToggleIntake extends SequentialCommandGroup {

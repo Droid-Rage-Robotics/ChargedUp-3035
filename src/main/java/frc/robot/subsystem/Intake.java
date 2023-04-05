@@ -14,7 +14,6 @@ import frc.robot.commands.DisabledCommand;
 import frc.robot.commands.LightCommand;
 import frc.robot.commands.LightCommand.IntakeState;
 import frc.robot.subsystem.TrackedElement.Element;
-import frc.robot.subsystem.arm.Arm;
 import frc.robot.utility.ComplexWidgetBuilder;
 import frc.robot.utility.SafeTalonFX;
 import frc.robot.utility.ShuffleboardValue;
