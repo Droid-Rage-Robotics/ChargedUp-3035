@@ -32,7 +32,7 @@ public class Light extends SubsystemBase {//TODO:Fix
         yellow = Color.kYellow;
         // yellow = new Color(255, 255, 0);
         purple = Color.kPurple;
-        orange = Color.kOrange;
+        orange = Color.kOrangeRed;
         blue = Color.kBlue;
         // timer.start();
         // this.intake = intake;
