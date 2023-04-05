@@ -229,6 +229,16 @@ public class RobotContainer {
             .whileTrue(
                 arm.setPositionCommand(Position.HOLD)
             );
+
+
+        operator.rightTrigger()
+            .onTrue(intake.run(intake::intake)) 
+            .onFalse(intake.run(intake::hold));
+        operator.leftTrigger()
+            .onTrue(intake.run(intake::outtake))
+            .onFalse(intake.run(intake::stop));
+
+
         // operator.rightTrigger()
         //     .whileTrue(
         //         new TeleopOuttake(arm, intake)
