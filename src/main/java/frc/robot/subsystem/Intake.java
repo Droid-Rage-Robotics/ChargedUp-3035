@@ -117,7 +117,7 @@ public class Intake extends SubsystemBase {
     }
   
     public void close(boolean changeElement) {
-        intakeSolenoid.set(Value.kForward);//TODO:change
+        intakeSolenoid.set(Value.kReverse);
         isOpen.set(false);
         if (changeElement){
             TrackedElement.set(Element.CONE);
@@ -125,7 +125,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void open(boolean changeElement) {
-        intakeSolenoid.set(Value.kReverse);//TODO:change
+        intakeSolenoid.set(Value.kForward);
         isOpen.set(true);
         if (changeElement){
             TrackedElement.set(Element.CUBE);
