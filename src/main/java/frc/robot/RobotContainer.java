@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.LightCommand;
+import frc.robot.commands.SuppliedCommand;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.autoPaths.BumpAutos;
 import frc.robot.commands.autoPaths.ChargeAutos;
@@ -9,7 +10,10 @@ import frc.robot.commands.autoPaths.TuningAutos;
 import frc.robot.commands.drive.SwerveDriveTeleop;
 import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
 import frc.robot.commands.intakeAndOuttake.ToggleIntake;
+import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCone;
+import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCube;
 import frc.robot.subsystem.*;
+import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
@@ -145,14 +149,22 @@ public class RobotContainer {
         //     .onFalse(intake.run(()->intake.setManualOutput(0)));
 
         driver.rightTrigger()
-            .onTrue(intake.run(intake::intake)) 
-            .onFalse(intake.run(intake::hold));
+            .onTrue(intake.run(intake::intake))
+            // .onFalse(intake.run(intake::stop)); 
+            .onFalse(SuppliedCommand.create(
+                () -> switch(TrackedElement.get()) {
+                    case CONE -> intake.run(intake::stop);
+                    case CUBE -> intake.run(intake::hold);
+                }
+            ));
+            // .onFalse(if(TrackedElement.get()==Element.CUBE)(intake.run(intake::hold)));
 
         driver.leftTrigger()
         // .onTrue(intake.run(intake::outtake))
         // .onTrue(intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)))
-            .onTrue(new TeleopOuttake(arm, intake))//TODO:Test!
+            // .onTrue(intake.run(intake::outtake))//TODO:Test!
             // .onTrue(intake.run(intake::outtake))
+            .onTrue(new DropTeleopCube(arm, intake))
             .onFalse(intake.run(intake::stop));
 
         driver.a()
@@ -229,11 +241,11 @@ public class RobotContainer {
 
 
         operator.rightTrigger()
-            .onTrue(intake.run(intake::intake)) 
-            .onFalse(intake.run(intake::hold));
-        operator.leftTrigger()
-            .onTrue(intake.run(intake::outtake))
+            .onTrue(new DropTeleopCone(arm, intake)) 
             .onFalse(intake.run(intake::stop));
+        // operator.leftTrigger()
+        //     .onTrue(new DropTeleopCube(arm, intake))
+        //     .onFalse(intake.run(intake::stop));
 
 
         // operator.rightTrigger()
