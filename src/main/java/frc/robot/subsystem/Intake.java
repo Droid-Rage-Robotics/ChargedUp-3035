@@ -36,8 +36,8 @@ public class Intake extends SubsystemBase {
         CONTINUOUS(50),
         INTAKE(-3000),
         OUTTAKE(2100),//4500
-        HOLD_CONE(100),
-        HOLD_CUBE(100),
+        HOLD_CONE(1000),
+        HOLD_CUBE(1000),
         STOP(0)
         ;
 
