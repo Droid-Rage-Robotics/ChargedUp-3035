@@ -55,7 +55,7 @@ public class Arm {
     public enum Value {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0,0),
 
-        INTAKE_LOW_CONE(0,0, 208),//215 or 219 (shoot COnes)
+        INTAKE_LOW_CONE(0,0, 214),//215 or 219 (shoot COnes)
         INTAKE_LOW_CUBE(0,0, 210),
 
         AUTO_INTAKE_LOW_CONE(0,13, INTAKE_LOW_CONE.getPivotDegrees()),//215 or 219 (shoot COnes)
@@ -76,8 +76,8 @@ public class Arm {
         HIGH_CONE(16.2,12.5, 145.5),
         HIGH_CUBE(15.1,12.65, 131),
 
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14.9,0, 110),
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(14.9,0, 120),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(13,0, 175),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13,0, 175),
 
         INTAKE_HIGH_SINGLE_SUBSTATION_CONE(13.5,0, 110),
         INTAKE_HIGH_SINGLE_SUBSTATION_CUBE(13.5,0,115),
@@ -167,36 +167,36 @@ public class Arm {
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case AUTO_HOLD -> //Commands.sequence(
-                        new ParallelCommandGroup(//TODO:ONly mve pivot fgor the cube not cone
-                            verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                            horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                            // Commands.waitSeconds(1.4),
-                            pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                    new ParallelCommandGroup(//TODO:ONly mve pivot fgor the cube not cone
+                        verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        // Commands.waitSeconds(1.4),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
 
                 case INTAKE_HIGH_DOUBLE_SUBSTATION -> //Commands.sequence(
                     new ParallelCommandGroup(
-                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                        verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case INTAKE_HIGH_SINGLE_SUBSTATION -> //Commands.sequence(
                     new ParallelCommandGroup(
-                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                        verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case INTAKE_LOW -> //Commands.sequence(
                     new ParallelCommandGroup(
-                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                        verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case START -> //Commands.sequence(
                     new ParallelCommandGroup(
-                    verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                    horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                    pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                        verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case AUTO_INTAKE_LOW -> //Commands.sequence(
                         new ParallelCommandGroup(
@@ -205,6 +205,12 @@ public class Arm {
                             // Commands.waitSeconds(1.4),
                             pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                         );
+                // case HIGH -> //Commands.sequence(
+                //             new ParallelCommandGroup(
+                //                 verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                //                 horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                //                 pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                // );
                 
                 default -> //Commands.sequence(
                     // Commands.run(() -> { // todo fix this please
