@@ -55,7 +55,7 @@ public class DriveConstants {
 
     public enum Speed {
         TURBO(1, 1),
-        NORMAL(2.5, 1),
+        NORMAL(3.5, 1),
         SLOW(0.2, 0.2),
         SUPER_SLOW(0.05, 0.05),
         ;
