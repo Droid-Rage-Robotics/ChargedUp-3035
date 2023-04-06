@@ -6,16 +6,14 @@ import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCube;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.TrackedElement;
 import frc.robot.subsystem.arm.Arm;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class TeleopOuttake extends SuppliedCommand {
     public TeleopOuttake(Arm arm, Intake intake) {
-        super(()->SuppliedCommand.create(
+        super(
                 () -> switch(TrackedElement.get()) {
                     case CONE -> new DropTeleopCone(arm, intake);
                     case CUBE -> new DropTeleopCube(arm, intake);
                 }
-            )
             // Commands.runOnce(
             //     () -> switch(TrackedElement.get()) {
             //         case CONE -> new DropTeleopCone(arm, intake);
