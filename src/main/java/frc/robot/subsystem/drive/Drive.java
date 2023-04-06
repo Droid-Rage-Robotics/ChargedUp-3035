@@ -117,7 +117,7 @@ public class Drive extends SubsystemBase {
     private final ShuffleboardValue<Double> backRightTurnPositionWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Right/Turn Position (Radians)", Drive.class.getSimpleName()).build();
     private final ShuffleboardValue<Double> backRightDriveDistanceWriter = ShuffleboardValue.create(0.0, "Swerve Modules/Back Right/Drive Position (Radians)", Drive.class.getSimpleName()).build();
 
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Drive Enabled", Drive.class.getSimpleName())
+    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(false, "Is Drive Enabled", Drive.class.getSimpleName())
         .withWidget(BuiltInWidgets.kToggleSwitch)
         .build();
 
