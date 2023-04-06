@@ -64,11 +64,11 @@ public class Arm {
         LOW_CONE(0, 0, 200),
         LOW_CUBE(0,0, 145),
 
-        MID_CONE(13.2,11.3,LOW_CONE.getPivotDegrees()), // LOWCONE.pivotAngle.get() 
+        MID_CONE(13.2,11.3,170), // LOWCONE.pivotAngle.get() 
         MID_CUBE(0,0, 125),
         // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE! - Old Mid Cube
 
-        AUTO_MID_CONE(15.2, 11.5, LOW_CONE.getPivotDegrees()),
+        AUTO_MID_CONE(15.2, 11.5, 150),
         AUTO_MID_CUBE(13,1, 135),
         // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
@@ -166,7 +166,7 @@ public class Arm {
                         // Commands.waitSeconds(1.4),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
-                case AUTO_HOLD -> //Commands.sequence(
+                case AUTO_HOLD, HOLD -> //Commands.sequence(
                     new ParallelCommandGroup(//TODO:ONly mve pivot fgor the cube not cone
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                         horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
@@ -228,8 +228,8 @@ public class Arm {
                     new ParallelCommandGroup(
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                         horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees()))),
-                        intake.runOnce(()->intake.close(false))//TODO: FIXXXXXX
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                        // intake.runOnce(()->intake.close(false))//TODO: FIXXXXXX
                     );
             }
         ));
