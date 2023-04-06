@@ -42,8 +42,13 @@ public final class FreeAutos {
                     arm.setPositionCommand(Position.AUTO_HOLD)
                     )
                 )
+                .addMarker("intake2", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.INTAKE_LOW),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
+                    )
+                )
                 .build(),
-                new WaitCommand(1),
+                new WaitCommand(1.4),
                 intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()
                 
@@ -77,6 +82,11 @@ public final class FreeAutos {
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE)),
                     new WaitCommand(1),
                     arm.setPositionCommand(Position.AUTO_HOLD)
+                    )
+                )
+                .addMarker("intake2", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.INTAKE_LOW),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
                     )
                 )
                 .build(),
@@ -115,6 +125,11 @@ public final class FreeAutos {
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE)),
                     new WaitCommand(1),
                     arm.setPositionCommand(Position.AUTO_HOLD)
+                    )
+                )
+                .addMarker("intake2", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.INTAKE_LOW),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
                     )
                 )
                 .build(),
