@@ -23,21 +23,21 @@ import frc.robot.utility.SafeMotor.IdleMode;
 public class Intake extends SubsystemBase {
     public enum Velocity implements ShuffleboardValueEnum<Double> {
         SHOOT_CUBE_LOW(15000),
-        SHOOT_CUBE_MID(3200),
+        SHOOT_CUBE_MID(5500),
         SHOOT_AUTO_CUBE_MID(22000),
-        // SHOOT_CUBE_HIGH(500),
+        SHOOT_CUBE_HIGH(5500),
 
         SHOOT_CONE_LOW(SHOOT_CUBE_LOW.get()),
         // SHOOT_CONE_MID(500),
-        SHOOT_CONE_HIGH(2500),
+        SHOOT_CONE_HIGH(3000),
 
         //3000 for pivot 140
         // CONE(50),
         CONTINUOUS(50),
         INTAKE(-3000),
-        OUTTAKE(2100),//4500
-        HOLD_CONE(1000),
-        HOLD_CUBE(1000),
+        OUTTAKE(2300),//4500
+        HOLD_CONE(-300),
+        HOLD_CUBE(-300),
         STOP(0)
         ;
 
