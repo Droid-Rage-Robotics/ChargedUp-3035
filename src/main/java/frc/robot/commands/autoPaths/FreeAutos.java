@@ -140,5 +140,47 @@ public final class FreeAutos {
         );
     }
 
+    public static CommandBase onePlusOneFreeMid_High(Drive drive, Arm arm, Intake intake) {
+        return new SequentialCommandGroup(
+            arm.setPositionCommand(Position.AUTO_MID),
+            new DropAutoCone(arm, intake),
+
+            PathPlannerFollow.create(drive, "1+1 Free")
+                .setMaxVelocity(9)
+                .setAcceleration(2)
+                .addMarker("open", new SequentialCommandGroup(
+                    intake.runOnce(()->intake.open(true))
+                ))
+                .addMarker("intake", new SequentialCommandGroup(//Make the robot go forward 
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                ))
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    arm.setPositionCommand(Position.AUTO_HOLD),
+                    intake.runOnce(intake::hold)
+                    )
+                )
+                .addMarker("drop", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.AUTO_HIGH),
+                    new WaitCommand(1.),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE)),
+                    new WaitCommand(1),
+                    arm.setPositionCommand(Position.AUTO_HOLD)
+                    )
+                )
+                .addMarker("intake2", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.INTAKE_LOW),
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
+                    )
+                )
+                .build(),
+                new WaitCommand(1),
+                intake.runOnce(()->intake.hold()),
+                drive.driveAutoReset()
+                
+        );
+    }
+
     private FreeAutos() {}
 }

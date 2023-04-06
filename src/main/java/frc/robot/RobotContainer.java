@@ -102,12 +102,13 @@ public class RobotContainer {
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
         autoChooser.addOption("1+1 Free (Mid_Mid)", FreeAutos.onePlusOneFreeMid_Mid(drive, arm,intake));
+        autoChooser.addOption("1+1 Free (Mid_High)", FreeAutos.onePlusOneFreeMid_High(drive, arm,intake));
 
         autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake));
         autoChooser.addOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake));
-        autoChooser.addOption("Charge Plus Pickup Parts (High)", ChargeAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//ISSUE!!!!
+        // autoChooser.addOption("Charge Plus Pickup Parts (High)", ChargeAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
 
 
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
