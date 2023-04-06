@@ -33,11 +33,11 @@ public class Intake extends SubsystemBase {
 
         //3000 for pivot 140
         // CONE(50),
-        CONTINUOUS(50),
+        CONTINUOUS(-400),
         INTAKE(-3000),
         OUTTAKE(2300),//4500
-        HOLD_CONE(-300),
-        HOLD_CUBE(-300),
+        HOLD_CONE(-400),
+        HOLD_CUBE(-3400),
         STOP(0)
         ;
 
