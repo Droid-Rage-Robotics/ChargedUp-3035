@@ -1,9 +1,6 @@
 package frc.robot.commands.autoPaths;
 
 import frc.robot.commands.drive.PathPlannerFollow;
-import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
-import frc.robot.subsystem.Intake;
-import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.drive.Drive;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,24 +13,24 @@ public final class TuningAutos {
             .setAcceleration(1)
             .build();
     }
-    public static CommandBase testShoot(Drive drive, Arm arm, Intake intake) {//Top Red/Bottom Blue
-        return new SequentialCommandGroup(
-            new DropAutoCone(arm, intake),//Shoot Cube High
-            PathPlannerFollow.create(drive, "TestShoot")
-                .setMaxVelocity(1)
-                .setAcceleration(1)
-                .addMarker("intake", 
-                    new SequentialCommandGroup(
-                        // new MoveIntakeLow(elevator, pivot),
-                        // new IntakeCube(pivot, intake, 4) //TODO:Test Wait Time
-                    ))
-                    .addMarker("pickUp", 
-                        new SequentialCommandGroup(
-                        // new MoveHigh(elevator, pivot)//SHoot Cube Mid or something
-                    ))
-                .build()
-        );
-    }
+    // public static CommandBase testShoot(Drive drive, Arm arm, Intake intake) {//Top Red/Bottom Blue
+    //     return new SequentialCommandGroup(
+    //         new DropAutoCone(arm, intake),//Shoot Cube High
+    //         PathPlannerFollow.create(drive, "TestShoot")
+    //             .setMaxVelocity(1)
+    //             .setAcceleration(1)
+    //             .addMarker("intake", 
+    //                 new SequentialCommandGroup(
+    //                     // new MoveIntakeLow(elevator, pivot),
+    //                     // new IntakeCube(pivot, intake, 4) //TODO:Test Wait Time
+    //                 ))
+    //                 .addMarker("pickUp", 
+    //                     new SequentialCommandGroup(
+    //                     // new MoveHigh(elevator, pivot)//SHoot Cube Mid or something
+    //                 ))
+    //             .build()
+    //     );
+    // }
 
 
                 

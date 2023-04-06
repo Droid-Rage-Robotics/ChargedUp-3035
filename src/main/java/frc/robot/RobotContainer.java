@@ -98,7 +98,7 @@ public class RobotContainer {
         autoChooser.addOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake));
-        autoChooser.addOption("Charge Plus Pickup Parts (High)", ChargeAutos.chargePlusPickUpPartsHigh(drive, arm, intake));
+        autoChooser.addOption("Charge Plus Pickup Parts (High)", ChargeAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//ISSUE!!!!
 
 
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));

@@ -65,7 +65,7 @@ public final class ChargeAutos {
                 new DropAutoCone(arm, intake),
                 Commands.waitSeconds(0.1)
                 ),
-            PathPlannerFollow.create(drive, "Charge+PickUp")
+            PathPlannerFollow.create(drive, "Charge + PickupNormal")
                 .setMaxVelocity(1.8)//Change to 1.8
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
@@ -95,7 +95,7 @@ public final class ChargeAutos {
             arm.setPositionCommand(Position.HIGH),
             new WaitCommand(1.05),//HAS TO BE 1
             new DropAutoCone(arm, intake),
-            PathPlannerFollow.create(drive, "Charge+PickUp")
+            PathPlannerFollow.create(drive, "Charge + PickupNormal")
                 .setMaxVelocity(1.8)//Change to 1.8
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
@@ -124,7 +124,7 @@ public final class ChargeAutos {
             arm.setPositionCommand(Position.HIGH),
             new WaitCommand(1.05),//HAS TO BE 1
             new DropAutoCone(arm, intake),
-            PathPlannerFollow.create(drive, "Charge+PickUp One")
+            PathPlannerFollow.create(drive, "Charge + Pickup One")
                 .setMaxVelocity(1.8)
                 .setAcceleration(1.8)
                 .addMarker("intake", new SequentialCommandGroup(
@@ -141,7 +141,7 @@ public final class ChargeAutos {
             arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
             intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE)),
 
-            PathPlannerFollow.create(drive, "Charge+PickUp Two")
+            PathPlannerFollow.create(drive, "Charge + Pickup Two")
                 .setMaxVelocity(1.8)
                 .setAcceleration(1.8)
                 .addMarker("intake", new SequentialCommandGroup(
