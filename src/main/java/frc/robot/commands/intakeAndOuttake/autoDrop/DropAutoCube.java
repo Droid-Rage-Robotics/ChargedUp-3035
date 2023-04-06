@@ -6,47 +6,39 @@ package frc.robot.commands.intakeAndOuttake.autoDrop;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.SuppliedCommand;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
-public class DropAutoCube extends SequentialCommandGroup {
+public class DropAutoCube extends SuppliedCommand {
     public DropAutoCube(Arm arm, Intake intake) {
-        switch(arm.getPosition()){
-            case AUTO_MID: // Should never be needed in Teleop
-                addCommands(
+        super(()->switch(arm.getPosition()){
+            case AUTO_MID-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),
                     new WaitCommand(0.2),
                     arm.setPositionCommand(Position.HOLD),
                     intake.runOnce(()->intake.stop())
                 );
-                break;
-            case LOW:
-                addCommands(
+            case LOW-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_LOW)),
                     new WaitCommand(0.2),
                     arm.setPositionCommand(Position.HOLD),
                     intake.runOnce(()->intake.stop())
                 );
-                break;
-            case MID:
-                addCommands(
+            case MID-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE)),
                     new WaitCommand(0.2),
                     arm.setPositionCommand(Position.HOLD),
                     intake.runOnce(()->intake.stop())
                 );
-                break;
-            case HIGH:
-                addCommands(
+            case HIGH-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.OUTTAKE)),
                     new WaitCommand(0.2),
                     arm.setPositionCommand(Position.HOLD),
                     intake.runOnce(()->intake.stop())
                 );
-                break;
-            default:
-                addCommands(
+            default-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),
                     new WaitCommand(0.2),
                     arm.setPositionCommand(Position.HOLD),
@@ -54,7 +46,6 @@ public class DropAutoCube extends SequentialCommandGroup {
                     //Doesn't hurt, since the only time
                     // outtake is used in high shot
                 );
-                break;
-        }
+        });
     }
 }

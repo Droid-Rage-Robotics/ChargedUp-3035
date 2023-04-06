@@ -2,57 +2,41 @@ package frc.robot.commands.intakeAndOuttake.autoDrop;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.SuppliedCommand;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 
-public class DropAutoCone extends SequentialCommandGroup {
+public class DropAutoCone extends SuppliedCommand {
     public DropAutoCone(Arm arm, Intake intake) {//TODO: MAKE IT DIFFERENT FOR SHOOT
-        // addCommands(
-        //     intake.runOnce(()->intake.close(false)),
-        //     // arm.lowerElevatorCommand(),
-        //     intake.runFor(Velocity.SHOOT_CONE_HIGH, 1),
-        //     Commands.waitSeconds(0.5),
-        //     intake.runOnce(()->intake.open(true)),
-        //     arm.setPositionCommand(Position.HOLD)
-        // );
+        super(()->
         switch(arm.getPosition()){
-            case AUTO_MID: // Should never be needed in Teleop
-                addCommands(
+            case AUTO_MID-> new SequentialCommandGroup(
                     arm.lowerElevatorCommand(),
                     Commands.waitSeconds(0.2),
                     intake.runOnce(()->intake.open(true)),
                     arm.setPositionCommand(Position.HOLD)
                 );
-                break;
-            case LOW:
-                addCommands(
+            case LOW-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_LOW))
                 );
-                break;
-            case MID:
-                addCommands(
+            case MID-> new SequentialCommandGroup(
                     arm.lowerElevatorCommand(),
                     Commands.waitSeconds(0.2),
                     intake.runOnce(()->intake.open(true)),
                     arm.setPositionCommand(Position.HOLD)
                 );
-                break;
-            case HIGH:
-                addCommands(
+            case HIGH-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),
                     Commands.waitSeconds(0.3),
                     arm.setPositionCommand(Position.HOLD)
                 );
-                break;
-            default:
-                addCommands(
+            default-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
                     // Doesn't hurt, since the only time
                     // outtake is used in high shot
                 );
-                break;
-    }
+    });
 }
 }
