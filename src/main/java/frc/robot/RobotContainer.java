@@ -44,6 +44,9 @@ public class RobotContainer {
 
 
 
+    //Disable chris's outtake on cone - Important
+    //move enabled to one spot
+    
     // MAKE ALL OFTHE IS ENABLED IN ONE LOCATION
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
