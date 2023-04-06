@@ -8,10 +8,9 @@ import frc.robot.subsystem.TrackedElement;
 import frc.robot.subsystem.arm.Arm;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class TeleopOuttake extends SequentialCommandGroup {
+public class TeleopOuttake extends SuppliedCommand {
     public TeleopOuttake(Arm arm, Intake intake) {
-    	addCommands(
-            SuppliedCommand.create(
+        super(()->SuppliedCommand.create(
                 () -> switch(TrackedElement.get()) {
                     case CONE -> new DropTeleopCone(arm, intake);
                     case CUBE -> new DropTeleopCube(arm, intake);
@@ -22,7 +21,7 @@ public class TeleopOuttake extends SequentialCommandGroup {
             //         case CONE -> new DropTeleopCone(arm, intake);
             //         case CUBE -> new DropTeleopCube(arm, intake);
             //     })
-            );
+        );
 
         // switch(TrackedElement.get()){
         //     case CONE: addCommands(new DropTeleopCone(arm, intake));
