@@ -12,7 +12,7 @@ public class SuppliedCommand extends CommandBase {
     private final Supplier<Command> commandSupplier;
     private Command command = Commands.none();
 
-    private SuppliedCommand(Supplier<Command> commandSupplier) {
+    protected SuppliedCommand(Supplier<Command> commandSupplier) {
         this.commandSupplier = commandSupplier;
     }
 
