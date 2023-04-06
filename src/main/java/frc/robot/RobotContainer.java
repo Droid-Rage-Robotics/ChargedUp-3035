@@ -180,15 +180,16 @@ public class RobotContainer {
                 // new MoveToPosition(elevator, pivot, intake)
                 // Commands.sequence(
                     // intake.toggleCommand()
-                    new ToggleIntake(arm, intake)
+                    intake.runOnce(()->intake.open(true))
+                    // new ToggleIntake(arm, intake)
                     
                 // )
             ); 
-        driver.y()
-            .onTrue(drive.toggleBreakMode());
+        // driver.y()
+        //     .onTrue(drive.toggleBreakMode());
 
-        // driver.x()
-        //     .onTrue(new ToggleElement());
+        driver.x()
+            .onTrue(intake.runOnce(()->intake.close(true)));
 
         driver.povUp()  //Have the robot reset in any 90 degree angle - TODO:Test!
             .onTrue(drive.setOffsetCommand(0));
