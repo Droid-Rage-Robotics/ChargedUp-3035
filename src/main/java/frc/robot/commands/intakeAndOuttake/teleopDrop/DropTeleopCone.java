@@ -5,7 +5,6 @@
 package frc.robot.commands.intakeAndOuttake.teleopDrop;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.SuppliedCommand;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Intake.Velocity;
