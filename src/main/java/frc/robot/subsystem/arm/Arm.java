@@ -55,7 +55,7 @@ public class Arm {
     public enum Value {//16-17 is MAXXXXXX for vert ; 11 is for horiz
         START(0,0,0),
 
-        INTAKE_LOW_CONE(0,0, 214),//215 or 219 (shoot COnes)
+        INTAKE_LOW_CONE(0,0, 209),//215 or 219 (shoot COnes)
         INTAKE_LOW_CUBE(0,0, 210),
 
         AUTO_INTAKE_LOW_CONE(0,13, INTAKE_LOW_CONE.getPivotDegrees()),//215 or 219 (shoot COnes)
@@ -73,10 +73,10 @@ public class Arm {
         // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGH_CONE(16.2,12.5, 145.5),
+        HIGH_CONE(15.4,12.5, 145.5),
         HIGH_CUBE(15.1,12.65, 131),
 
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(13,0, 175),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14,0, INTAKE_LOW_CONE.getPivotDegrees()),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13,0, 175),
 
         INTAKE_HIGH_SINGLE_SUBSTATION_CONE(13.5,0, 110),
