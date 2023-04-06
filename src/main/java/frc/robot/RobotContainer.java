@@ -46,6 +46,8 @@ public class RobotContainer {
 
     //Disable chris's outtake on cone - Important
     //move enabled to one spot
+    //Add a velocity offset intake 
+    //Make the arm position switch simpler
     
     // MAKE ALL OFTHE IS ENABLED IN ONE LOCATION
     private final CommandXboxController driver =
@@ -162,13 +164,13 @@ public class RobotContainer {
             ));
             // .onFalse(if(TrackedElement.get()==Element.CUBE)(intake.run(intake::hold)));
 
-        driver.leftTrigger()
-        // .onTrue(intake.run(intake::outtake))
-        // .onTrue(intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)))
-            // .onTrue(intake.run(intake::outtake))//TODO:Test!
-            // .onTrue(intake.run(intake::outtake))
-            .onTrue(new DropTeleopCube(arm, intake))
-            .onFalse(intake.run(intake::stop));
+        // driver.leftTrigger()
+        // // .onTrue(intake.run(intake::outtake))
+        // // .onTrue(intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)))
+        //     // .onTrue(intake.run(intake::outtake))//TODO:Test!
+        //     // .onTrue(intake.run(intake::outtake))
+        //     .onTrue(new DropTeleopCube(arm, intake))
+        //     .onFalse(intake.run(intake::stop));
 
         driver.a()
             .onTrue(drive.resetOffsetCommand());
@@ -246,9 +248,9 @@ public class RobotContainer {
         operator.rightTrigger()
             .onTrue(new DropTeleopCone(arm, intake)) 
             .onFalse(intake.run(intake::stop));
-        // operator.leftTrigger()
-        //     .onTrue(new DropTeleopCube(arm, intake))
-        //     .onFalse(intake.run(intake::stop));
+        operator.leftTrigger()
+            .onTrue(new DropTeleopCube(arm, intake))
+            .onFalse(intake.run(intake::stop));
 
 
         // operator.rightTrigger()
