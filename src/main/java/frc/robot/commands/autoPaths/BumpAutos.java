@@ -52,13 +52,16 @@ public final class BumpAutos {
     public static CommandBase onePlusOneBumpMid_Mid(Drive drive, Arm arm, Intake intake) {
         return new SequentialCommandGroup(
             arm.setPositionCommand(Position.AUTO_MID),
+            new WaitCommand(0.8),
             new DropAutoCone(arm, intake),
 
             PathPlannerFollow.create(drive, "1+1 Bump")
                 .setMaxVelocity(3)
                 .setAcceleration(1)
                 .addMarker("open", new SequentialCommandGroup(
-                    intake.runOnce(()->intake.open(true))
+                    intake.runOnce(()->intake.open(true)),
+                    new WaitCommand(0.5),
+                    arm.setPositionCommand(Position.HOLD)
                 ))
                 .addMarker("intake", new SequentialCommandGroup(
                     arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
