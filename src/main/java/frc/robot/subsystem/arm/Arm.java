@@ -75,7 +75,7 @@ public class Arm {
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
         HIGH_CONE(16,12.5, 145.5),
-        HIGH_CUBE(15.1,12.65, 150),
+        HIGH_CUBE(15.1,12.65, 153),
 
         AUTO_MID_CONE(14.6, 11.5, 175),
         AUTO_MID_CUBE(13,10, 170),
