@@ -68,7 +68,7 @@ public class Arm {
 
         MID_CONE(13.2,11.3,170), // LOWCONE.pivotAngle.get() 
         // MID_CUBE(0,0, 125), - shoot mid place
-        MID_CUBE(13.4,10.4, 145),
+        MID_CUBE(13.4,10.4, 165),
 
         
         // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
@@ -77,19 +77,19 @@ public class Arm {
         HIGH_CONE(15.4,12.5, 145.5),
         HIGH_CUBE(15.1,12.65, 150),
 
-        AUTO_MID_CONE(15.2, 11.5, 150),
+        AUTO_MID_CONE(14.7, 11.5, 170),
         AUTO_MID_CUBE(13,1, 135),
 
         AUTO_HIGH_CONE(HIGH_CONE),
         AUTO_HIGH_CUBE(HIGH_CUBE),
 
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14,0, INTAKE_LOW_CONE.getPivotDegrees()),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14,0, 164),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13,0, 175),
 
         INTAKE_HIGH_SINGLE_SUBSTATION_CONE(13.5,0, 110),
-        INTAKE_HIGH_SINGLE_SUBSTATION_CUBE(13.5,0,115),
+        INTAKE_HIGH_SINGLE_SUBSTATION_CUBE(13.5,0,113),
 
-        HOLD(0,0, 50),
+        HOLD(0,0, 60),
         AUTO_HOLD(HOLD.getVertical(),HOLD.getHorizontal(), HOLD.getPivotDegrees()),
         
         ;
@@ -220,6 +220,6 @@ public class Arm {
     }
 
     public CommandBase lowerElevatorCommand() {
-        return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 7));
+        return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 8));
     }
 }
