@@ -31,7 +31,7 @@ public final class FreeAutos {
                 .addMarker("pickUp", new SequentialCommandGroup(
                     new WaitCommand(1),
                     arm.setPositionCommand(Position.AUTO_HOLD),
-                    intake.runOnce(intake::hold)
+                    intake.runOnce(intake::stop)
                     )
                 )
                 .addMarker("drop", new SequentialCommandGroup(
@@ -73,7 +73,7 @@ public final class FreeAutos {
                 .addMarker("pickUp", new SequentialCommandGroup(
                     new WaitCommand(1),
                     arm.setPositionCommand(Position.AUTO_HOLD),
-                    intake.runOnce(intake::hold)
+                    intake.runOnce(intake::stop)
                     )
                 )
                 .addMarker("drop", new SequentialCommandGroup(
@@ -91,7 +91,7 @@ public final class FreeAutos {
                 )
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.hold()),
+                intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()
                 
         );
@@ -134,7 +134,7 @@ public final class FreeAutos {
                 )
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.hold()),
+                intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()
                 
         );
@@ -158,7 +158,7 @@ public final class FreeAutos {
                 .addMarker("pickUp", new SequentialCommandGroup(
                     new WaitCommand(1),
                     arm.setPositionCommand(Position.AUTO_HOLD),
-                    intake.runOnce(intake::hold)
+                    intake.runOnce(intake::stop)
                     )
                 )
                 .addMarker("drop", new SequentialCommandGroup(

@@ -30,7 +30,7 @@ public final class BumpAutos {
                 ))
                 .addMarker("pickUp", new SequentialCommandGroup(
                     new WaitCommand(0.4),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.AUTO_HOLD)
                 ))
                 .addMarker("shoot", new SequentialCommandGroup(
@@ -38,13 +38,13 @@ public final class BumpAutos {
                     new WaitCommand(0.8),
                     intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID)),
                     new WaitCommand(0.3),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.INTAKE_LOW),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
                 ))
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.hold()),
+                intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()
         );
     }
@@ -66,7 +66,7 @@ public final class BumpAutos {
                 ))
                 .addMarker("pickUp", new SequentialCommandGroup(
                     new WaitCommand(0.4),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.AUTO_HOLD)
                 ))
                 .addMarker("shoot", new SequentialCommandGroup(
@@ -74,13 +74,13 @@ public final class BumpAutos {
                     new WaitCommand(0.8),
                     intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID)),
                     new WaitCommand(0.3),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.INTAKE_LOW),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
                 ))
                 .build(),
                 new WaitCommand(1),
-                intake.runOnce(()->intake.hold()),
+                intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()
         );
     }

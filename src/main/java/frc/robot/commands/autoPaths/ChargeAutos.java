@@ -27,7 +27,16 @@ public final class ChargeAutos {
             PathPlannerFollow.create(drive, "Just Charge")
                 .setMaxVelocity(1.8)
                 .setAcceleration(1.8)
-                // .addMarker("wait", Commands.waitSeconds(1))
+                .addMarker("wait", Commands.waitSeconds(1))
+                .addMarker("intake", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                ))
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    new WaitCommand(0.4),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.AUTO_HOLD)
+                ))
                 .build(),
                 new AutoBalance(drive),
                 new LockWheels(drive),
@@ -47,6 +56,15 @@ public final class ChargeAutos {
                 .setMaxVelocity(1.8)
                 .setAcceleration(1.8)
                 // .addMarker("wait", Commands.waitSeconds(1))
+                .addMarker("intake", new SequentialCommandGroup(
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                ))
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    new WaitCommand(0.4),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.AUTO_HOLD)
+                ))
                 .build(),
                 new AutoBalance(drive),
                 new LockWheels(drive),
@@ -106,7 +124,7 @@ public final class ChargeAutos {
                     ))
                 .addMarker("intake", new SequentialCommandGroup(
                     new WaitCommand(1),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.HOLD)
                 ))
                 .build(),
@@ -129,7 +147,7 @@ public final class ChargeAutos {
                 .setAcceleration(1.8)
                 .addMarker("intake", new SequentialCommandGroup(
                     new WaitCommand(1),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.HOLD)
                 )
             )
@@ -146,7 +164,7 @@ public final class ChargeAutos {
                 .setAcceleration(1.8)
                 .addMarker("intake", new SequentialCommandGroup(
                     new WaitCommand(1),
-                    intake.runOnce(intake::hold),
+                    intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.HOLD)
                 )
             )
