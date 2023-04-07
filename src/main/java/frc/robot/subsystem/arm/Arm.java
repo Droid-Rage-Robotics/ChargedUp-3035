@@ -58,7 +58,7 @@ public class Arm {
         START(0,0,0),
 
         INTAKE_LOW_CONE(0,0, 213),//215 or 219 (shoot COnes)
-        INTAKE_LOW_CUBE(0,0, 210),
+        INTAKE_LOW_CUBE(0,0, 209),
 
         AUTO_INTAKE_LOW_CONE(0,13, INTAKE_LOW_CONE.getPivotDegrees()),//215 or 219 (shoot COnes)
         AUTO_INTAKE_LOW_CUBE(0,13, INTAKE_LOW_CUBE.getPivotDegrees()),
@@ -86,8 +86,8 @@ public class Arm {
         INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(13,0, 181),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13,0, 175),
 
-        INTAKE_HIGH_SINGLE_SUBSTATION_CONE(13.5,0, 110),
-        INTAKE_HIGH_SINGLE_SUBSTATION_CUBE(13.5,0,113),
+        INTAKE_HIGH_SINGLE_SUBSTATION_CONE(12,0, 110),
+        INTAKE_HIGH_SINGLE_SUBSTATION_CUBE(12,0,113),
 
         HOLD(0,0, 60),
         AUTO_HOLD(HOLD.getVertical(),HOLD.getHorizontal(), HOLD.getPivotDegrees()),
