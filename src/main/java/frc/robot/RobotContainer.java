@@ -69,7 +69,7 @@ public class RobotContainer {
     
 
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
-
+    
     public RobotContainer(Drive drive, VerticalElevator verticalElevator, 
                             HorizontalElevator horizontalElevator, PivotAbsolute pivot, 
                             Intake intake, Arm arm, Light light) {
@@ -91,7 +91,7 @@ public class RobotContainer {
         autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
         autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
-        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
+        autoChooser.addOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
 
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
@@ -100,7 +100,7 @@ public class RobotContainer {
         autoChooser.addOption("1+1 Free (Mid_High)", FreeAutos.onePlusOneFreeMid_High(drive, arm,intake));
 
         autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake));
-        autoChooser.addOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
+        autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake));
         // autoChooser.addOption("Charge Plus Pickup Parts (High)", ChargeAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
