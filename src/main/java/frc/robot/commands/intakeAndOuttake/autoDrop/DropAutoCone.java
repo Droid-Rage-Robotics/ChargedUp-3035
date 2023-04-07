@@ -13,7 +13,7 @@ public class DropAutoCone extends SuppliedCommand {
         super(()->
         switch(arm.getPosition()){
             case AUTO_MID-> new SequentialCommandGroup(
-                    arm.lowerElevatorCommand(),
+                    // arm.lowerElevatorCommand(),
                     Commands.waitSeconds(0.5),
                     intake.runOnce(()->intake.open(true)),
                     Commands.waitSeconds(0.3),
