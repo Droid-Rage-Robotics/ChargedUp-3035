@@ -1,19 +1,15 @@
 package frc.robot;
 
 import frc.robot.commands.LightCommand;
-import frc.robot.commands.SuppliedCommand;
 import frc.robot.commands.arm.*;
 import frc.robot.commands.autoPaths.BumpAutos;
 import frc.robot.commands.autoPaths.ChargeAutos;
 import frc.robot.commands.autoPaths.FreeAutos;
 import frc.robot.commands.autoPaths.TuningAutos;
 import frc.robot.commands.drive.SwerveDriveTeleop;
-import frc.robot.commands.intakeAndOuttake.TeleopOuttake;
-import frc.robot.commands.intakeAndOuttake.ToggleIntake;
 import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCone;
 import frc.robot.commands.intakeAndOuttake.teleopDrop.DropTeleopCube;
 import frc.robot.subsystem.*;
-import frc.robot.subsystem.TrackedElement.Element;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
@@ -44,10 +40,8 @@ public class RobotContainer {
 
 
 
-    //Disable chris's outtake on cone - Important
     //move enabled to one spot
     //Add a velocity offset intake 
-    //Make the arm position switch simpler
     
     // MAKE ALL OFTHE IS ENABLED IN ONE LOCATION
     private final CommandXboxController driver =
@@ -97,11 +91,12 @@ public class RobotContainer {
         autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
         autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
-        autoChooser.addOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
+        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
 
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
         autoChooser.addOption("1+1 Free (Mid_Mid)", FreeAutos.onePlusOneFreeMid_Mid(drive, arm,intake));
+        autoChooser.addOption("1+1 Free (Mid_Mid)Pear", FreeAutos.onePlusOneFreeMid_MidPear(drive, arm,intake));
         autoChooser.addOption("1+1 Free (Mid_High)", FreeAutos.onePlusOneFreeMid_High(drive, arm,intake));
 
         autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake));
@@ -156,13 +151,13 @@ public class RobotContainer {
 
         driver.rightTrigger()
             .onTrue(intake.run(intake::intake))
-            // .onFalse(intake.run(intake::stop)); 
-            .onFalse(SuppliedCommand.create(
-                () -> switch(TrackedElement.get()) {
-                    case CONE -> intake.run(intake::stop);
-                    case CUBE -> intake.run(intake::hold);
-                }
-            ));
+            .onFalse(intake.run(intake::stop)); 
+            // .onFalse(SuppliedCommand.create(
+            //     () -> switch(TrackedElement.get()) {
+            //         case CONE -> intake.run(intake::stop);
+            //         case CUBE -> intake.run(intake::hold);
+            //     }
+            // ));
             // .onFalse(if(TrackedElement.get()==Element.CUBE)(intake.run(intake::hold)));
 
         // driver.leftTrigger()
