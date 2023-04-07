@@ -68,22 +68,22 @@ public class Arm {
 
         MID_CONE(13.2,11.3,170), // LOWCONE.pivotAngle.get() 
         // MID_CUBE(0,0, 125), - shoot mid place
-        MID_CUBE(13.4,10.4, 165),
+        MID_CUBE(13.4,10.4, 193),
 
         
         // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
-        HIGH_CONE(15.4,12.5, 145.5),
+        HIGH_CONE(16,12.5, 145.5),
         HIGH_CUBE(15.1,12.65, 150),
 
-        AUTO_MID_CONE(14.7, 11.5, 170),
-        AUTO_MID_CUBE(13,1, 135),
+        AUTO_MID_CONE(14.6, 11.5, 175),
+        AUTO_MID_CUBE(13,10, 135),
 
         AUTO_HIGH_CONE(HIGH_CONE),
         AUTO_HIGH_CUBE(HIGH_CUBE),
 
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(14,0, 164),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(13,0, 181),
         INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13,0, 175),
 
         INTAKE_HIGH_SINGLE_SUBSTATION_CONE(13.5,0, 110),
@@ -186,12 +186,12 @@ public class Arm {
                         Commands.waitSeconds(0.8),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
-                case  AUTO_MID -> //Commands.sequence( seperate
-                    new ParallelCommandGroup(
+                case  AUTO_MID ->
+                    new SequentialCommandGroup(
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                        Commands.waitSeconds(0.6),
+                        Commands.waitSeconds(0.5),
                         horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
-                        Commands.waitSeconds(0.6),
+                        // Commands.waitSeconds(0.3),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case AUTO_HOLD, HOLD -> //Commands.sequence(
@@ -220,6 +220,6 @@ public class Arm {
     }
 
     public CommandBase lowerElevatorCommand() {
-        return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 8));
+        return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 3));
     }
 }
