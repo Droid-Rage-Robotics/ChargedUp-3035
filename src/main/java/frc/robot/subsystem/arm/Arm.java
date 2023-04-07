@@ -67,18 +67,19 @@ public class Arm {
         LOW_CUBE(0,0, 145),
 
         MID_CONE(13.2,11.3,170), // LOWCONE.pivotAngle.get() 
-        MID_CUBE(0,0, 125),
-        // MID_CUBE(13.4,10.4, 190),//DON'T REMOVE! - Old Mid Cube
+        // MID_CUBE(0,0, 125), - shoot mid place
+        MID_CUBE(13.4,10.4, 145),
 
         
         // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
         // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
 
         HIGH_CONE(15.4,12.5, 145.5),
-        HIGH_CUBE(15.1,12.65, 131),
+        HIGH_CUBE(15.1,12.65, 150),
 
         AUTO_MID_CONE(15.2, 11.5, 150),
         AUTO_MID_CUBE(13,1, 135),
+
         AUTO_HIGH_CONE(HIGH_CONE),
         AUTO_HIGH_CUBE(HIGH_CUBE),
 
@@ -173,16 +174,24 @@ public class Arm {
         return position;
     }
 
-    public CommandBase setPositionCommand(Position targetPosition) {// TODO: Fix position to include the intake close
-        //TODO: Put in parallel COMAND!!!!!
+    public CommandBase setPositionCommand(Position targetPosition) {
         return SuppliedCommand.create(() -> Commands.sequence(
             Commands.runOnce(() -> logPosition(targetPosition)),
             switch (targetPosition) {
-                case AUTO_HIGH, AUTO_MID -> //Commands.sequence(
-                    new SequentialCommandGroup(//TODO:ONly mve pivot fgor the cube not cone
+                case AUTO_HIGH -> //Commands.sequence( seperate
+                    new SequentialCommandGroup(
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
-                        Commands.waitSeconds(0.5),
+                        Commands.waitSeconds(1),
                         horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        Commands.waitSeconds(0.8),
+                        pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
+                    );
+                case  AUTO_MID -> //Commands.sequence( seperate
+                    new ParallelCommandGroup(
+                        verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
+                        Commands.waitSeconds(0.6),
+                        horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
+                        Commands.waitSeconds(0.6),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case AUTO_HOLD, HOLD -> //Commands.sequence(
