@@ -2,6 +2,7 @@ package frc.robot.commands.drive;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -15,7 +16,7 @@ import frc.robot.subsystem.drive.SwerveModule;
 public class SwerveDriveTeleop extends CommandBase {
     private final Drive drive;
     private final Supplier<Double> x, y, turn;
-    // private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
+    private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
     // private static final PIDController autoBalanceY = new PIDController(0.006, 0, 0.0005);
 
     private volatile double xSpeed, ySpeed, turnSpeed;
@@ -29,9 +30,9 @@ public class SwerveDriveTeleop extends CommandBase {
         this.turn = turn;
         this.lockTrigger = lockTrigger;
 
-        // this.xLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
-        // this.yLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
-        // this.turnLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.get());
+        this.xLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.yLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ACCELERATION_UNITS_PER_SECOND.get());
+        this.turnLimiter = new SlewRateLimiter(DriveConstants.Config.MAX_ANGULAR_ACCELERATION_UNITS_PER_SECOND.get());
 
 
 
