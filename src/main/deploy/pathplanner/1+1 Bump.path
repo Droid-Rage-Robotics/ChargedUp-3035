@@ -42,7 +42,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "intake2"
+          "intake"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
