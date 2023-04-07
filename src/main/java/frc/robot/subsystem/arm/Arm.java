@@ -78,7 +78,7 @@ public class Arm {
         HIGH_CUBE(15.1,12.65, 150),
 
         AUTO_MID_CONE(14.6, 11.5, 175),
-        AUTO_MID_CUBE(13,10, 135),
+        AUTO_MID_CUBE(13,10, 170),
 
         AUTO_HIGH_CONE(HIGH_CONE),
         AUTO_HIGH_CUBE(HIGH_CUBE),
