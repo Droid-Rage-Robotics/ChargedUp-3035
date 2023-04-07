@@ -25,7 +25,7 @@ public class ManualHorizontalElevator extends CommandBase {
         double move = horizontalElevatorMove.get();
         move = DroidRageConstants.squareInput(move);
         move = DroidRageConstants.applyDeadBand(move);
-        horizontalElevator.setTargetPosition(horizontalElevator.getTargetPosition() + move * 0.1);
+        horizontalElevator.setTargetPosition(horizontalElevator.getTargetPosition() + move * 0.2);
         horizontalElevator.setMovingManually(!(move == 0));
     }
 

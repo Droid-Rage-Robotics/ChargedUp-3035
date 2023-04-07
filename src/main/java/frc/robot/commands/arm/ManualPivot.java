@@ -29,7 +29,7 @@ public class ManualPivot extends CommandBase {
         double move = pivotMove.get();
         move = DroidRageConstants.squareInput(move);
         move = DroidRageConstants.applyDeadBand(move);
-        pivot.setTargetPosition(pivot.getTargetPosition() + move * 0.5);
+        pivot.setTargetPosition(pivot.getTargetPosition() + move * 0.6);
         pivot.setMovingManually(true);
     }
 
