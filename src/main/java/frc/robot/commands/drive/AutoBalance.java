@@ -50,10 +50,9 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
   @Override
   public boolean isFinished() {
     // final int time = driverStation.getMatchTime();
-    if(isMatchTime()){
-      // timer.stop();
-      return true;
-    }
+    // if(isMatchTime()){
+    //   return true;
+    // }
 
     // atSetpointWriter.set(getController().atSetpoint());
     return getController().atSetpoint();
