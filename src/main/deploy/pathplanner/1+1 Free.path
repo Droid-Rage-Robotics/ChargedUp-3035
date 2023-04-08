@@ -39,7 +39,7 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.85,
-        "y": 4.62
+        "x": 5.89,
+        "y": 4.63
       },
       "prevControl": {
-        "x": 4.819338510105591,
-        "y": 4.77838310533764
+        "x": 4.859338510105591,
+        "y": 4.7883831053376396
       },
       "nextControl": {
-        "x": 6.37350035812525,
-        "y": 4.539553012140059
+        "x": 6.41350035812525,
+        "y": 4.549553012140059
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -76,16 +76,41 @@
     },
     {
       "anchorPoint": {
+        "x": 5.95,
+        "y": 4.63
+      },
+      "prevControl": {
+        "x": 5.663705141695998,
+        "y": 4.63
+      },
+      "nextControl": {
+        "x": 6.131365336112346,
+        "y": 4.63
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
         "x": 1.73,
-        "y": 4.36
+        "y": 4.33
       },
       "prevControl": {
         "x": 4.40527595340905,
-        "y": 4.8896454878624045
+        "y": 4.859645487862404
       },
       "nextControl": {
         "x": 4.40527595340905,
-        "y": 4.8896454878624045
+        "y": 4.859645487862404
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -103,12 +128,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.51,
+        "x": 6.47,
         "y": 3.3
       },
       "prevControl": {
-        "x": 6.51,
-        "y": 4.222849273058309
+        "x": 6.47,
+        "y": 6.242183346164618
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -132,7 +157,7 @@
       ]
     },
     {
-      "position": 1.7,
+      "position": 1.4,
       "names": [
         "intake"
       ]
