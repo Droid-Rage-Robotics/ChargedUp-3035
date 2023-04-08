@@ -56,8 +56,8 @@ public final class BumpAutos {
             new DropAutoCone(arm, intake),
 
             PathPlannerFollow.create(drive, "1+1 Bump")
-                .setMaxVelocity(3)
-                .setAcceleration(1)
+                .setMaxVelocity(3.5)
+                .setAcceleration(1.5)
                 .addMarker("open", new SequentialCommandGroup(
                     intake.runOnce(()->intake.open(true)),
                     new WaitCommand(0.5),
