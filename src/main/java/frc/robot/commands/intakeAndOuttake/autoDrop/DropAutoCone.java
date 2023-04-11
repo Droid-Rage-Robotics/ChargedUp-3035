@@ -12,7 +12,7 @@ public class DropAutoCone extends SuppliedCommand {
     public DropAutoCone(Arm arm, Intake intake) {//TODO: MAKE IT DIFFERENT FOR SHOOT
         super(()->
         switch(arm.getPosition()){
-            case AUTO_MID-> new SequentialCommandGroup(
+            case AUTO_MID, MID-> new SequentialCommandGroup(
                     // arm.lowerElevatorCommand(),
                     Commands.waitSeconds(0.5),
                     intake.runOnce(()->intake.open(true)),
@@ -22,12 +22,6 @@ public class DropAutoCone extends SuppliedCommand {
             case LOW-> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_LOW)),
                     Commands.waitSeconds(0.3),
-                    arm.setPositionCommand(Position.HOLD)
-                );
-            case MID-> new SequentialCommandGroup(
-                    arm.lowerElevatorCommand(),
-                    Commands.waitSeconds(0.2),
-                    intake.runOnce(()->intake.open(true)),
                     arm.setPositionCommand(Position.HOLD)
                 );
             case HIGH-> new SequentialCommandGroup(
