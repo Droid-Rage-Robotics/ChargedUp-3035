@@ -13,8 +13,8 @@ public class PivotAbsolute extends PivotMotionProfiled {
     protected final ShuffleboardValue<Double> rawEncoderPositionWriter = ShuffleboardValue.create(0.0, "Raw Encoder Position (Radians)", Pivot.class.getSimpleName())
         .withSize(1, 2)
         .build();
-    public PivotAbsolute() {
-        super();
+    public PivotAbsolute(Boolean isEnabled) {
+        super(isEnabled);
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
         absoluteEncoder.setPositionConversionFactor(Math.PI * 2);
         absoluteEncoder.setVelocityConversionFactor(Math.PI * 2 / 60);

@@ -18,8 +18,8 @@ public class PivotMotionProfiled extends Pivot {
     protected final ShuffleboardValue<Double> goalVelocityWriter = ShuffleboardValue.create(0.0, "Goal Velocity", Pivot.class.getSimpleName()).build();
     protected final ShuffleboardValue<Double> targetVelocityWriter = ShuffleboardValue.create(0.0, "Target Velocity", Pivot.class.getSimpleName()).build();
     
-    public PivotMotionProfiled() {
-        super();
+    public PivotMotionProfiled(Boolean isEnabled) {
+        super(isEnabled);
 
         controller.setPID(5, 0, 0);
         controller.setTolerance(0.10);

@@ -127,7 +127,7 @@ public class Drive extends SubsystemBase {
 
     private final Field2d field2d = new Field2d();
 
-    public Drive() {
+    public Drive(Boolean isEnabled) {
         //TODO: Make sure IMU RESETS
         for (SwerveModule swerveModule: swerveModules) {
             swerveModule.brakeMode();
@@ -137,6 +137,7 @@ public class Drive extends SubsystemBase {
         resetOffset();
 
         ComplexWidgetBuilder.create(field2d, "Field", Drive.class.getSimpleName());
+        this.isEnabled.set(isEnabled);
     }
 
     

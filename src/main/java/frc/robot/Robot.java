@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystem.Intake;
@@ -12,6 +13,7 @@ import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.PivotAbsolute;
 import frc.robot.subsystem.drive.Drive;
+import frc.robot.utility.ShuffleboardValue;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,12 +26,12 @@ public class Robot extends TimedRobot {
     
     private RobotContainer robotContainer;
 
-    private final Drive drive = new Drive();
-    private final VerticalElevator verticalElevator = new VerticalElevator();
+    private final Drive drive = new Drive(true);
+    private final VerticalElevator verticalElevator = new VerticalElevator(true, true);
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    private final PivotAbsolute pivot = new PivotAbsolute();
-    private final Intake intake = new Intake();
+    private final HorizontalElevator horizontalElevator = new HorizontalElevator(true);
+    private final PivotAbsolute pivot = new PivotAbsolute(true);
+    private final Intake intake = new Intake(true);
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
     private final Light light = new Light();
     

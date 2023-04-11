@@ -81,10 +81,10 @@ public class Intake extends SubsystemBase {
     protected final SimpleMotorFeedforward feedforward;
         
 
-    public Intake() {
+    public Intake(Boolean isEnabled) {
         motor = new SafeTalonFX(
             19,
-            ShuffleboardValue.create(true, "Is Enabled", Intake.class.getSimpleName())
+            ShuffleboardValue.create(isEnabled, "Is Enabled", Intake.class.getSimpleName())
                     .withWidget(BuiltInWidgets.kToggleSwitch)
                     .build(),
                 ShuffleboardValue.create(0.0, "Voltage", Intake.class.getSimpleName())

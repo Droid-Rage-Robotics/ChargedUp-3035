@@ -23,28 +23,18 @@ public class VerticalElevator extends Elevator {
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0.1, 0.2, 0, 0);
-    private final ShuffleboardValue<Boolean> isEnabled = ShuffleboardValue.create(true, "Is Enabled", VerticalElevator.class.getSimpleName())
-        .withWidget(BuiltInWidgets.kToggleSwitch)
-        .build();
-    // private final ShuffleboardValue<Boolean> isEnabled2 = ShuffleboardValue.create(false, "Is Enabled 2", VerticalElevator.class.getSimpleName())
+    // private final ShuffleboardValue<Boolean> isEnabledLeft = ShuffleboardValue.create(true, "Is Enabled Left", VerticalElevator.class.getSimpleName())
+    //     .withWidget(BuiltInWidgets.kToggleSwitch)
+    //     .build();
+    // private final ShuffleboardValue<Boolean> isEnabledRight = ShuffleboardValue.create(false, "Is Enabled R", VerticalElevator.class.getSimpleName())
     //     .withWidget(BuiltInWidgets.kToggleSwitch)
     //     .build();
     private final ShuffleboardValue<Double> voltage = ShuffleboardValue.create(0.0, "Voltage", VerticalElevator.class.getSimpleName())
         .build();
 
-    private final SafeCanSparkMax leftMotor = new SafeCanSparkMax(
-        16, 
-        MotorType.kBrushless,
-        isEnabled,
-        voltage
-    );
+    private final SafeCanSparkMax leftMotor;
 
-    private final SafeCanSparkMax rightMotor = new SafeCanSparkMax(
-        15, 
-        MotorType.kBrushless,
-        isEnabled,
-        voltage
-    );
+    private final SafeCanSparkMax rightMotor;
 
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", VerticalElevator.class.getSimpleName())
         .withSize(1, 3)
@@ -55,7 +45,24 @@ public class VerticalElevator extends Elevator {
 
     private final RelativeEncoder encoder;
 
-    public VerticalElevator() {
+    public VerticalElevator(Boolean isEnabledLeft, Boolean isEnabledRight) {
+        leftMotor = new SafeCanSparkMax(
+            16, 
+            MotorType.kBrushless,
+            ShuffleboardValue.create(isEnabledLeft, "Is Enabled Left", VerticalElevator.class.getSimpleName())
+                .withWidget(BuiltInWidgets.kToggleSwitch)
+                .build(),
+            voltage
+        );
+
+        rightMotor = new SafeCanSparkMax(
+            15, 
+            MotorType.kBrushless,
+            ShuffleboardValue.create(isEnabledRight, "Is Enabled Right", VerticalElevator.class.getSimpleName())
+                .withWidget(BuiltInWidgets.kToggleSwitch)
+                .build(),
+            voltage
+        );
         leftMotor.setIdleMode(IdleMode.Brake);
         rightMotor.setIdleMode(IdleMode.Brake);
         leftMotor.setInverted(false);

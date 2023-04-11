@@ -23,15 +23,7 @@ public class HorizontalElevator extends Elevator {
     }
     private final PIDController controller = new PIDController(2.4, 0, 0);
     private final ElevatorFeedforward feedforward = new ElevatorFeedforward(0.05, 0, 0, 0);
-    private final SafeCanSparkMax motor = new SafeCanSparkMax(
-        17, 
-        MotorType.kBrushless,
-        ShuffleboardValue.create(true, "Is Enabled", HorizontalElevator.class.getSimpleName())
-            .withWidget(BuiltInWidgets.kToggleSwitch)
-            .build(),
-        ShuffleboardValue.create(0.0, "Voltage", HorizontalElevator.class.getSimpleName())
-            .build()
-    );
+    private final SafeCanSparkMax motor;
 
     protected final ShuffleboardValue<Double> encoderPositionWriter = ShuffleboardValue.create(0.0, "Encoder Position", HorizontalElevator.class.getSimpleName())
         .withSize(1, 3)
@@ -42,7 +34,16 @@ public class HorizontalElevator extends Elevator {
 
     private final RelativeEncoder encoder;
 
-    public HorizontalElevator() {
+    public HorizontalElevator(Boolean isEnabled) {
+        motor = new SafeCanSparkMax(
+            17, 
+            MotorType.kBrushless,
+            ShuffleboardValue.create(isEnabled, "Is Enabled", HorizontalElevator.class.getSimpleName())
+                .withWidget(BuiltInWidgets.kToggleSwitch)
+                .build(),
+            ShuffleboardValue.create(0.0, "Voltage", HorizontalElevator.class.getSimpleName())
+                .build()
+        );
         motor.setIdleMode(IdleMode.Brake);
         motor.setInverted(true);
 
