@@ -111,45 +111,18 @@ public final class ChargeAutos {
         );
     }
 
-    public static CommandBase chargePlusPickUpPartsHigh(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargePlusTaxiMid(Drive drive, Arm arm, Intake intake) {
         return Commands.sequence(
-            arm.setPositionCommand(Position.HIGH),
+            arm.setPositionCommand(Position.MID),
             new WaitCommand(1.05),//HAS TO BE 1
             new DropAutoCone(arm, intake),
-            PathPlannerFollow.create(drive, "Charge + Pickup One")
-                .setMaxVelocity(1.8)
+            PathPlannerFollow.create(drive, "Charge+Taxi")
+                .setMaxVelocity(1.8)//Change to 1.8
                 .setAcceleration(1.8)
-                .addMarker("intake", new SequentialCommandGroup(
-                    new WaitCommand(1),
-                    intake.runOnce(intake::stop),
-                    arm.setPositionCommand(Position.HOLD)
-                )
-            )
-            .build(),
-            
-            //Try to use gyro to figure out when the bot is level to continue the path, or just go backwards to balance
-            
-            intake.runOnce(()->intake.open(true)),
-            arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
-            intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE)),
-
-            PathPlannerFollow.create(drive, "Charge + Pickup Two")
-                .setMaxVelocity(1.8)
-                .setAcceleration(1.8)
-                .addMarker("intake", new SequentialCommandGroup(
-                    new WaitCommand(1),
-                    intake.runOnce(intake::stop),
-                    arm.setPositionCommand(Position.HOLD)
-                )
-            )
-            .build(),
-
-            new AutoBalance(drive),
-            new LockWheels(drive),
-            drive.driveAutoReset(),
-
-            arm.setPositionCommand(Position.MID),
-            intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID))
+                .build(),
+                new AutoBalance(drive),
+                new LockWheels(drive),
+                drive.driveAutoReset()
         );
     }
 
