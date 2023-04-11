@@ -20,7 +20,9 @@ public class DropAutoCone extends SuppliedCommand {
                     arm.setPositionCommand(Position.HOLD)
                 );
             case LOW-> new SequentialCommandGroup(
-                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_LOW))
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_LOW)),
+                    Commands.waitSeconds(0.3),
+                    arm.setPositionCommand(Position.HOLD)
                 );
             case MID-> new SequentialCommandGroup(
                     arm.lowerElevatorCommand(),
@@ -34,7 +36,9 @@ public class DropAutoCone extends SuppliedCommand {
                     arm.setPositionCommand(Position.HOLD)
                 );
             default-> new SequentialCommandGroup(
-                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
+                    intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),
+                    Commands.waitSeconds(0.3),
+                    arm.setPositionCommand(Position.HOLD)
                     // Doesn't hurt, since the only time
                     // outtake is used in high shot
                 );
