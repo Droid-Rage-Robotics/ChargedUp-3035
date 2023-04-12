@@ -16,7 +16,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     public final Color red, yellow, purple, orange, blue;
     public static Timer timer = new Timer();
 
-    private long waitTime = 100, startTime= System.currentTimeMillis();
+    private long waitTime = 150, startTime= System.currentTimeMillis();
     private int stage = 0;
 
   //   private TrobotAddressableLEDPattern m_onPattern;
@@ -115,7 +115,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     //   }
     // }
 
-    public void setColor(Color color) {
+    public void setAllColor(Color color) {
       for (int i = 0; i < buffer.getLength(); i++) {
         buffer.setLED(i, color);
       }
@@ -129,9 +129,12 @@ public class Light extends SubsystemBase {//TODO:Fix
     public void setColor(int i,int r, int g, int b) {
         buffer.setRGB(i, r, g, b);
     }
+    public void setColor(int i, Color color) {
+      buffer.setLED(i, color);
+  }
 
     public void elementIn() {
-      setColor(red);
+      setAllColor(red);
       // timer.reset();
       // timer.start();
     }
@@ -139,10 +142,10 @@ public class Light extends SubsystemBase {//TODO:Fix
     public void trackElementLight() {
       switch (TrackedElement.get()) {
         case CONE:
-            setColor(yellow);
+            setAllColor(yellow);
             return;
         case CUBE:
-            setColor(purple);
+            setAllColor(purple);
             return;
       }
     }
@@ -175,19 +178,18 @@ public class Light extends SubsystemBase {//TODO:Fix
       m_offset =(m_offset+1) %bufferLength;
     }
 
-    public void test(){
+    public void flashingOrangeAndBlue(){
       if (System.currentTimeMillis() - startTime >= waitTime) {
         for (int i = 0; i < buffer.getLength(); i++) {
-            if (i % 4 == stage) {
-                setColor(i, 255, 255, 255);
+            if (i % 3 == stage) {
+                setColor(i, orange);
                 continue;
             }
-            setColor(i, 20, 120, 255);
+            setColor(i, blue);
         }
-        // ledSubsystem.sendData();
         stage = stage + 1 > 3 ? 0 : stage + 1;
         startTime = System.currentTimeMillis();
-    }
+      }
     }
 }
 

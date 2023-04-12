@@ -73,8 +73,9 @@ public class Robot extends TimedRobot {
         //TODO: Add lights to have the robot tell us any errors with can, etc.
         // light.rainbow();
         // light.orangeAndBlue();
-        light.switchLeds();
+        // light.switchLeds();
         // light.chaseLED( 1);
+        light.flashingOrangeAndBlue();
     }
 
     @Override
