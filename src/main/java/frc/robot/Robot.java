@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     
     private RobotContainer robotContainer;
 
-    private final Drive drive = new Drive(true);
+    private final Drive drive = new Drive(false);
     private final VerticalElevator verticalElevator = new VerticalElevator(true, true);
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
     private final HorizontalElevator horizontalElevator = new HorizontalElevator(true);
@@ -72,7 +72,9 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         //TODO: Add lights to have the robot tell us any errors with can, etc.
         // light.rainbow();
-        light.orangeAndBlue();
+        // light.orangeAndBlue();
+        light.switchLeds();
+        // light.chaseLED( 1);
     }
 
     @Override
