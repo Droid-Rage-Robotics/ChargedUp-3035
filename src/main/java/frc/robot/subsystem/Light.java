@@ -16,6 +16,9 @@ public class Light extends SubsystemBase {//TODO:Fix
     public final Color red, yellow, purple, orange, blue;
     public static Timer timer = new Timer();
 
+    private long waitTime = 100, startTime= System.currentTimeMillis();
+    private int stage = 0;
+
   //   private TrobotAddressableLEDPattern m_onPattern;
 	// private TrobotAddressableLEDPattern m_offPattern;
 	// private double m_interval = 2;
@@ -74,29 +77,18 @@ public class Light extends SubsystemBase {//TODO:Fix
         m_rainbowFirstPixelHue %= 180;
     }
 
-    public void orangeAndBlue() {
-      // For every pixel
-      for (int i = 0; i < buffer.getLength(); i++) {
-        if(i%2==0) {
-          buffer.setLED(i, orange);
 
-        } else{
-          buffer.setLED(i, blue);
-        }
-      }
-  }
-
-  public void blueAndOrange() {
+  public void setAlternatingColor(Color colorOne, Color colorTwo) {
     // For every pixel
     for (int i = 0; i < buffer.getLength(); i++) {
       if(i%2==0) {
-        buffer.setLED(i, blue);
+        buffer.setLED(i, colorOne);
 
       } else{
-        buffer.setLED(i, orange);
+        buffer.setLED(i, colorTwo);
       }
     }
-}
+  }
     
     // public void setColorType() {
     //   if (timer.get()<0.6){
@@ -129,10 +121,13 @@ public class Light extends SubsystemBase {//TODO:Fix
       }
     }
   
-    public void setColor(int r, int g, int b) {
+    public void setAllColor(int r, int g, int b) {
       for (int i = 0; i < buffer.getLength(); i++) {
-        buffer.setRGB(i, r, g, b);
+        setColor(i, r, g, b);
       }
+    }
+    public void setColor(int i,int r, int g, int b) {
+        buffer.setRGB(i, r, g, b);
     }
 
     public void elementIn() {
@@ -159,9 +154,9 @@ public class Light extends SubsystemBase {//TODO:Fix
         lastChange = timestamp;
       }
       if (on){
-        orangeAndBlue();
+        setAlternatingColor(orange, blue);
       } else {
-        blueAndOrange();
+        setAlternatingColor(blue, orange);
       }
     }
 
@@ -178,6 +173,21 @@ public class Light extends SubsystemBase {//TODO:Fix
       }
   
       m_offset =(m_offset+1) %bufferLength;
+    }
+
+    public void test(){
+      if (System.currentTimeMillis() - startTime >= waitTime) {
+        for (int i = 0; i < buffer.getLength(); i++) {
+            if (i % 4 == stage) {
+                setColor(i, 255, 255, 255);
+                continue;
+            }
+            setColor(i, 20, 120, 255);
+        }
+        // ledSubsystem.sendData();
+        stage = stage + 1 > 3 ? 0 : stage + 1;
+        startTime = System.currentTimeMillis();
+    }
     }
 }
 
