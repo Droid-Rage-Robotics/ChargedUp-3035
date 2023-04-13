@@ -118,7 +118,6 @@ public class RobotContainer {
 
     public void configureTeleOpBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
-        // TrackedElement.set();
         light.setDefaultCommand(new LightCommand(intake, light, driver));
         
          /*
@@ -171,7 +170,6 @@ public class RobotContainer {
         /*
          * Operator Controls
          */
-        // Trigger pivotManual = 
         pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
         verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
@@ -244,9 +242,8 @@ public class RobotContainer {
         //     .onTrue(pivot.runOnce(pivot::resetEncoder)); // In absolute mode
     }
 
-    public void configureTeleOpBindingsTwo() {
+    public void configureTeleOpDriverOnlyBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
-        // TrackedElement.set();
         light.setDefaultCommand(new LightCommand(intake, light, driver));
         
          /*
@@ -263,35 +260,56 @@ public class RobotContainer {
             );
 
         driver.rightBumper()
-            .and(null) //- allows you to make 
             //one button different by having to press 2 buttons
             .onTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
+        
         driver.rightTrigger()
             .onTrue(intake.run(intake::intake))
             .onFalse(intake.run(intake::stop)); 
-        driver.a()
-            .onTrue(drive.resetOffsetCommand());
 
+        driver.leftTrigger()
+            .onTrue(new DropTeleopCone(arm, intake)) 
+            .onFalse(intake.run(intake::stop));
+        driver.leftTrigger().and(driver.leftBumper())
+            .onTrue(new DropTeleopCube(arm, intake))
+            .onFalse(intake.run(intake::stop));
+
+        driver.a()
+            .whileTrue(arm.setPositionCommand(Position.LOW));
+        driver.x()//.and(driver.leftBumper())
+            .whileTrue(arm.setPositionCommand(Position.MID));
+        driver.y()
+            .whileTrue(arm.setPositionCommand(Position.HIGH));
         driver.b()
             .onTrue(
                     intake.runOnce(()->intake.open(true))
             ); 
-        driver.x()
+        driver.b().and(driver.leftBumper())
             .onTrue(intake.runOnce(()->intake.close(true)));
+
 
         driver.povUp()  //Have the robot reset in any 90 degree angle - TODO:Test!
             .onTrue(drive.setOffsetCommand(0));
+        driver.povUp().and(driver.leftBumper())
+            .onTrue(drive.setOffsetCommand(180));
+        
         driver.povRight()
             .onTrue(drive.setOffsetCommand(-90));
-        driver.povDown()
-            .onTrue(drive.setOffsetCommand(180));
-        driver.povLeft()
+        driver.povRight().and(driver.leftBumper())
             .onTrue(drive.setOffsetCommand(90));
-        
-        driver.back()
-            .onTrue(drive.toggleFieldOriented()
-            );
+
+        driver.povLeft()
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION));
+        driver.povLeft().and(driver.leftBumper())
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
+
+        driver.povDown().and(driver.leftBumper())
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_LOW));
+        driver.povDown()
+            .whileTrue(arm.setPositionCommand(Position.HOLD));
+
+        driver.back().onTrue(drive.toggleFieldOriented());
         
         
 
@@ -299,77 +317,9 @@ public class RobotContainer {
         /*
          * Operator Controls
          */
-        // Trigger pivotManual = 
         pivot.setDefaultCommand(new ManualMotionProfiledPivot(operator::getRightY, pivot)); // This should run the command repeatedly even once its ended if i read correctly
         verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
-
-        operator.a()
-            .whileTrue( // while true to update positions when moving manually
-                arm.setPositionCommand(Position.LOW)
-            );
-        operator.x()
-            .whileTrue(
-                arm.setPositionCommand(Position.MID)
-            );
-        operator.y()
-            .whileTrue(
-                arm.setPositionCommand(Position.HIGH)
-            );
-        
-        operator.povUp()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-            );
-        operator.povRight()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-            );
-        operator.povLeft()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_LOW)
-            );
-        operator.povDown()
-            .whileTrue(
-                arm.setPositionCommand(Position.HOLD)
-            );
-
-
-        // operator.rightTrigger().and(rightBumper())
-        //     .onTrue(new DropTeleopCone(arm, intake)) 
-        //     .onFalse(intake.run(intake::stop));
-        operator.leftTrigger()
-            .onTrue(new DropTeleopCube(arm, intake))
-            .onFalse(intake.run(intake::stop));
-
-
-        // operator.rightTrigger()
-        //     .whileTrue(
-        //         new TeleopOuttake(arm, intake)
-        //     ).whileFalse(intake.runOnce(()->intake.stop()));
-
-        // operator.leftTrigger()
-        //     .whileTrue(
-        //         new DropTeleopCone(arm, intake)
-        //     ).whileFalse(intake.runOnce(()->intake.stop()));
-        // operator.a()
-        //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
-
-        // operator.start()
-        //     .onTrue(Commands.sequence(
-        //         verticalElevator.runOnce(verticalElevator::resetEncoder),
-        //         horizontalElevator.runOnce(horizontalElevator::resetEncoder)
-        //     ));
-      
-      
-        
-        // operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(1)))
-        //                         .onFalse(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
-        // operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-1)))
-        //                         .onFalse(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
-        
-        // operator.back()
-        //     .onTrue(pivot.runOnce(pivot::resetEncoder)); // In absolute mode
     }
 
     public void configureTestBindings(){}

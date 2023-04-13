@@ -94,7 +94,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
-        robotContainer.configureTeleOpBindings();
+        // robotContainer.configureTeleOpBindings();
+        robotContainer.configureTeleOpDriverOnlyBindings();
     }
 
     @Override
