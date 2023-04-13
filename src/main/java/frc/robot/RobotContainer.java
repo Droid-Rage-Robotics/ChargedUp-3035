@@ -261,12 +261,14 @@ public class RobotContainer {
 
         driver.rightBumper()
             //one button different by having to press 2 buttons
-            .onTrue(drive.setSlowSpeed())
+            .whileTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
         
         driver.rightTrigger()
-            .onTrue(intake.run(intake::intake))
-            .onFalse(intake.run(intake::stop)); 
+            .whileTrue(intake.run(intake::intake))
+            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
+            .onFalse(intake.run(intake::stop))
+            ; 
 
         driver.leftTrigger()
             .onTrue(new DropTeleopCone(arm, intake)) 
@@ -276,15 +278,13 @@ public class RobotContainer {
             .onFalse(intake.run(intake::stop));
 
         driver.a()
-            .whileTrue(arm.setPositionCommand(Position.LOW));
-        driver.x()//.and(driver.leftBumper())
+            .whileTrue(arm.setPositionCommand(Position.LOW));//Should be on True imo
+        driver.x()
             .whileTrue(arm.setPositionCommand(Position.MID));
         driver.y()
             .whileTrue(arm.setPositionCommand(Position.HIGH));
         driver.b()
-            .onTrue(
-                    intake.runOnce(()->intake.open(true))
-            ); 
+            .onTrue(intake.runOnce(()->intake.open(true))); 
         driver.b().and(driver.leftBumper())
             .onTrue(intake.runOnce(()->intake.close(true)));
 
