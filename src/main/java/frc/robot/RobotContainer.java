@@ -17,10 +17,12 @@ import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -136,18 +138,17 @@ public class RobotContainer {
         driver.rightBumper()
             // .and(null) - allows you to make 
             //one button different by having to press 2 buttons
-            .onTrue(drive.setSlowSpeed())
+            .whileTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
         driver.rightTrigger()
-            .onTrue(intake.run(intake::intake))
-            .onFalse(intake.run(intake::stop)); 
-        driver.a()
-            .onTrue(drive.resetOffsetCommand());
+            .whileTrue(intake.run(intake::intake))
+            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
+
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
 
         driver.b()
-            .onTrue(
-                    intake.runOnce(()->intake.open(true))
-            ); 
+            .onTrue(intake.runOnce(()->intake.open(true))); 
         driver.x()
             .onTrue(intake.runOnce(()->intake.close(true)));
 
@@ -161,8 +162,7 @@ public class RobotContainer {
             .onTrue(drive.setOffsetCommand(90));
         
         driver.back()
-            .onTrue(drive.toggleFieldOriented()
-            );
+            .onTrue(drive.toggleFieldOriented());
         
         
 
@@ -175,34 +175,22 @@ public class RobotContainer {
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
 
         operator.a()
-            .whileTrue( // while true to update positions when moving manually
+            .onTrue( // while true to update positions when moving manually
                 arm.setPositionCommand(Position.LOW)
             );
         operator.x()
-            .whileTrue(
-                arm.setPositionCommand(Position.MID)
-            );
+            .onTrue(arm.setPositionCommand(Position.MID));
         operator.y()
-            .whileTrue(
-                arm.setPositionCommand(Position.HIGH)
-            );
+            .onTrue(arm.setPositionCommand(Position.HIGH));
         
         operator.povUp()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION)
-            );
+            .onTrue(arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION));
         operator.povRight()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION)
-            );
+            .onTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
         operator.povLeft()
-            .whileTrue(
-                arm.setPositionCommand(Position.INTAKE_LOW)
-            );
+            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW));
         operator.povDown()
-            .whileTrue(
-                arm.setPositionCommand(Position.HOLD)
-            );
+            .onTrue(arm.setPositionCommand(Position.HOLD));
 
 
         operator.rightTrigger()
@@ -267,47 +255,49 @@ public class RobotContainer {
         driver.rightTrigger()
             .whileTrue(intake.run(intake::intake))
             .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
-            .onFalse(intake.run(intake::stop))
-            ; 
 
-        driver.leftTrigger()
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD)); 
+
+        driver.leftTrigger().and(driver.leftBumper())
             .onTrue(new DropTeleopCone(arm, intake)) 
             .onFalse(intake.run(intake::stop));
-        driver.leftTrigger().and(driver.leftBumper())
+        driver.leftTrigger().and(driver.leftBumper().negate())
             .onTrue(new DropTeleopCube(arm, intake))
             .onFalse(intake.run(intake::stop));
 
         driver.a()
-            .whileTrue(arm.setPositionCommand(Position.LOW));//Should be on True imo
+            .onTrue(arm.setPositionCommand(Position.LOW));//Should be on True imo
         driver.x()
-            .whileTrue(arm.setPositionCommand(Position.MID));
+            .onTrue(arm.setPositionCommand(Position.MID));
         driver.y()
-            .whileTrue(arm.setPositionCommand(Position.HIGH));
-        driver.b()
+            .onTrue(arm.setPositionCommand(Position.HIGH));
+        
+        driver.b().and(driver.leftBumper().negate())
             .onTrue(intake.runOnce(()->intake.open(true))); 
         driver.b().and(driver.leftBumper())
             .onTrue(intake.runOnce(()->intake.close(true)));
 
 
-        driver.povUp()  //Have the robot reset in any 90 degree angle - TODO:Test!
+        driver.povUp().and(driver.leftBumper().negate())  //Have the robot reset in any 90 degree angle - TODO:Test!
             .onTrue(drive.setOffsetCommand(0));
         driver.povUp().and(driver.leftBumper())
             .onTrue(drive.setOffsetCommand(180));
         
-        driver.povRight()
+        driver.povRight().and(driver.leftBumper().negate())
             .onTrue(drive.setOffsetCommand(-90));
         driver.povRight().and(driver.leftBumper())
             .onTrue(drive.setOffsetCommand(90));
 
-        driver.povLeft()
-            .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION));
+        driver.povLeft().and(driver.leftBumper().negate())
+            .onTrue(arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION));
         driver.povLeft().and(driver.leftBumper())
-            .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
+            .onTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
 
         driver.povDown().and(driver.leftBumper())
-            .whileTrue(arm.setPositionCommand(Position.INTAKE_LOW));
-        driver.povDown()
-            .whileTrue(arm.setPositionCommand(Position.HOLD));
+            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW));
+        driver.povDown().and(driver.leftBumper().negate())
+            .onTrue(arm.setPositionCommand(Position.HOLD));
 
         driver.back().onTrue(drive.toggleFieldOriented());
         
@@ -327,7 +317,4 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
-
-
-    
 }
