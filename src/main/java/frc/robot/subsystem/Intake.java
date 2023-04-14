@@ -97,6 +97,9 @@ public class Intake extends SubsystemBase {
         pneumaticHub = new PneumaticHub(10);
         intakeSolenoid = pneumaticHub.makeDoubleSolenoid(9, 11);
 
+        if(!isEnabled){
+            pneumaticHub.disableCompressor();
+        }
         
         controller = new PIDController(
             0.0003,//0.0003 
