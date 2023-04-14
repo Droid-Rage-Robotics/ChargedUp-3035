@@ -41,8 +41,8 @@ public class Drive extends SubsystemBase {
     );
 
     private final SwerveModule frontLeft = new SwerveModule(
-        2,
         1,
+        2,
 
         false, 
         true,
@@ -52,8 +52,8 @@ public class Drive extends SubsystemBase {
         false
     );
     private final SwerveModule frontRight = new SwerveModule(
-        4,
         3,
+        4,
 
         false, 
         true,
@@ -63,8 +63,8 @@ public class Drive extends SubsystemBase {
         false
     );
     private final SwerveModule backLeft = new SwerveModule(
-        8,
         7,
+        8,
 
         false, 
         true,
