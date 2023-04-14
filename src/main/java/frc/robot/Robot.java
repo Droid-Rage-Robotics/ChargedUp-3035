@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Light;
+import frc.robot.subsystem.Vision;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.elevator.HorizontalElevator;
 import frc.robot.subsystem.arm.elevator.VerticalElevator;
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
     private final Intake intake = new Intake(true);
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
     private final Light light = new Light();
+    private final Vision vision = new Vision();
     
     /**
      * This function is run when the robot is first started up and should be used for any
