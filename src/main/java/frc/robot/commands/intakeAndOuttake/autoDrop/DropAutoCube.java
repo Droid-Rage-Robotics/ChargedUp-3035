@@ -38,7 +38,9 @@ public class DropAutoCube extends SuppliedCommand {
                     arm.setPositionCommand(Position.HOLD),
                     intake.runOnce(()->intake.stop())
                 );
-            default-> new SequentialCommandGroup(
+            case AUTO_HIGH,AUTO_HOLD,AUTO_INTAKE_LOW,AUTO_LOW,HOLD,
+                INTAKE_HIGH_DOUBLE_SUBSTATION,INTAKE_HIGH_SINGLE_SUBSTATION,
+                INTAKE_LOW,INTAKE_LOW_DROPPED,START -> new SequentialCommandGroup(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH)),
                     new WaitCommand(0.2),
                     arm.setPositionCommand(Position.HOLD),

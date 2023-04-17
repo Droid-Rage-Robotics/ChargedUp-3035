@@ -31,7 +31,9 @@ public class DropTeleopCone extends SuppliedCommand {
             case HIGH-> Commands.sequence(
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
                 );
-            default -> Commands.sequence(
+            case AUTO_HIGH,AUTO_HOLD,AUTO_INTAKE_LOW,AUTO_LOW,HOLD,
+                INTAKE_HIGH_DOUBLE_SUBSTATION,INTAKE_HIGH_SINGLE_SUBSTATION,
+                INTAKE_LOW,INTAKE_LOW_DROPPED,START ->  Commands.sequence(
                     // intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_MID))
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CONE_HIGH))
                     //Doesn't hurt, since the only time

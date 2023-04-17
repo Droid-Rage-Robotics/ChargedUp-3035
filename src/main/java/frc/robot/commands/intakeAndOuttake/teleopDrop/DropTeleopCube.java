@@ -20,8 +20,9 @@ public class DropTeleopCube extends SuppliedCommand {
                 //     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_MID));
             case HIGH->
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.SHOOT_CUBE_HIGH));
-            default->
-                    intake.runOnce(()->intake.outtake());
+            case AUTO_HIGH,AUTO_HOLD,AUTO_INTAKE_LOW,AUTO_LOW,HOLD,
+                    INTAKE_HIGH_DOUBLE_SUBSTATION,INTAKE_HIGH_SINGLE_SUBSTATION,
+                    INTAKE_LOW,INTAKE_LOW_DROPPED,START -> intake.runOnce(()->intake.outtake());
         
             
         });
