@@ -13,9 +13,13 @@ public class Light extends SubsystemBase {//TODO:Fix
     private final AddressableLEDBuffer buffer;
     private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
-    public final Color red, yellow, purple, orange, blue;
+    public final Color red = Color.kRed, 
+                      orange = Color.kOrange, 
+                      purple = Color.kPurple, 
+                      yellow = Color.kOrangeRed, 
+                      blue = Color.kBlue, 
+                      green = Color.kGreen;
     public static Timer timer = new Timer();
-
     private long waitTime = 200, startTime= System.currentTimeMillis();
     private int stage = 0;
 
@@ -36,14 +40,6 @@ public class Light extends SubsystemBase {//TODO:Fix
         led.setLength(buffer.getLength());
         led.setData(buffer);
         led.start();
-
-        
-        red = Color.kRed;
-        yellow = Color.kYellow;
-        // yellow = new Color(255, 255, 0);
-        purple = Color.kPurple;
-        orange = Color.kOrangeRed;
-        blue = Color.kBlue;
         // timer.start();
         // this.intake = intake;
         // this.driver = driver;
@@ -142,7 +138,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     public void trackElementLight() {
       switch (TrackedElement.get()) {
         case CONE:
-            setAllColor(yellow);
+            setAllColor(orange);
             return;
         case CUBE:
             setAllColor(purple);
@@ -157,14 +153,14 @@ public class Light extends SubsystemBase {//TODO:Fix
         lastChange = timestamp;
       }
       if (on){
-        setAlternatingColor(orange, blue);
+        setAlternatingColor(yellow, blue);
       } else {
-        setAlternatingColor(blue, orange);
+        setAlternatingColor(blue, yellow);
       }
     }
 
     public void chaseLED( int m_offset) {//Doesn't work correctly
-      Color[] m_Colors = {blue, orange};
+      Color[] m_Colors = {blue, yellow};
       int numberOfColors = m_Colors.length;
       int effectiveIndex;
       int colorIndex;
@@ -182,7 +178,7 @@ public class Light extends SubsystemBase {//TODO:Fix
       if (System.currentTimeMillis() - startTime >= waitTime) {
         for (int i = 0; i < buffer.getLength(); i++) {
             if (i % 3 == stage) {
-                setColor(i, orange);
+                setColor(i, yellow);
                 continue;
             }
             setColor(i, blue);
