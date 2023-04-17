@@ -60,7 +60,7 @@
         "x": 2.904398842834348,
         "y": 2.161422574290624
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 90.0,
       "isReversal": false,
       "velOverride": 1.0,
       "isLocked": false,
@@ -85,7 +85,7 @@
         "x": 5.200003423485879,
         "y": 2.15
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 90.0,
       "isReversal": false,
       "velOverride": 1.0,
       "isLocked": false,
@@ -110,7 +110,7 @@
         "x": 5.439980669610631,
         "y": 2.15
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 90.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -132,7 +132,7 @@
         "y": 2.15
       },
       "nextControl": null,
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 90.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -147,21 +147,9 @@
   ],
   "markers": [
     {
-      "position": 3.6,
-      "names": [
-        "pickUp"
-      ]
-    },
-    {
       "position": 2.4,
       "names": [
         "pushDown"
-      ]
-    },
-    {
-      "position": 4.1,
-      "names": [
-        "intake"
       ]
     }
   ]

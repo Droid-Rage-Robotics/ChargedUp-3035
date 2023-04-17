@@ -40,22 +40,14 @@ public class RobotContainer {
     //move enabled to one spot
     //Add a velocity offset intake 
 
-    //add a 90 and 180 degree charge station auto
     //save time on bump don't worry about free
+    //Add lights to have the robot tell us any errors with can, etc.
     
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
     private final CommandXboxController operator =
         new CommandXboxController(DroidRageConstants.Gamepad.OPERATOR_CONTROLLER_PORT);
 
-    // private final Drive drive = new Drive();
-    // private final VerticalElevator verticalElevator = new VerticalElevator();
-    // // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    // private final HorizontalElevator horizontalElevator = new HorizontalElevator();
-    // private final PivotAbsolute pivot = new PivotAbsolute();
-    // private final Intake intake = new Intake();
-    // private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
-    // private final Light light = new Light();
     private final Drive drive;
     private final VerticalElevator verticalElevator;
     // private final VerticalElevatorSetPower verticalElevatorSetPower;
@@ -102,6 +94,8 @@ public class RobotContainer {
         autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake));
+        autoChooser.addOption("Charge Taxi 180 (Mid)", ChargeAutos.chargeMidTaxi180(drive, arm, intake));
+        autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake));
         
         // autoChooser.addOption("Charge Plus Pickup Parts (High)", OldAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));

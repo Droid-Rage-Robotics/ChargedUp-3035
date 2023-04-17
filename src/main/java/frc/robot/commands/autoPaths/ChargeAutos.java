@@ -15,7 +15,59 @@ import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.drive.Drive;
 
 public final class ChargeAutos {
-
+    public static CommandBase chargeMidTaxi180(Drive drive, Arm arm, Intake intake) {
+        return Commands.sequence(
+            Commands.sequence(
+                arm.setPositionCommand(Position.AUTO_MID),
+                Commands.waitSeconds(1),
+                new DropAutoCone(arm, intake),
+                Commands.waitSeconds(0.1)
+                ),
+            PathPlannerFollow.create(drive, "Charge+Taxi180")
+                .setMaxVelocity(3)
+                .setAcceleration(1.)
+                .addMarker("pushDown", new SequentialCommandGroup(
+                    arm.lowerPivotCommand()
+                    )
+                )
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    intake.runOnce(()->intake.open(true)),
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                    ))
+                .addMarker("intake", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                    )
+                )
+                .build(),
+                new AutoBalance(drive),
+                new LockWheels(drive),
+                drive.driveAutoReset()
+        );
+    }
+    public static CommandBase chargeMidTaxi90(Drive drive, Arm arm, Intake intake) {
+        return Commands.sequence(
+            Commands.sequence(
+                arm.setPositionCommand(Position.AUTO_MID),
+                Commands.waitSeconds(1),
+                new DropAutoCone(arm, intake),
+                Commands.waitSeconds(0.1)
+                ),
+            PathPlannerFollow.create(drive, "Charge+Taxi90")
+                .setMaxVelocity(3)
+                .setAcceleration(1.)
+                .addMarker("pushDown", new SequentialCommandGroup(
+                    arm.lowerPivotCommand()
+                    )
+                )
+                .build(),
+                new AutoBalance(drive),
+                new LockWheels(drive),
+                drive.driveAutoReset()
+        );
+    }
     public static CommandBase chargeMid(Drive drive, Arm arm, Intake intake) {
         return Commands.sequence(
             Commands.sequence(
@@ -25,7 +77,7 @@ public final class ChargeAutos {
                 Commands.waitSeconds(0.1)
                 ),
             PathPlannerFollow.create(drive, "Just Charge")
-                .setMaxVelocity(1.)
+                .setMaxVelocity(1)
                 .setAcceleration(1.)
                 .build(),
                 new AutoBalance(drive),
