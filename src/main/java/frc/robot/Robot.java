@@ -2,6 +2,9 @@ package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -70,12 +73,17 @@ public class Robot extends TimedRobot {
     
     @Override
     public void disabledPeriodic() {
+        if(RobotController.getBatteryVoltage()<11){//TODO:Test
+            light.setAllColor(light.orange);
+        } else{
+            light.flashingOrangeAndBlue();
+        }
+        
         //TODO: Add lights to have the robot tell us any errors with can, etc.
         // light.rainbow();
         // light.orangeAndBlue();
         // light.switchLeds();
         // light.chaseLED( 1);
-        light.flashingOrangeAndBlue();
     }
 
     @Override
