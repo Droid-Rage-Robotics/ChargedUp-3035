@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import frc.robot.subsystem.Light;
 import frc.robot.subsystem.drive.Drive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,9 +18,10 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
   /** Creates a new AutoBalance. */
   // private static DriverStation driverStation;
   private Drive drive;
+  private Light light;
   // private Timer timer;
   // private WriteOnlyBoolean atSetpointWriter = new WriteOnlyBoolean(false, "PID Auto balance at positionn", Drive.class.getSimpleName());
-  public AutoBalance(Drive drive) {//TODO:Test
+  public AutoBalance(Drive drive, Light light) {//TODO:Test
     
     super(
         new ProfiledPIDController(
@@ -36,9 +38,9 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
 
     addRequirements(drive);
     this.drive = drive;
+    this.light = light;
     getController().setTolerance(0.5); //degrees
     // ComplexWidgetBuilder.create(getController(), "PID Auto balance controller", Drive.class.getSimpleName());
-
   }
   
   @Override
@@ -49,17 +51,21 @@ public class AutoBalance extends ProfiledPIDCommand {//TODO: Add a TImeout to lo
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+      light.setAllColor(light.red);
     // final int time = driverStation.getMatchTime();
     // if(isMatchTime()){
     //   return true;
     // }
 
     // atSetpointWriter.set(getController().atSetpoint());
+    if(getController().atSetpoint()){
+      light.setAllColor(light.green);
+    }
     return getController().atSetpoint();
   }
 
-  public boolean isMatchTime(){//TODO:test
-    return DriverStation.getMatchTime()<2;
-  }
+  // public boolean isMatchTime(){//TODO:test
+  //   return DriverStation.getMatchTime()<2;
+  // }
 
 }

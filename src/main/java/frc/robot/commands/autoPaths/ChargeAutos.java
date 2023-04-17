@@ -9,13 +9,14 @@ import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
 import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.Light;
 import frc.robot.subsystem.Intake.Velocity;
 import frc.robot.subsystem.arm.Arm;
 import frc.robot.subsystem.arm.Arm.Position;
 import frc.robot.subsystem.drive.Drive;
 
 public final class ChargeAutos {
-    public static CommandBase chargeMidTaxi180(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargeMidTaxi180(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
@@ -42,12 +43,12 @@ public final class ChargeAutos {
                     )
                 )
                 .build(),
-                new AutoBalance(drive),
+                new AutoBalance(drive, light),
                 new LockWheels(drive),
                 drive.driveAutoReset()
         );
     }
-    public static CommandBase chargeMidTaxi90(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargeMidTaxi90(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
@@ -63,12 +64,12 @@ public final class ChargeAutos {
                     )
                 )
                 .build(),
-                new AutoBalance(drive),
+                new AutoBalance(drive,light),
                 new LockWheels(drive),
                 drive.driveAutoReset()
         );
     }
-    public static CommandBase chargeMid(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargeMid(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
@@ -80,13 +81,13 @@ public final class ChargeAutos {
                 .setMaxVelocity(1)
                 .setAcceleration(1.)
                 .build(),
-                new AutoBalance(drive),
+                new AutoBalance(drive, light),
                 new LockWheels(drive),
                 drive.driveAutoReset()
         );
     }
 
-    public static CommandBase chargeHigh(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargeHigh(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             arm.setPositionCommand(Position.HIGH),
             new WaitCommand(1.05),//HAS TO BE 1
@@ -95,13 +96,13 @@ public final class ChargeAutos {
                 .setMaxVelocity(1.)
                 .setAcceleration(1.)
                 .build(),
-                new AutoBalance(drive),
+                new AutoBalance(drive, light),
                 new LockWheels(drive),
                 drive.driveAutoReset()
         );
     }
 
-    public static CommandBase chargePlusPickUpMid(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargePlusPickUpMid(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
@@ -125,7 +126,7 @@ public final class ChargeAutos {
                 )
             )
             .build(),
-            new AutoBalance(drive),
+            new AutoBalance(drive,light),
             new LockWheels(drive),
             drive.driveAutoReset(),
             
@@ -134,7 +135,7 @@ public final class ChargeAutos {
         );
     }
 
-    public static CommandBase chargePlusPickUpHigh(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargePlusPickUpHigh(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             arm.setPositionCommand(Position.HIGH),
             new WaitCommand(1.05),//HAS TO BE 1
@@ -154,7 +155,7 @@ public final class ChargeAutos {
                     arm.setPositionCommand(Position.HOLD)
                 ))
                 .build(),
-                new AutoBalance(drive),
+                new AutoBalance(drive, light),
                 new LockWheels(drive),
                 drive.driveAutoReset(),
 
@@ -163,7 +164,7 @@ public final class ChargeAutos {
         );
     }
 
-    public static CommandBase chargePlusTaxiMid(Drive drive, Arm arm, Intake intake) {
+    public static CommandBase chargePlusTaxiMid(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             arm.setPositionCommand(Position.MID),
             new WaitCommand(1.05),//HAS TO BE 1
@@ -172,7 +173,7 @@ public final class ChargeAutos {
                 .setMaxVelocity(1.8)//Change to 1.8
                 .setAcceleration(1.8)
                 .build(),
-                new AutoBalance(drive),
+                new AutoBalance(drive, light),
                 new LockWheels(drive),
                 drive.driveAutoReset()
         );
