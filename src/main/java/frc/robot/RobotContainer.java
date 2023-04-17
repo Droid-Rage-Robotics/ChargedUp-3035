@@ -45,6 +45,10 @@ public class RobotContainer {
 
     //move enabled to one spot
     //Add a velocity offset intake 
+
+    //add a go and 180 degree charge station auto
+    //save time on bump don't worry about free
+    //position to pick up cones that are downwards
     
     // MAKE ALL OFTHE IS ENABLED IN ONE LOCATION
     private final CommandXboxController driver =
@@ -136,13 +140,17 @@ public class RobotContainer {
             );
 
         driver.rightBumper()
-            // .and(null) - allows you to make 
-            //one button different by having to press 2 buttons
             .whileTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
         driver.rightTrigger()
             .whileTrue(intake.run(intake::intake))
             .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
+
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
+        driver.leftTrigger()
+            .whileTrue(intake.run(intake::intake))
+            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
 
             .onFalse(intake.run(intake::stop))
             .onFalse(arm.setPositionCommand(Position.HOLD));
@@ -195,39 +203,12 @@ public class RobotContainer {
 
         operator.rightTrigger()
             .onTrue(new DropTeleopCone(arm, intake)) 
-            .onFalse(intake.run(intake::stop));
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
         operator.leftTrigger()
             .onTrue(new DropTeleopCube(arm, intake))
-            .onFalse(intake.run(intake::stop));
-
-
-        // operator.rightTrigger()
-        //     .whileTrue(
-        //         new TeleopOuttake(arm, intake)
-        //     ).whileFalse(intake.runOnce(()->intake.stop()));
-
-        // operator.leftTrigger()
-        //     .whileTrue(
-        //         new DropTeleopCone(arm, intake)
-        //     ).whileFalse(intake.runOnce(()->intake.stop()));
-        // operator.a()
-        //     .onTrue(pivot.runOnce(() -> pivot.setTargetPosition(Math.PI)));
-
-        // operator.start()
-        //     .onTrue(Commands.sequence(
-        //         verticalElevator.runOnce(verticalElevator::resetEncoder),
-        //         horizontalElevator.runOnce(horizontalElevator::resetEncoder)
-        //     ));
-      
-      
-        
-        // operator.rightTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(1)))
-        //                         .onFalse(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
-        // operator.leftTrigger().onTrue(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.setPower(-1)))
-        //                         .onFalse(verticalElevatorSetPower.runOnce(()->verticalElevatorSetPower.stop()));
-        
-        // operator.back()
-        //     .onTrue(pivot.runOnce(pivot::resetEncoder)); // In absolute mode
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
     }
 
     public void configureTeleOpDriverOnlyBindings() {
@@ -248,23 +229,30 @@ public class RobotContainer {
             );
 
         driver.rightBumper()
-            //one button different by having to press 2 buttons
             .whileTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
         
-        driver.rightTrigger()
+        driver.rightTrigger().and(driver.leftBumper().negate())
             .whileTrue(intake.run(intake::intake))
             .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
+
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
+        driver.rightTrigger().and(driver.leftBumper())
+            .whileTrue(intake.run(intake::intake))
+            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
 
             .onFalse(intake.run(intake::stop))
             .onFalse(arm.setPositionCommand(Position.HOLD)); 
 
         driver.leftTrigger().and(driver.leftBumper())
             .onTrue(new DropTeleopCone(arm, intake)) 
-            .onFalse(intake.run(intake::stop));
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
         driver.leftTrigger().and(driver.leftBumper().negate())
             .onTrue(new DropTeleopCube(arm, intake))
-            .onFalse(intake.run(intake::stop));
+            .onFalse(intake.run(intake::stop))
+            .onFalse(arm.setPositionCommand(Position.HOLD));
 
         driver.a()
             .onTrue(arm.setPositionCommand(Position.LOW));//Should be on True imo
