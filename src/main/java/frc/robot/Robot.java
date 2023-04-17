@@ -29,14 +29,14 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
 
     private final Drive drive = new Drive(false);
-    private final VerticalElevator verticalElevator = new VerticalElevator(true, true);
+    private final VerticalElevator verticalElevator = new VerticalElevator(false, false);
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    private final HorizontalElevator horizontalElevator = new HorizontalElevator(true);
-    private final PivotAbsolute pivot = new PivotAbsolute(true);
-    private final Intake intake = new Intake(true);
+    private final HorizontalElevator horizontalElevator = new HorizontalElevator(false);
+    private final PivotAbsolute pivot = new PivotAbsolute(false);//TODO:Fix the Gearing and Tuning
+    private final Intake intake = new Intake(false);
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
     private final Light light = new Light();
-    private final Vision vision = new Vision();
+    // private final Vision vision = new Vision();
     
     /**
      * This function is run when the robot is first started up and should be used for any
