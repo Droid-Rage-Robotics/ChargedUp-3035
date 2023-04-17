@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
     //TODO: Ideas
+    //Logging Battery usage
+    //Logging Robot Positioning
     // override button for when sensors fail
     // custom shuffleboard droid rage theme
     // auto align
@@ -37,7 +39,6 @@ public class RobotContainer {
 
 
 
-    //move enabled to one spot
     //Add a velocity offset intake 
 
     //save time on bump don't worry about free
@@ -90,12 +91,12 @@ public class RobotContainer {
         autoChooser.addOption("1+1 Free (Mid_Mid)Pear", FreeAutos.onePlusOneFreeMid_MidPear(drive, arm,intake));
         autoChooser.addOption("1+1 Free (Mid_High)", FreeAutos.onePlusOneFreeMid_High(drive, arm,intake));
 
-        autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake));
-        autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake));
-        autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake));
-        autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake));
-        autoChooser.addOption("Charge Taxi 180 (Mid)", ChargeAutos.chargeMidTaxi180(drive, arm, intake));
-        autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake));
+        autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake, light));
+        autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake, light));
+        autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake, light));
+        autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 180 (Mid)", ChargeAutos.chargeMidTaxi180(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake, light));
         
         // autoChooser.addOption("Charge Plus Pickup Parts (High)", OldAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
@@ -196,6 +197,8 @@ public class RobotContainer {
             .onFalse(intake.run(intake::stop))
             .onFalse(arm.setPositionCommand(Position.HOLD));
     }
+
+    /*************************************/
 
     public void configureTeleOpDriverOnlyBindings() {
         DriverStation.silenceJoystickConnectionWarning(true);
