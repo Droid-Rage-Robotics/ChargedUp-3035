@@ -17,6 +17,7 @@ import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -105,8 +106,9 @@ public class RobotContainer {
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
-        // ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
-        //     .withSize(5, 5);
+        ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
+        
+            .withSize(5, 5);
     }
 
     public void configureTeleOpBindings() {
@@ -131,10 +133,10 @@ public class RobotContainer {
             .onFalse(drive.setNormalSpeed());
         driver.rightTrigger()
             .whileTrue(intake.run(intake::intake))
-            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
+            // .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
 
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
+            .onFalse(intake.run(intake::stop));
+            // .onFalse(arm.setPositionCommand(Position.HOLD));
         driver.leftTrigger()
             .whileTrue(intake.run(intake::intake))
             .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
