@@ -17,26 +17,20 @@ import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     //TODO: Ideas
     // override button for when sensors fail
-    // find out how to make a field graph with robot pose on it and preferably a visual for path following
     // custom shuffleboard droid rage theme
     // auto align
-    // fix auto balace
+    // fix auto balance
     // fix lock wheels
-    // limielite
-    // detect when intake velocity error drops and light leds
-    // Rumble Driver 1 when element in claw
+    // limelight
     // see how slew rate limiter affects turning and movement. can it make motors stop faster without enabling brake mode?
     //Idea: Make a button that automatically aligns to 180 degrees with a press of a button - 
     //      only when held - still leave control of drive to driver except for turning
@@ -46,11 +40,9 @@ public class RobotContainer {
     //move enabled to one spot
     //Add a velocity offset intake 
 
-    //add a go and 180 degree charge station auto
+    //add a 90 and 180 degree charge station auto
     //save time on bump don't worry about free
-    //position to pick up cones that are downwards
     
-    // MAKE ALL OFTHE IS ENABLED IN ONE LOCATION
     private final CommandXboxController driver =
         new CommandXboxController(DroidRageConstants.Gamepad.DRIVER_CONTROLLER_PORT);
     private final CommandXboxController operator =
