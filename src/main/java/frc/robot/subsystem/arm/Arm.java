@@ -16,6 +16,7 @@ public class Arm {
     public enum Position {
         START(Value.START, Value.START),
         INTAKE_LOW(Value.INTAKE_LOW_CONE, Value.INTAKE_LOW_CUBE),
+        INTAKE_LOW_DROPPED(Value.INTAKE_LOW_CONE_DROPPED, Value.INTAKE_LOW_CUBE),
         LOW(Value.LOW_CONE, Value.LOW_CUBE),
         MID(Value.MID_CONE, Value.MID_CUBE),
         AUTO_HIGH(Value.AUTO_HIGH_CONE, Value.AUTO_HIGH_CUBE),
@@ -59,6 +60,7 @@ public class Arm {
 
         INTAKE_LOW_CONE(0,0, 213),//215 or 219 (shoot COnes)
         INTAKE_LOW_CUBE(0,0, 209),
+        INTAKE_LOW_CONE_DROPPED(0,1, 230),
 
         AUTO_INTAKE_LOW_CONE(0,13, INTAKE_LOW_CONE.getPivotDegrees()),//215 or 219 (shoot COnes)
         AUTO_INTAKE_LOW_CUBE(0,13, INTAKE_LOW_CUBE.getPivotDegrees()),
@@ -221,5 +223,8 @@ public class Arm {
 
     public CommandBase lowerElevatorCommand() {
         return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 3));
+    }
+    public CommandBase lowerPivotCommand() {
+        return pivot.runOnce(() -> pivot.setTargetPosition(pivot.getTargetPosition() - 2));
     }
 }
