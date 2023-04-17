@@ -47,9 +47,9 @@ public class LightCommand extends CommandBase {
         }
         else intakeState=IntakeState.TRACK_ELEMENT;
 
-        switch(intakeState){//Implement another timer to keep green on
+        switch(intakeState){
             case ElEMENT_IN:
-                // intake.runOnce(intake::intake);//Would you want to intake no matter what? 
+                // intake.runOnce(intake::intake);
                 driver.getHID().setRumble(RumbleType.kBothRumble, 1);
                 light.elementIn();
                 break;
