@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
         SHOOT_CUBE_LOW(19000),
         SHOOT_CUBE_MID(5000),
 
-        SHOOT_AUTO_CUBE_MID(26000),
+        SHOOT_AUTO_CUBE_LOW(26000),
         SHOOT_CUBE_HIGH(2400),
   
         SHOOT_CONE_LOW(SHOOT_CUBE_LOW.get()),
