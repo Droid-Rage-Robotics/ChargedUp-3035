@@ -16,7 +16,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     public final Color red, yellow, purple, orange, blue;
     public static Timer timer = new Timer();
 
-    private long waitTime = 150, startTime= System.currentTimeMillis();
+    private long waitTime = 200, startTime= System.currentTimeMillis();
     private int stage = 0;
 
   //   private TrobotAddressableLEDPattern m_onPattern;
