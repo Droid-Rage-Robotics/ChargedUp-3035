@@ -226,6 +226,6 @@ public class Arm {
         return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 3));
     }
     public CommandBase lowerPivotCommand() {
-        return pivot.runOnce(() -> pivot.setTargetPosition(pivot.getTargetPosition() - 2));
+        return pivot.runOnce(() -> pivot.setTargetPosition(pivot.getTargetPosition() - 25));
     }
 }
