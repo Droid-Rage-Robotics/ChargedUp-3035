@@ -15,7 +15,7 @@ import frc.robot.utility.SafeMotor.IdleMode;
 
 public class Pivot extends SubsystemBase {
     public static class Constants {
-        public static final double GEAR_RATIO = 1 / 240;
+        public static final double GEAR_RATIO = 1 / 240;//Old One is 240 // New is 180 (I think)
         public static final double READINGS_PER_REVOLUTION = 1;
         public static final double ROTATIONS_TO_RADIANS = (GEAR_RATIO * READINGS_PER_REVOLUTION) / (Math.PI * 2);
     }
@@ -45,7 +45,7 @@ public class Pivot extends SubsystemBase {
             ShuffleboardValue.create(0.0, "Voltage", Pivot.class.getSimpleName())
                 .build()
         );
-        motor.setIdleMode(IdleMode.Brake);
+        motor.setIdleMode(IdleMode.Coast);//TODO:Make it brake 
 
         encoder = motor.getEncoder();
         encoder.setPositionConversionFactor(Constants.ROTATIONS_TO_RADIANS);
@@ -55,7 +55,7 @@ public class Pivot extends SubsystemBase {
         controller = new PIDController(0.0, 0.0, 0.0);//0.024
         controller.setTolerance(Math.toRadians(0.1));//How Much?
 
-        feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.052763);
+        // feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.052763);
         // feedforward = new ArmFeedforward(0, 0,0);
 
         ComplexWidgetBuilder.create(controller, "PID Controller", Pivot.class.getSimpleName())
