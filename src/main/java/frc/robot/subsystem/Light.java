@@ -14,10 +14,11 @@ public class Light extends SubsystemBase {//TODO:Fix
     private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
     public final Color red = Color.kRed, 
+    batteryBlue = Color.kMidnightBlue,
                       orange = Color.kOrange, 
-                      purple = Color.kPurple, 
-                      yellow = Color.kOrangeRed, 
-                      blue = Color.kBlue, 
+                      purple = Color.kPurple, //CUbe
+                      yellow = Color.kOrangeRed, //COne
+                      blue = Color.kBlue, //Decoration
                       green = Color.kGreen;
     public static Timer timer = new Timer();
     private long waitTime = 200, startTime= System.currentTimeMillis();
