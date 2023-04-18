@@ -29,9 +29,9 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
 
     private final Drive drive = new Drive(false);
-    private final VerticalElevator verticalElevator = new VerticalElevator(false, false);
+    private final VerticalElevator verticalElevator = new VerticalElevator(true, true);
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
-    private final HorizontalElevator horizontalElevator = new HorizontalElevator(false);
+    private final HorizontalElevator horizontalElevator = new HorizontalElevator(true);
     private final PivotAbsolute pivot = new PivotAbsolute(true);//TODO:Fix the Gearing and Tuning
     private final Intake intake = new Intake(false);
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
