@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     private final VerticalElevator verticalElevator = new VerticalElevator(false, false);
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
     private final HorizontalElevator horizontalElevator = new HorizontalElevator(false);
-    private final PivotAbsolute pivot = new PivotAbsolute(false);//TODO:Fix the Gearing and Tuning
+    private final PivotAbsolute pivot = new PivotAbsolute(true);//TODO:Fix the Gearing and Tuning
     private final Intake intake = new Intake(false);
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
     private final Light light = new Light();
@@ -102,8 +102,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
-        // robotContainer.configureTeleOpBindings();
-        robotContainer.configureTeleOpDriverOnlyBindings();
+        robotContainer.configureTeleOpBindings();
+        // robotContainer.configureTeleOpDriverOnlyBindings();
     }
 
     @Override

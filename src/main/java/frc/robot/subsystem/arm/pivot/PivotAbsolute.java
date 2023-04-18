@@ -10,7 +10,7 @@ public class PivotAbsolute extends PivotMotionProfiled {
         public static double OFFSET = Math.PI / 2;
     }
     SparkMaxAbsoluteEncoder absoluteEncoder;
-    protected final ShuffleboardValue<Double> rawEncoderPositionWriter = ShuffleboardValue.create(0.0, "Raw Encoder Position (Radians)", Pivot.class.getSimpleName())
+    protected final ShuffleboardValue<Double> rawEncoderPositionWriter = ShuffleboardValue.create(0.0, "Raw Encoder Position (Degrees)", Pivot.class.getSimpleName())
         .withSize(1, 2)
         .build();
     public PivotAbsolute(Boolean isEnabled) {
@@ -33,7 +33,7 @@ public class PivotAbsolute extends PivotMotionProfiled {
 
     public void getRawEncoderPositions() {
         double position = (absoluteEncoder.getPosition());
-        rawEncoderPositionWriter.write(position);
+        rawEncoderPositionWriter.write(Math.toDegrees(position));
     }
 
     @Override

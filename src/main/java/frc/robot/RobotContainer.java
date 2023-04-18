@@ -172,18 +172,18 @@ public class RobotContainer {
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
 
         operator.a()
-            .onTrue( // while true to update positions when moving manually
+            .whileTrue( // while true to update positions when moving manually
                 arm.setPositionCommand(Position.LOW)
             );
         operator.x()
-            .onTrue(arm.setPositionCommand(Position.MID));
+            .whileTrue(arm.setPositionCommand(Position.MID));
         operator.y()
-            .onTrue(arm.setPositionCommand(Position.HIGH));
+            .whileTrue(arm.setPositionCommand(Position.HIGH));
         
         operator.povUp()
-            .onTrue(arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION));
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_DOUBLE_SUBSTATION));
         operator.povRight()
-            .onTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
         operator.povLeft()
             .onTrue(arm.setPositionCommand(Position.INTAKE_LOW));
         operator.povDown()

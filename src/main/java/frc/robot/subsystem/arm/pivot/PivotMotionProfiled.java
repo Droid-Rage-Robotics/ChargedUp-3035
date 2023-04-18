@@ -25,7 +25,7 @@ public class PivotMotionProfiled extends Pivot {
         controller.setTolerance(0.10);
 
         // feedforward = new ArmFeedforward(0.079284, 0.12603, 2.3793, 0.07);
-        feedforward = new ArmFeedforward(0,0,0,0);
+        feedforward = new ArmFeedforward(0.15177,0.3,1.8137,0.030438);
 
         constraints = new TrapezoidProfile.Constraints(
             8, // radians per second
