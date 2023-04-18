@@ -14,7 +14,7 @@ public class Light extends SubsystemBase {//TODO:Fix
     private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
     public final Color red = Color.kRed, 
-    batteryBlue = Color.kMidnightBlue,
+                      batteryBlue = Color.kMidnightBlue,
                       orange = Color.kOrange, 
                       purple = Color.kPurple, //CUbe
                       yellow = Color.kOrangeRed, //COne

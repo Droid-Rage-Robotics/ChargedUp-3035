@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         if(RobotController.getBatteryVoltage()<11){//TODO:Test
-            light.setAllColor(light.orange);
+            light.setAllColor(light.batteryBlue);
         } else{
             light.flashingOrangeAndBlue();
         }
