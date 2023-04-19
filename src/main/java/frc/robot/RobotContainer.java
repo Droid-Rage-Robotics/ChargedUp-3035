@@ -96,8 +96,11 @@ public class RobotContainer {
         autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake, light));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake, light));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake, light));
+        
         autoChooser.addOption("Charge Taxi 180 (Mid)", ChargeAutos.chargeMidTaxi180(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 180 (Mid)Turn", ChargeAutos.chargeMidTaxi180Turn(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 90 (Mid) urn", ChargeAutos.chargeMidTaxi90Turn(drive, arm, intake, light));
         
         // autoChooser.addOption("Charge Plus Pickup Parts (High)", OldAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
