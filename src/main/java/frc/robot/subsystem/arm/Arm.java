@@ -185,7 +185,7 @@ public class Arm {
                         Commands.waitSeconds(0.8),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
-                case  AUTO_MID ->
+                case  AUTO_MID, MID ->
                     new SequentialCommandGroup(
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                         Commands.waitSeconds(0.5),
