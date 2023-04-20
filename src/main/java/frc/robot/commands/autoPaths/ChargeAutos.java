@@ -8,6 +8,7 @@ import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.PathPlannerFollow;
 import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCone;
+import frc.robot.commands.intakeAndOuttake.autoDrop.DropAutoCube;
 import frc.robot.subsystem.Intake;
 import frc.robot.subsystem.Light;
 import frc.robot.subsystem.Intake.Velocity;
@@ -111,7 +112,7 @@ public final class ChargeAutos {
         );
     }
 
-    public static CommandBase chargePlusTaxiMid(Drive drive, Arm arm, Intake intake, Light light) {
+    public static CommandBase chargePlusTaxiMidCone(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             arm.setPositionCommand(Position.MID),
             new WaitCommand(1.05),//HAS TO BE 1
@@ -119,6 +120,28 @@ public final class ChargeAutos {
             PathPlannerFollow.create(drive, "Charge+Taxi")
                 .setMaxVelocity(1.8)//Change to 1.8
                 .setAcceleration(1.8)
+                .addMarker("pushDown", new SequentialCommandGroup(
+                    arm.pushChargeDownCommand()
+                    )
+                )
+                .build(),
+                new AutoBalance(drive, light),
+                new LockWheels(drive),
+                drive.driveAutoReset()
+        );
+    }
+    public static CommandBase chargePlusTaxiHighCube(Drive drive, Arm arm, Intake intake, Light light) {
+        return Commands.sequence(
+            arm.setPositionCommand(Position.HIGH),
+            new WaitCommand(1.05),//HAS TO BE 1
+            new DropAutoCube(arm, intake),
+            PathPlannerFollow.create(drive, "Charge+Taxi180")
+                .setMaxVelocity(1.8)//Change to 1.8
+                .setAcceleration(1.8)
+                .addMarker("pushDown", new SequentialCommandGroup(
+                    arm.pushChargeDownCommand()
+                    )
+                )
                 .build(),
                 new AutoBalance(drive, light),
                 new LockWheels(drive),
@@ -126,7 +149,40 @@ public final class ChargeAutos {
         );
     }
 
-    public static CommandBase chargeMidTaxi180(Drive drive, Arm arm, Intake intake, Light light) {
+    // public static CommandBase chargeMidTaxi180(Drive drive, Arm arm, Intake intake, Light light) {
+    //     return Commands.sequence(
+    //         Commands.sequence(
+    //             arm.setPositionCommand(Position.AUTO_MID),
+    //             Commands.waitSeconds(1),
+    //             new DropAutoCone(arm, intake),
+    //             Commands.waitSeconds(0.1)
+    //             ),
+    //         PathPlannerFollow.create(drive, "Charge+Taxi180")
+    //             .setMaxVelocity(3)
+    //             .setAcceleration(1.)
+    //             .addMarker("pushDown", new SequentialCommandGroup(
+    //                 arm.pushChargeDownCommand()
+    //                 )
+    //             )
+    //             // .addMarker("pickUp", new SequentialCommandGroup(
+    //             //     intake.runOnce(()->intake.open(true)),
+    //             //     arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+    //             //     intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+    //             //     ))
+    //             // .addMarker("intake", new SequentialCommandGroup(
+    //             //     new WaitCommand(1),
+    //             //     intake.runOnce(intake::stop),
+    //             //     arm.setPositionCommand(Position.HOLD)
+    //             //     )
+    //             // )
+    //             .build(),
+    //             new AutoBalance(drive, light),
+    //             new LockWheels(drive),
+    //             drive.driveAutoReset()
+    //     );
+    // }
+
+    public static CommandBase chargeMidTaxi180Works(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
@@ -135,60 +191,36 @@ public final class ChargeAutos {
                 Commands.waitSeconds(0.1)
                 ),
             PathPlannerFollow.create(drive, "Charge+Taxi180")
-                .setMaxVelocity(3)
-                .setAcceleration(1.)
-                .addMarker("pushDown", new SequentialCommandGroup(
-                    arm.lowerPivotCommand()
-                    )
-                )
-                .addMarker("pickUp", new SequentialCommandGroup(
-                    intake.runOnce(()->intake.open(true)),
-                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
-                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
-                    ))
-                .addMarker("intake", new SequentialCommandGroup(
-                    new WaitCommand(1),
-                    intake.runOnce(intake::stop),
-                    arm.setPositionCommand(Position.HOLD)
-                    )
-                )
-                .build(),
-                new AutoBalance(drive, light),
-                new LockWheels(drive),
-                drive.driveAutoReset()
-        );
-    }
+                .setMaxVelocity(3.5)
+                .setAcceleration(1.5)
+                // .addMarker("pushDown", new SequentialCommandGroup(
+                //     arm.pushChargeDownCommand()//No work -Y?
+                //     )
+                // )
+                // .addMarker("hold", new SequentialCommandGroup(
+                //     arm.setPositionCommand(Position.HOLD)//Not needed wihtout push down
+                //     ))
 
-    public static CommandBase chargeMidTaxi180Turn(Drive drive, Arm arm, Intake intake, Light light) {
-        return Commands.sequence(
-            Commands.sequence(
-                arm.setPositionCommand(Position.AUTO_MID),
-                Commands.waitSeconds(1),
-                new DropAutoCone(arm, intake),
-                Commands.waitSeconds(0.1)
-                ),
-            PathPlannerFollow.create(drive, "Charge+Taxi180Turn")
-                .setMaxVelocity(3)
-                .setAcceleration(1.)
-                .addMarker("pushDown", new SequentialCommandGroup(
-                    arm.lowerPivotCommand()
-                    )
-                )
-                .addMarker("pickUp", new SequentialCommandGroup(
-                    intake.runOnce(()->intake.open(true)),
-                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
-                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
-                    ))
-                .addMarker("intake", new SequentialCommandGroup(
-                    new WaitCommand(1),
-                    intake.runOnce(intake::stop),
-                    arm.setPositionCommand(Position.HOLD)
-                    )
-                )
+                // .addMarker("pickUp", new SequentialCommandGroup(
+                    // intake.runOnce(()->intake.open(true)),
+                    // arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    // intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                    // ))
+                // .addMarker("intake", new SequentialCommandGroup(
+                //     new WaitCommand(1),
+                //     intake.runOnce(intake::stop),
+                //     arm.setPositionCommand(Position.HOLD)
+                //     )
+                // )
+                
+                // .addMarker("pushDown2", new SequentialCommandGroup(
+                //     arm.pushChargeDownCommand()//No work -Y?
+                //     )
+                // )
                 .build(),
                 new AutoBalance(drive, light),
                 new LockWheels(drive),
-                drive.driveAutoReset()
+                drive.driveAutoReset()//Don't Know If It Works
         );
     }
 
@@ -226,7 +258,7 @@ public final class ChargeAutos {
                 .setMaxVelocity(3)
                 .setAcceleration(1.)
                 .addMarker("pushDown", new SequentialCommandGroup(
-                    arm.lowerPivotCommand()
+                    arm.pushChargeDownCommand()
                     )
                 )
                 .build(),
