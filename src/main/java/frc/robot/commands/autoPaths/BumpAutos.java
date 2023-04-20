@@ -70,16 +70,16 @@ public final class BumpAutos {
                 .addMarker("pickUp", new SequentialCommandGroup(
                     // new WaitCommand(0.9),
                     intake.runOnce(intake::stop),
-                    arm.setPositionCommand(Position.AUTO_HOLD)
+                    arm.setPositionCommand(Position.AUTO_LOW)//Was Auto Hold,but should be AutoLow
                 ))
                 .addMarker("wait", new SequentialCommandGroup(
                     new WaitCommand(0.7)
                 ))
                 .addMarker("shoot", new SequentialCommandGroup(
-                    arm.setPositionCommand(Position.AUTO_LOW),
-                    new WaitCommand(0.8),
+                    // arm.setPositionCommand(Position.AUTO_LOW),
+                    // new WaitCommand(0.8),
                     intake.runOnce(()-> intake.setTargetVelocity(Velocity.SHOOT_AUTO_CUBE_LOW)),
-                    new WaitCommand(0.3),
+                    new WaitCommand(0.8),
                     intake.runOnce(intake::stop),
                     arm.setPositionCommand(Position.INTAKE_LOW),
                     intake.runOnce(()->intake.setTargetVelocity(Velocity.INTAKE))
