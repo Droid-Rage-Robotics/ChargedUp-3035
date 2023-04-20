@@ -17,6 +17,8 @@ import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
+import frc.robot.utility.ShuffleboardValue;
+import frc.robot.utility.ShuffleboardValueBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -42,6 +44,7 @@ public class RobotContainer {
 
     //Add a velocity offset intake 
     //Project to Test Motors Seperately
+    //make lift reset while driving away ofr autos
     //save time on bump don't worry about free
     //Add lights to have the robot tell us any errors with can, etc.
     
@@ -58,7 +61,8 @@ public class RobotContainer {
     private final Intake intake;
     private final Arm arm;
     private final Light light;
-
+    private ShuffleboardValue<Double> matchTime = ShuffleboardValue.create(0.0, "Match Time", "Misc")
+    .build();
     
 
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
@@ -115,6 +119,7 @@ public class RobotContainer {
         ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
         
             .withSize(5, 5);
+        
     }
 
     public void configureTeleOpBindings() {
@@ -155,8 +160,8 @@ public class RobotContainer {
         //     .onFalse(intake.run(intake::stop))
         //     .onFalse(arm.setPositionCommand(Position.HOLD));
         driver.leftTrigger()
-            .onTrue(new DropTeleopCube(arm, intake));
-            // .onFalse(intake.run(intake::stop)) 
+            .onTrue(new DropTeleopCube(arm, intake))
+            .onFalse(intake.run(intake::stop));
             // .onFalse(arm.setPositionCommand(Position.HOLD));
         
         driver.b()
@@ -316,5 +321,9 @@ public class RobotContainer {
     
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    public void teleopPeriodic() {
+        matchTime.set(DriverStation.getMatchTime());
     }
 }
