@@ -153,27 +153,9 @@
       ]
     },
     {
-      "position": 2.4,
-      "names": [
-        "pushDown"
-      ]
-    },
-    {
       "position": 4.1,
       "names": [
         "intake"
-      ]
-    },
-    {
-      "position": 4.5,
-      "names": [
-        "pushDown2"
-      ]
-    },
-    {
-      "position": 2.8,
-      "names": [
-        "hold"
       ]
     }
   ]

@@ -149,40 +149,7 @@ public final class ChargeAutos {
         );
     }
 
-    // public static CommandBase chargeMidTaxi180(Drive drive, Arm arm, Intake intake, Light light) {
-    //     return Commands.sequence(
-    //         Commands.sequence(
-    //             arm.setPositionCommand(Position.AUTO_MID),
-    //             Commands.waitSeconds(1),
-    //             new DropAutoCone(arm, intake),
-    //             Commands.waitSeconds(0.1)
-    //             ),
-    //         PathPlannerFollow.create(drive, "Charge+Taxi180")
-    //             .setMaxVelocity(3)
-    //             .setAcceleration(1.)
-    //             .addMarker("pushDown", new SequentialCommandGroup(
-    //                 arm.pushChargeDownCommand()
-    //                 )
-    //             )
-    //             // .addMarker("pickUp", new SequentialCommandGroup(
-    //             //     intake.runOnce(()->intake.open(true)),
-    //             //     arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
-    //             //     intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
-    //             //     ))
-    //             // .addMarker("intake", new SequentialCommandGroup(
-    //             //     new WaitCommand(1),
-    //             //     intake.runOnce(intake::stop),
-    //             //     arm.setPositionCommand(Position.HOLD)
-    //             //     )
-    //             // )
-    //             .build(),
-    //             new AutoBalance(drive, light),
-    //             new LockWheels(drive),
-    //             drive.driveAutoReset()
-    //     );
-    // }
-
-    public static CommandBase chargeMidTaxi180Works(Drive drive, Arm arm, Intake intake, Light light) {
+    public static CommandBase chargeMidTaxi180PickUp(Drive drive, Arm arm, Intake intake, Light light) {
         return Commands.sequence(
             Commands.sequence(
                 arm.setPositionCommand(Position.AUTO_MID),
@@ -193,30 +160,53 @@ public final class ChargeAutos {
             PathPlannerFollow.create(drive, "Charge+Taxi180")
                 .setMaxVelocity(3.5)
                 .setAcceleration(1.5)
-                // .addMarker("pushDown", new SequentialCommandGroup(
-                //     arm.pushChargeDownCommand()//No work -Y?
-                //     )
-                // )
-                // .addMarker("hold", new SequentialCommandGroup(
-                //     arm.setPositionCommand(Position.HOLD)//Not needed wihtout push down
-                //     ))
+                .addMarker("pickUp", new SequentialCommandGroup(
+                    intake.runOnce(()->intake.open(true)),
+                    arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
+                    intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
+                    ))
+                .addMarker("intake", new SequentialCommandGroup(
+                    new WaitCommand(1),
+                    intake.runOnce(intake::stop),
+                    arm.setPositionCommand(Position.HOLD)
+                    )
+                )
+                .build(),
+                new AutoBalance(drive, light),
+                new LockWheels(drive),
+                drive.driveAutoReset()//Don't Know If It Works
+        );
+    }
 
-                // .addMarker("pickUp", new SequentialCommandGroup(
-                    // intake.runOnce(()->intake.open(true)),
-                    // arm.setPositionCommand(Position.AUTO_INTAKE_LOW),
-                    // intake.runOnce(()-> intake.setTargetVelocity(Velocity.INTAKE))
-                    // ))
-                // .addMarker("intake", new SequentialCommandGroup(
-                //     new WaitCommand(1),
-                //     intake.runOnce(intake::stop),
-                //     arm.setPositionCommand(Position.HOLD)
-                //     )
-                // )
-                
-                // .addMarker("pushDown2", new SequentialCommandGroup(
-                //     arm.pushChargeDownCommand()//No work -Y?
-                //     )
-                // )
+    public static CommandBase chargeMidTaxi180NoPickUp(Drive drive, Arm arm, Intake intake, Light light) {
+        return Commands.sequence(
+            Commands.sequence(
+                arm.setPositionCommand(Position.AUTO_MID),
+                Commands.waitSeconds(1),
+                new DropAutoCone(arm, intake),
+                Commands.waitSeconds(0.1)
+                ),
+            PathPlannerFollow.create(drive, "Charge+Taxi180")
+                .setMaxVelocity(3.5)
+                .setAcceleration(1.5)
+                .build(),
+                new AutoBalance(drive, light),
+                new LockWheels(drive),
+                drive.driveAutoReset()//Don't Know If It Works
+        );
+    }
+
+    public static CommandBase chargeHighTaxi180NoPickUpCube(Drive drive, Arm arm, Intake intake, Light light) {
+        return Commands.sequence(
+            Commands.sequence(
+                arm.setPositionCommand(Position.AUTO_HIGH),
+                Commands.waitSeconds(1),
+                new DropAutoCube(arm, intake),
+                Commands.waitSeconds(0.1)
+                ),
+            PathPlannerFollow.create(drive, "Charge+Taxi180")
+                .setMaxVelocity(3.5)
+                .setAcceleration(1.5)
                 .build(),
                 new AutoBalance(drive, light),
                 new LockWheels(drive),
