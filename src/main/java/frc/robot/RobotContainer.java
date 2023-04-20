@@ -201,7 +201,7 @@ public class RobotContainer {
         verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
 
-        operator.a()
+        operator.a()//Make Sure to HOLD the button
             .whileTrue( // while true to update positions when moving manually
                 arm.setPositionCommand(Position.LOW)
             );

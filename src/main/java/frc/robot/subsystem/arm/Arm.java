@@ -63,7 +63,7 @@ public class Arm {
         INTAKE_LOW_CUBE(0,0, 209),
         INTAKE_LOW_CONE_DROPPED(0.,2, 230),
 
-        AUTO_INTAKE_LOW_CONE(0,13, INTAKE_LOW_CONE.getPivotDegrees()),//215 or 219 (shoot COnes)
+        AUTO_INTAKE_LOW_CONE(0,13, 210),//215 or 219 (shoot COnes)
         AUTO_INTAKE_LOW_CUBE(0,13, INTAKE_LOW_CUBE.getPivotDegrees()),
        
         LOW_CONE(0, 0, 200),
@@ -185,7 +185,7 @@ public class Arm {
                         Commands.waitSeconds(0.8),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
-                case  AUTO_MID, MID ->
+                case  AUTO_MID ->
                     new SequentialCommandGroup(
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                         Commands.waitSeconds(0.5),
