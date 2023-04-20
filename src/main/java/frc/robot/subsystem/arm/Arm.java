@@ -61,7 +61,7 @@ public class Arm {
 
         INTAKE_LOW_CONE(0,0, 213),//215 or 219 (shoot COnes)
         INTAKE_LOW_CUBE(0,0, 209),
-        INTAKE_LOW_CONE_DROPPED(0,1, 230),
+        INTAKE_LOW_CONE_DROPPED(0.,2, 230),
 
         AUTO_INTAKE_LOW_CONE(0,13, INTAKE_LOW_CONE.getPivotDegrees()),//215 or 219 (shoot COnes)
         AUTO_INTAKE_LOW_CUBE(0,13, INTAKE_LOW_CUBE.getPivotDegrees()),
@@ -69,25 +69,21 @@ public class Arm {
         LOW_CONE(0, 0, 200),
         LOW_CUBE(0,0, 145),
 
-        MID_CONE(13.2,11.3,170), // LOWCONE.pivotAngle.get() 
+        MID_CONE(13.,11.3,172), 
         // MID_CUBE(0,0, 125), - shoot mid place
         MID_CUBE(13.4,10.4, 193),
-
-        
-        // AUTO_MID_CUBE(MID_CUBE.getVertical(), MID_CUBE.getHorizontal(), MID_CUBE.getPivotDegrees()), // Should be same as MID_CUBE
-        // AUTOMIDCUBE(13.4,10.4, MIDCONE.pivotAngle.get()),
-
-        HIGH_CONE(16,12.5, 145.5),
-        HIGH_CUBE(15.1,12.65, 153),
 
         AUTO_MID_CONE(14.6, 11.5, 175),
         AUTO_MID_CUBE(13,10, 170),
 
+        HIGH_CONE(16,12.5, 145.5),
+        HIGH_CUBE(15.1,12.65, 153),
+
         AUTO_HIGH_CONE(HIGH_CONE),
         AUTO_HIGH_CUBE(HIGH_CUBE),
 
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(13,0, 181),
-        INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13,0, 175),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CONE(13.5,0, 181),
+        INTAKE_HIGH_DOUBLE_SUBSTATION_CUBE(13.2,0, 175),
 
         INTAKE_HIGH_SINGLE_SUBSTATION_CONE(12,0, 110),
         INTAKE_HIGH_SINGLE_SUBSTATION_CUBE(12,0,113),
@@ -225,7 +221,10 @@ public class Arm {
     public CommandBase lowerElevatorCommand() {
         return verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(verticalElevator.getTargetPosition() - 3));
     }
-    public CommandBase lowerPivotCommand() {
-        return pivot.runOnce(() -> pivot.setTargetPosition(pivot.getTargetPosition() - 25));
+    public CommandBase lowerPivotCommand(double lowerNum) {
+        return pivot.runOnce(() -> pivot.setTargetPosition(pivot.getTargetPosition() - lowerNum));
+    }
+    public CommandBase pushChargeDownCommand() {
+        return pivot.runOnce(() -> pivot.setTargetPosition(Value.INTAKE_LOW_CUBE.getPivotDegrees()));
     }
 }
