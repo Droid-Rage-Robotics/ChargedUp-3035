@@ -64,7 +64,8 @@ public class RobotContainer {
     private final Arm arm;
     private final Light light;
     private ShuffleboardValue<Double> matchTime = ShuffleboardValue.create(0.0, "Match Time", "Misc")
-        // .withWidget(BuiltInWidgets.k)
+        // .withWidget(BuiltInWidgets.kDial)
+        .withWidget(BuiltInWidgets.kTextView)
         .build();
     
 
