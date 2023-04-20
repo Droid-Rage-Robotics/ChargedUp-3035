@@ -28,12 +28,12 @@ public class Robot extends TimedRobot {
     
     private RobotContainer robotContainer;
 
-    private final Drive drive = new Drive(false);
+    private final Drive drive = new Drive(true);
     private final VerticalElevator verticalElevator = new VerticalElevator(true, true);
     // private final VerticalElevatorSetPower verticalElevatorSetPower = new VerticalElevatorSetPower();
     private final HorizontalElevator horizontalElevator = new HorizontalElevator(true);
-    private final PivotAbsolute pivot = new PivotAbsolute(true);//TODO:Fix the Gearing and Tuning
-    private final Intake intake = new Intake(false);
+    private final PivotAbsolute pivot = new PivotAbsolute(true);
+    private final Intake intake = new Intake(true);
     private final Arm arm = new Arm(verticalElevator, horizontalElevator, pivot, intake);
     private final Light light = new Light();
     // private final Vision vision = new Vision();
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
     
     @Override
     public void disabledPeriodic() {
-        if(RobotController.getBatteryVoltage()<11){//TODO:Test
+        if(RobotController.getBatteryVoltage()<11.5){//TODO:Test
             light.setAllColor(light.batteryBlue);
         } else{
             light.flashingOrangeAndBlue();
