@@ -41,7 +41,7 @@ public class RobotContainer {
 
 
     //Add a velocity offset intake 
-
+    //Project to Test Motors Seperately
     //save time on bump don't worry about free
     //Add lights to have the robot tell us any errors with can, etc.
     
@@ -93,14 +93,15 @@ public class RobotContainer {
         autoChooser.addOption("1+1 Free (Mid_High)", FreeAutos.onePlusOneFreeMid_High(drive, arm,intake));
 
         autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake, light));
-        autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake, light));
+        autoChooser.addOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake, light));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake, light));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake, light));
         
-        autoChooser.addOption("Charge Taxi 180 (Mid)", ChargeAutos.chargeMidTaxi180(drive, arm, intake, light));
-        autoChooser.addOption("Charge Taxi 180 (Mid)Turn", ChargeAutos.chargeMidTaxi180Turn(drive, arm, intake, light));
+        autoChooser.addOption("Charge+Taxi Mid Cone Only", ChargeAutos.chargePlusTaxiMidCone(drive, arm, intake, light));
+        autoChooser.addOption("Charge+Taxi High Cube Only", ChargeAutos.chargePlusTaxiHighCube(drive, arm, intake, light));
+        autoChooser.setDefaultOption("Charge Taxi 180 (Mid) Works", ChargeAutos.chargeMidTaxi180Works(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake, light));
-        autoChooser.addOption("Charge Taxi 90 (Mid) urn", ChargeAutos.chargeMidTaxi90Turn(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 90 (Mid) Turn", ChargeAutos.chargeMidTaxi90Turn(drive, arm, intake, light));
         
         // autoChooser.addOption("Charge Plus Pickup Parts (High)", OldAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
@@ -134,25 +135,40 @@ public class RobotContainer {
         driver.rightBumper()
             .whileTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
-        driver.rightTrigger()
+        driver.rightTrigger().and(driver.leftBumper().negate())
             .whileTrue(intake.run(intake::intake))
             // .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
 
             .onFalse(intake.run(intake::stop));
             // .onFalse(arm.setPositionCommand(Position.HOLD));
+        // driver.rightTrigger().and(driver.leftBumper())
+        //     .whileTrue(intake.run(intake::intake))
+        //     .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
+
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
+
+        // driver.leftTrigger().and(driver.leftBumper())
+        //     .onTrue(new DropTeleopCone(arm, intake)) 
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
         driver.leftTrigger()
-            .whileTrue(intake.run(intake::intake))
-            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
-
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
-
+            .onTrue(new DropTeleopCube(arm, intake));
+            // .onFalse(intake.run(intake::stop)) 
+            // .onFalse(arm.setPositionCommand(Position.HOLD));
+        
         driver.b()
             .onTrue(intake.runOnce(()->intake.open(true))); 
         driver.x()
             .onTrue(intake.runOnce(()->intake.close(true)));
 
-        driver.povUp()  //Have the robot reset in any 90 degree angle - TODO:Test!
+        driver.y()
+            .onTrue(new DropTeleopCone(arm, intake));
+            // .onFalse(intake.run(intake::stop))
+            // .onFalse(arm.setPositionCommand(Position.HOLD));
+        driver.a() 
+            .onTrue(drive.setOffsetCommand(0));
+        driver.povUp() 
             .onTrue(drive.setOffsetCommand(0));
         driver.povRight()
             .onTrue(drive.setOffsetCommand(-90));
@@ -188,19 +204,19 @@ public class RobotContainer {
         operator.povRight()
             .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
         operator.povLeft()
-            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW));
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_LOW));
         operator.povDown()
-            .onTrue(arm.setPositionCommand(Position.HOLD));
+            .whileTrue(arm.setPositionCommand(Position.HOLD));
 
 
-        operator.rightTrigger()
-            .onTrue(new DropTeleopCone(arm, intake)) 
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
-        operator.leftTrigger()
-            .onTrue(new DropTeleopCube(arm, intake))
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
+        // operator.rightTrigger()
+        //     .onTrue(new DropTeleopCone(arm, intake)) 
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
+        // operator.leftTrigger()
+        //     .onTrue(new DropTeleopCube(arm, intake))
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
     }
 
     /*************************************/
