@@ -21,6 +21,8 @@ import frc.robot.utility.ShuffleboardValue;
 import frc.robot.utility.ShuffleboardValueBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -62,7 +64,8 @@ public class RobotContainer {
     private final Arm arm;
     private final Light light;
     private ShuffleboardValue<Double> matchTime = ShuffleboardValue.create(0.0, "Match Time", "Misc")
-    .build();
+        // .withWidget(BuiltInWidgets.k)
+        .build();
     
 
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
@@ -103,8 +106,8 @@ public class RobotContainer {
         
         autoChooser.addOption("Charge+Taxi Mid Cone Only", ChargeAutos.chargePlusTaxiMidCone(drive, arm, intake, light));
         autoChooser.addOption("Charge+Taxi High Cube Only", ChargeAutos.chargePlusTaxiHighCube(drive, arm, intake, light));
-        autoChooser.setDefaultOption("Charge Taxi 180 (Mid) Pick Up", ChargeAutos.chargeMidTaxi180PickUp(drive, arm, intake, light));
-        autoChooser.addOption("Charge Taxi 180 (Mid) No Pick Up", ChargeAutos.chargeMidTaxi180NoPickUp(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 180 (Mid) Pick Up", ChargeAutos.chargeMidTaxi180PickUp(drive, arm, intake, light));
+        autoChooser.setDefaultOption("Charge Taxi 180 (Mid) No Pick Up", ChargeAutos.chargeMidTaxi180NoPickUp(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 180 (High-Cube) No Pick Up", ChargeAutos.chargeHighTaxi180NoPickUpCube(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid) Turn", ChargeAutos.chargeMidTaxi90Turn(drive, arm, intake, light));
