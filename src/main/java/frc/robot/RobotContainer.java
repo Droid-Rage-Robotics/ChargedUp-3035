@@ -92,7 +92,7 @@ public class RobotContainer {
         autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
         autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
-        autoChooser.addOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
+        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
 
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
@@ -108,7 +108,7 @@ public class RobotContainer {
         autoChooser.addOption("Charge+Taxi Mid Cone Only", ChargeAutos.chargePlusTaxiMidCone(drive, arm, intake, light));
         autoChooser.addOption("Charge+Taxi High Cube Only", ChargeAutos.chargePlusTaxiHighCube(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 180 (Mid) Pick Up", ChargeAutos.chargeMidTaxi180PickUp(drive, arm, intake, light));
-        autoChooser.setDefaultOption("Charge Taxi 180 (Mid) No Pick Up", ChargeAutos.chargeMidTaxi180NoPickUp(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 180 (Mid) No Pick Up", ChargeAutos.chargeMidTaxi180NoPickUp(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 180 (High-Cube) No Pick Up", ChargeAutos.chargeHighTaxi180NoPickUpCube(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid) Turn", ChargeAutos.chargeMidTaxi90Turn(drive, arm, intake, light));

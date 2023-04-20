@@ -194,7 +194,7 @@ public class Arm {
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
                     );
                 case AUTO_HOLD, HOLD -> //Commands.sequence(
-                    new ParallelCommandGroup(//TODO:ONly mve pivot fgor the cube not cone
+                    new ParallelCommandGroup(//TODO:ONly mve pivot for the cube not cone?
                         verticalElevator.runOnce(() -> verticalElevator.setTargetPosition(targetPosition.getVertical())),
                         horizontalElevator.runOnce(() -> horizontalElevator.setTargetPosition(targetPosition.getHorizontal())),
                         pivot.runOnce(() -> pivot.setTargetPosition(Math.toRadians(targetPosition.getPivotDegrees())))
