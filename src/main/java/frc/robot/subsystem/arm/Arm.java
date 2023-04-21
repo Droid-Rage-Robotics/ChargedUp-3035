@@ -63,7 +63,7 @@ public class Arm {
         INTAKE_LOW_CUBE(0,0, 209),
         INTAKE_LOW_CONE_DROPPED(0.,2, 230),
 
-        AUTO_INTAKE_LOW_CONE(0,13, 210),//215 or 219 (shoot COnes)
+        AUTO_INTAKE_LOW_CONE(0,13, 213),//215 or 219 (shoot COnes)
         AUTO_INTAKE_LOW_CUBE(0,13, INTAKE_LOW_CUBE.getPivotDegrees()),
        
         LOW_CONE(0, 0, 200),
