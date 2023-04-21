@@ -118,8 +118,8 @@ public final class ChargeAutos {
             new WaitCommand(1.05),//HAS TO BE 1
             new DropAutoCone(arm, intake),
             PathPlannerFollow.create(drive, "Charge+Taxi")
-                .setMaxVelocity(1.8)//Change to 1.8
-                .setAcceleration(1.8)
+                .setMaxVelocity(2.1)//Change to 1.8
+                .setAcceleration(2)
                 .addMarker("pushDown", new SequentialCommandGroup(
                     arm.pushChargeDownCommand()
                     )
