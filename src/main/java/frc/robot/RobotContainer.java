@@ -93,7 +93,7 @@ public class RobotContainer {
 
         autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
         autoChooser.setDefaultOption("1+1 Bump (Mid_Mid) Cone", BumpAutos.onePlusOneBumpMid_MidCone(drive, arm,intake));
-        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid) Cube", BumpAutos.onePlusOneBumpMid_MidCube(drive, arm,intake));
+        autoChooser.addOption("1+1 Bump (Mid_Mid) Cube", BumpAutos.onePlusOneBumpMid_MidCube(drive, arm,intake));
 
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
@@ -121,9 +121,9 @@ public class RobotContainer {
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
-        ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
+        // ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
         
-            .withSize(5, 5);
+        //     .withSize(5, 5);
         
     }
 
