@@ -92,7 +92,8 @@ public class RobotContainer {
         autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
         autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
-        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
+        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid) Cone", BumpAutos.onePlusOneBumpMid_MidCone(drive, arm,intake));
+        autoChooser.setDefaultOption("1+1 Bump (Mid_Mid) Cube", BumpAutos.onePlusOneBumpMid_MidCube(drive, arm,intake));
 
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
