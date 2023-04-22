@@ -86,8 +86,8 @@ public final class BumpAutos {
                 ))
                 .build(),
                 intake.runOnce(()->intake.close(true)),
-                new WaitCommand(1.6),
-                intake.runOnce(()->intake.stop()),
+                // new WaitCommand(1.6),
+                // intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()   
         );
     }
@@ -129,8 +129,8 @@ public final class BumpAutos {
                 ))
                 .build(),
                 intake.runOnce(()->intake.open(true)),
-                new WaitCommand(1.6),
-                intake.runOnce(()->intake.stop()),
+                // new WaitCommand(1.6),
+                // intake.runOnce(()->intake.stop()),
                 drive.driveAutoReset()   
         );
     }
