@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
+    // guess these will never be implemented bc were done with the season
     //TODO: Ideas
     //Logging Battery usage
     //Logging Robot Positioning
