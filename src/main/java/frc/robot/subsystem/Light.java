@@ -20,9 +20,12 @@ public class Light extends SubsystemBase {//TODO:Fix
                       blue = Color.kBlue, //Decoration
                       green = Color.kGreen;
     public static Timer timer = new Timer();
+<<<<<<< HEAD
     class Rainbow{
       private int rainbowFirstPixelHue = 0;
     }
+=======
+>>>>>>> be5569a6001ff1c89359ef11aa7173edf3379895
     class SwitchLED{
       private boolean on = true;
       private double lastChange;
