@@ -21,18 +21,26 @@ public class Light extends SubsystemBase {//TODO:Fix
                       blue = Color.kBlue, //Decoration
                       green = Color.kGreen;
     public static Timer timer = new Timer();
-    private long waitTime = 200, startTime= System.currentTimeMillis();
-    private int stage = 0;
+    class SwitchLED{
+      private boolean on = true;
+      private double lastChange;
+    }
+    class FlashingColor{
+      private long waitTime = 200, 
+                    startTime = System.currentTimeMillis();
+      private int stage = 0;
+    }
+    private SwitchLED switchLED;
+    private FlashingColor flashingColor;
 
   //   private TrobotAddressableLEDPattern m_onPattern;
 	// private TrobotAddressableLEDPattern m_offPattern;
 	// private double m_interval = 2;
-	private boolean on = true;
-	private double lastChange;
   
     // protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
     //     .build();
-    public Light() {//TODO:Move most of these things to a command instead of the subsystem (very important)
+    public Light() {
+      //TODO:Move most of these things to a command instead of the subsystem (very important)
       //TODO: Add a timeout for when Intake is first pressed
         
         led = new AddressableLED(0);
@@ -149,11 +157,11 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     public void switchLeds() {
       double timestamp = Timer.getFPGATimestamp();
-      if (timestamp- lastChange > 1){
-        on = !on;
-        lastChange = timestamp;
+      if (timestamp - switchLED.lastChange > 1){
+        switchLED.on = !switchLED.on;
+        switchLED.lastChange = timestamp;
       }
-      if (on){
+      if (switchLED.on){
         setAlternatingColor(yellow, blue);
       } else {
         setAlternatingColor(blue, yellow);
@@ -175,17 +183,17 @@ public class Light extends SubsystemBase {//TODO:Fix
       m_offset =(m_offset+1) %bufferLength;
     }
 
-    public void flashingOrangeAndBlue(){
-      if (System.currentTimeMillis() - startTime >= waitTime) {
+    public void flashingColors(Color colorOne, Color colorTwo){
+      if (System.currentTimeMillis() - flashingColor.startTime >= flashingColor.waitTime) {
         for (int i = 0; i < buffer.getLength(); i++) {
-            if (i % 3 == stage) {
-                setColor(i, yellow);
+            if (i % 3 == flashingColor.stage) {
+                setColor(i, colorOne);
                 continue;
             }
-            setColor(i, blue);
+            setColor(i, colorTwo);
         }
-        stage = stage + 1 > 3 ? 0 : stage + 1;
-        startTime = System.currentTimeMillis();
+        flashingColor.stage = flashingColor.stage + 1 > 3 ? 0 : flashingColor.stage + 1;
+        flashingColor.startTime = System.currentTimeMillis();
       }
     }
 }
