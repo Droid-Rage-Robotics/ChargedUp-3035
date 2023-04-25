@@ -20,9 +20,12 @@ public class Light extends SubsystemBase {//TODO:Fix
                       blue = Color.kBlue, //Decoration
                       green = Color.kGreen;
     public static Timer timer = new Timer();
+<<<<<<< HEAD
     class Rainbow{
       private int rainbowFirstPixelHue = 0;
     }
+=======
+>>>>>>> be5569a6001ff1c89359ef11aa7173edf3379895
     class SwitchLED{
       private boolean on = true;
       private double lastChange;
@@ -36,6 +39,13 @@ public class Light extends SubsystemBase {//TODO:Fix
     private FlashingColor flashingColor;
     private Rainbow rainbow;
 
+
+  //   private TrobotAddressableLEDPattern m_onPattern;
+	// private TrobotAddressableLEDPattern m_offPattern;
+	// private double m_interval = 2;
+  
+    // protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
+    //     .build();
     public Light() {
       //TODO:Move most of these things to a command instead of the subsystem (very important)
       //TODO: Add a timeout for when Intake is first pressed
