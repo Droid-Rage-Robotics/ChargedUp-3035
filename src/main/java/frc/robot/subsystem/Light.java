@@ -36,6 +36,13 @@ public class Light extends SubsystemBase {//TODO:Fix
     private FlashingColor flashingColor;
     private Rainbow rainbow;
 
+
+  //   private TrobotAddressableLEDPattern m_onPattern;
+	// private TrobotAddressableLEDPattern m_offPattern;
+	// private double m_interval = 2;
+  
+    // protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
+    //     .build();
     public Light() {
       //TODO:Move most of these things to a command instead of the subsystem (very important)
       //TODO: Add a timeout for when Intake is first pressed
