@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
         if(RobotController.getBatteryVoltage()<11.5){//TODO:Test
             light.setAllColor(light.batteryBlue);
         } else{
-            light.flashingOrangeAndBlue();
+            light.flashingColors(light.yellow, light.blue);
         }
         
         //TODO: Add lights to have the robot tell us any errors with can, etc.
