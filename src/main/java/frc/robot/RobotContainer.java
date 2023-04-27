@@ -17,14 +17,19 @@ import frc.robot.subsystem.arm.elevator.VerticalElevator;
 import frc.robot.subsystem.arm.pivot.*;
 import frc.robot.subsystem.drive.Drive;
 import frc.robot.utility.ComplexWidgetBuilder;
+import frc.robot.utility.ShuffleboardValue;
+import frc.robot.utility.ShuffleboardValueBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
+    // guess these will never be implemented bc were done with the season
     //TODO: Ideas
     //Logging Battery usage
     //Logging Robot Positioning
@@ -42,7 +47,8 @@ public class RobotContainer {
 
 
     //Add a velocity offset intake 
-
+    //Project to Test Motors Seperately
+    //make lift reset while driving away ofr autos
     //save time on bump don't worry about free
     //Add lights to have the robot tell us any errors with can, etc.
     
@@ -59,7 +65,10 @@ public class RobotContainer {
     private final Intake intake;
     private final Arm arm;
     private final Light light;
-
+    private ShuffleboardValue<Double> matchTime = ShuffleboardValue.create(0.0, "Match Time", "Misc")
+        // .withWidget(BuiltInWidgets.kDial)
+        .withWidget(BuiltInWidgets.kTextView)
+        .build();
     
 
     SendableChooser<CommandBase> autoChooser = new SendableChooser<CommandBase>();
@@ -85,7 +94,8 @@ public class RobotContainer {
         autoChooser.addOption("ForwardThenTurn Test", TuningAutos.forwardThenTurnTest(drive));
 
         autoChooser.addOption("1+1 Bump (High_Mid)", BumpAutos.onePlusOneBumpHigh_Mid(drive, arm,intake));
-        autoChooser.addOption("1+1 Bump (Mid_Mid)", BumpAutos.onePlusOneBumpMid_Mid(drive, arm,intake));
+        autoChooser.addOption("1+1 Bump (Mid_Mid) Cone", BumpAutos.onePlusOneBumpMid_MidCone(drive, arm,intake));
+        autoChooser.addOption("1+1 Bump (Mid_Mid) Cube", BumpAutos.onePlusOneBumpMid_MidCube(drive, arm,intake));
 
         autoChooser.addOption("1+1 Free (High_High)", FreeAutos.onePlusOneFreeHigh_High(drive, arm,intake));
         autoChooser.addOption("1+1 Free (High_Mid)", FreeAutos.onePlusOneFreeHigh_Mid(drive, arm,intake));
@@ -94,11 +104,17 @@ public class RobotContainer {
         autoChooser.addOption("1+1 Free (Mid_High)", FreeAutos.onePlusOneFreeMid_High(drive, arm,intake));
 
         autoChooser.addOption("Charge (High)", ChargeAutos.chargeHigh(drive, arm, intake, light));
-        autoChooser.setDefaultOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake, light));
+        autoChooser.addOption("Charge (Mid)", ChargeAutos.chargeMid(drive, arm, intake, light));
         autoChooser.addOption("Charge Plus Pickup (High)", ChargeAutos.chargePlusPickUpHigh(drive, arm, intake, light));
         autoChooser.addOption("Charge Plus Pickup (Mid)", ChargeAutos.chargePlusPickUpMid(drive, arm, intake, light));
-        autoChooser.addOption("Charge Taxi 180 (Mid)", ChargeAutos.chargeMidTaxi180(drive, arm, intake, light));
+        
+        autoChooser.addOption("Charge+Taxi Mid Cone Only", ChargeAutos.chargePlusTaxiMidCone(drive, arm, intake, light));
+        autoChooser.addOption("Charge+Taxi High Cube Only", ChargeAutos.chargePlusTaxiHighCube(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 180 (Mid) Pick Up", ChargeAutos.chargeMidTaxi180PickUp(drive, arm, intake, light));
+        autoChooser.setDefaultOption("Charge Taxi 180 (Mid) No Pick Up", ChargeAutos.chargeMidTaxi180NoPickUp(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 180 (High-Cube) No Pick Up", ChargeAutos.chargeHighTaxi180NoPickUpCube(drive, arm, intake, light));
         autoChooser.addOption("Charge Taxi 90 (Mid)", ChargeAutos.chargeMidTaxi90(drive, arm, intake, light));
+        autoChooser.addOption("Charge Taxi 90 (Mid) Turn", ChargeAutos.chargeMidTaxi90Turn(drive, arm, intake, light));
         
         // autoChooser.addOption("Charge Plus Pickup Parts (High)", OldAutos.chargePlusPickUpPartsHigh(drive, arm, intake));//Doesn't Work - Amost Tipped bot in practice
         // autoChooser.addOption("One: CUbe + drop", OldAutos.oneToCubeAndToDrop(drive, arm, intake));
@@ -107,9 +123,10 @@ public class RobotContainer {
         ComplexWidgetBuilder.create(autoChooser, "Auto Chooser", "Misc")
             .withSize(1, 3);
 
-        ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
+        // ComplexWidgetBuilder.create(CameraServer.startAutomaticCapture(), "USB Camera Stream", "Misc")
         
-            .withSize(5, 5);
+        //     .withSize(5, 5);
+        
     }
 
     public void configureTeleOpBindings() {
@@ -132,25 +149,40 @@ public class RobotContainer {
         driver.rightBumper()
             .whileTrue(drive.setSlowSpeed())
             .onFalse(drive.setNormalSpeed());
-        driver.rightTrigger()
+        driver.rightTrigger().and(driver.leftBumper().negate())
             .whileTrue(intake.run(intake::intake))
             // .onTrue(arm.setPositionCommand(Position.INTAKE_LOW))
 
             .onFalse(intake.run(intake::stop));
             // .onFalse(arm.setPositionCommand(Position.HOLD));
+        // driver.rightTrigger().and(driver.leftBumper())
+        //     .whileTrue(intake.run(intake::intake))
+        //     .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
+
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
+
+        // driver.leftTrigger().and(driver.leftBumper())
+        //     .onTrue(new DropTeleopCone(arm, intake)) 
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
         driver.leftTrigger()
-            .whileTrue(intake.run(intake::intake))
-            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW_DROPPED))
-
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
-
+            .onTrue(new DropTeleopCube(arm, intake))
+            .onFalse(intake.run(intake::stop));
+            // .onFalse(arm.setPositionCommand(Position.HOLD));
+        
         driver.b()
             .onTrue(intake.runOnce(()->intake.open(true))); 
         driver.x()
             .onTrue(intake.runOnce(()->intake.close(true)));
 
-        driver.povUp()  //Have the robot reset in any 90 degree angle - TODO:Test!
+        driver.y()
+            .onTrue(new DropTeleopCone(arm, intake));
+            // .onFalse(intake.run(intake::stop))
+            // .onFalse(arm.setPositionCommand(Position.HOLD));
+        driver.a() 
+            .onTrue(drive.setOffsetCommand(0));
+        driver.povUp() 
             .onTrue(drive.setOffsetCommand(0));
         driver.povRight()
             .onTrue(drive.setOffsetCommand(-90));
@@ -172,7 +204,7 @@ public class RobotContainer {
         verticalElevator.setDefaultCommand(new ManualVerticalElevator(operator::getLeftY, verticalElevator));
         horizontalElevator.setDefaultCommand(new ManualHorizontalElevator(operator::getLeftX, horizontalElevator));
 
-        operator.a()
+        operator.a()//Make Sure to HOLD the button
             .whileTrue( // while true to update positions when moving manually
                 arm.setPositionCommand(Position.LOW)
             );
@@ -186,19 +218,19 @@ public class RobotContainer {
         operator.povRight()
             .whileTrue(arm.setPositionCommand(Position.INTAKE_HIGH_SINGLE_SUBSTATION));
         operator.povLeft()
-            .onTrue(arm.setPositionCommand(Position.INTAKE_LOW));
+            .whileTrue(arm.setPositionCommand(Position.INTAKE_LOW));
         operator.povDown()
-            .onTrue(arm.setPositionCommand(Position.HOLD));
+            .whileTrue(arm.setPositionCommand(Position.HOLD));
 
 
-        operator.rightTrigger()
-            .onTrue(new DropTeleopCone(arm, intake)) 
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
-        operator.leftTrigger()
-            .onTrue(new DropTeleopCube(arm, intake))
-            .onFalse(intake.run(intake::stop))
-            .onFalse(arm.setPositionCommand(Position.HOLD));
+        // operator.rightTrigger()
+        //     .onTrue(new DropTeleopCone(arm, intake)) 
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
+        // operator.leftTrigger()
+        //     .onTrue(new DropTeleopCube(arm, intake))
+        //     .onFalse(intake.run(intake::stop))
+        //     .onFalse(arm.setPositionCommand(Position.HOLD));
     }
 
     /*************************************/
@@ -296,5 +328,9 @@ public class RobotContainer {
     
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    public void teleopPeriodic() {
+        matchTime.set(DriverStation.getMatchTime());
     }
 }

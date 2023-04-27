@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6445625748394357,
-        "y": 1.0592909757248095
+        "x": 2.6016183460938356,
+        "y": 1.1738089190464094
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -51,16 +51,43 @@
     },
     {
       "anchorPoint": {
-        "x": 6.52,
-        "y": 0.81
+        "x": 6.3,
+        "y": 0.93
       },
       "prevControl": {
-        "x": 6.151674589063464,
-        "y": 0.7759403461664073
+        "x": 5.931674589063464,
+        "y": 0.8959403461664037
       },
       "nextControl": {
-        "x": 6.890602178375647,
-        "y": 0.8442701902465939
+        "x": 6.670602178375647,
+        "y": 0.9642701902465929
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "wait"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.52,
+        "y": 0.93
+      },
+      "prevControl": {
+        "x": 6.1071362058779375,
+        "y": 0.93
+      },
+      "nextControl": {
+        "x": 6.9328637941220626,
+        "y": 0.93
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -68,9 +95,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "pickUp"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -105,12 +130,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.53,
-        "y": 2.04
+        "x": 6.455,
+        "y": 2.08
       },
       "prevControl": {
-        "x": 6.53,
-        "y": 1.627641228413782
+        "x": 6.455,
+        "y": 1.667641228413782
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -137,21 +162,21 @@
       ]
     },
     {
-      "position": 1.163636363636364,
+      "position": 0.98,
       "names": [
         "intake"
       ]
     },
     {
-      "position": 2.5,
+      "position": 2.95,
       "names": [
-        "pickUp"
+        "shoot"
       ]
     },
     {
-      "position": 3.054545454545449,
+      "position": 2.45,
       "names": [
-        "shoot"
+        "pickUp"
       ]
     }
   ]

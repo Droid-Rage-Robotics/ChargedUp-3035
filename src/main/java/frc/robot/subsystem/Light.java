@@ -11,7 +11,6 @@ public class Light extends SubsystemBase {//TODO:Fix
     // private final CommandXboxController driver;
     private final AddressableLED led;
     private final AddressableLEDBuffer buffer;
-    private int m_rainbowFirstPixelHue = 0;
     private int LED_COUNT = 47;
     public final Color red = Color.kRed, 
                       batteryBlue = Color.kMidnightBlue,
@@ -21,18 +20,31 @@ public class Light extends SubsystemBase {//TODO:Fix
                       blue = Color.kBlue, //Decoration
                       green = Color.kGreen;
     public static Timer timer = new Timer();
-    private long waitTime = 200, startTime= System.currentTimeMillis();
-    private int stage = 0;
+    class Rainbow{
+      private int rainbowFirstPixelHue = 0;
+    }
+    class SwitchLED{
+      private boolean on = true;
+      private double lastChange;
+    }
+    class FlashingColor{
+      private long waitTime = 200, 
+                    startTime = System.currentTimeMillis();
+      private int stage = 0;
+    }
+    private SwitchLED switchLED;
+    private FlashingColor flashingColor;
+    private Rainbow rainbow;
+
 
   //   private TrobotAddressableLEDPattern m_onPattern;
 	// private TrobotAddressableLEDPattern m_offPattern;
 	// private double m_interval = 2;
-	private boolean on = true;
-	private double lastChange;
   
     // protected final ShuffleboardValue<String> intakeStateWriter = ShuffleboardValue.create(intakeState.name(), "IntakeState", Intake.class.getSimpleName())
     //     .build();
-    public Light() {//TODO:Move most of these things to a command instead of the subsystem (very important)
+    public Light() {
+      //TODO:Move most of these things to a command instead of the subsystem (very important)
       //TODO: Add a timeout for when Intake is first pressed
         
         led = new AddressableLED(0);
@@ -64,14 +76,14 @@ public class Light extends SubsystemBase {//TODO:Fix
         for (int i = 0; i < buffer.getLength(); i++) {
           // Calculate the hue - hue is easier for rainbows because the color
           // shape is a circle so only one value needs to precess
-          final var hue = (m_rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+          final var hue = (rainbow.rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
           // Set the value
           buffer.setHSV(i, hue, 255, 128);
         }
         // Increase by to make the rainbow "move"
-        m_rainbowFirstPixelHue += 3;
+        rainbow.rainbowFirstPixelHue += 3;
         // Check bounds
-        m_rainbowFirstPixelHue %= 180;
+        rainbow.rainbowFirstPixelHue %= 180;
     }
 
 
@@ -149,11 +161,11 @@ public class Light extends SubsystemBase {//TODO:Fix
 
     public void switchLeds() {
       double timestamp = Timer.getFPGATimestamp();
-      if (timestamp- lastChange > 1){
-        on = !on;
-        lastChange = timestamp;
+      if (timestamp - switchLED.lastChange > 1){
+        switchLED.on = !switchLED.on;
+        switchLED.lastChange = timestamp;
       }
-      if (on){
+      if (switchLED.on){
         setAlternatingColor(yellow, blue);
       } else {
         setAlternatingColor(blue, yellow);
@@ -175,17 +187,17 @@ public class Light extends SubsystemBase {//TODO:Fix
       m_offset =(m_offset+1) %bufferLength;
     }
 
-    public void flashingOrangeAndBlue(){
-      if (System.currentTimeMillis() - startTime >= waitTime) {
+    public void flashingColors(Color colorOne, Color colorTwo){
+      if (System.currentTimeMillis() - flashingColor.startTime >= flashingColor.waitTime) {
         for (int i = 0; i < buffer.getLength(); i++) {
-            if (i % 3 == stage) {
-                setColor(i, yellow);
+            if (i % 3 == flashingColor.stage) {
+                setColor(i, colorOne);
                 continue;
             }
-            setColor(i, blue);
+            setColor(i, colorTwo);
         }
-        stage = stage + 1 > 3 ? 0 : stage + 1;
-        startTime = System.currentTimeMillis();
+        flashingColor.stage = flashingColor.stage + 1 > 3 ? 0 : flashingColor.stage + 1;
+        flashingColor.startTime = System.currentTimeMillis();
       }
     }
 }
