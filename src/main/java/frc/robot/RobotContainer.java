@@ -37,6 +37,7 @@ public class RobotContainer {
     // see how slew rate limiter affects turning and movement. can it make motors stop faster without enabling brake mode?
     //Idea: Make a button that automatically aligns to 180 degrees with a press of a button - 
     //      only when held - still leave control of drive to driver except for turning
+    //Make all of the writes that are not necessary during a match be in a practice only writers (Helps prevent the likelyhood of loop overruns)
 
 
 
