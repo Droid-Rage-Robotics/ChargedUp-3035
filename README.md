@@ -2,14 +2,11 @@
 
 ## Overview
 
-This repository contains the competition code for Team 3035's 2023 FRC robot, **Emergence**, built for the **Charged Up** season.
+This repository contains the competition code for Team 3035's FRC robot, **Emergence**, from the 2023 **Charged Up** season.
 
 ---
 
 ## Season Summary
-
-The 2023 season saw Team 3035 compete at two FIRST in Texas district events, the District Championship, and the World Championship. Throughout the season, Droid Rage demonstrated consistent performance and qualified for the playoffs at every event attended.
-
 ### Events Attended
 
 * FIT District Waco Event
