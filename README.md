@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the competition code for Team 3035's 2023 FRC robot, **Angler**, built for the **Charged Up** season.
+This repository contains the competition code for Team 3035's 2023 FRC robot, **Emergence**, built for the **Charged Up** season.
 
 ---
 
